@@ -6,8 +6,9 @@ const colors = {
   blue: "#0000FF",
   yellow: "#FFFF00",
   purple: "#800080",
-  mainColor: "#18453B", //294B29
-  secondColor: "#50C878", //78c6a3
+  mainColor: "#18453B", //18453B
+  secondColor: "#50C878", //50C878
+  lightGreen: "#83f28f", //83f28f
 };
 
 module.exports = colors;

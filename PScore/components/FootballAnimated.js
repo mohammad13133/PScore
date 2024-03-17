@@ -9,7 +9,7 @@ import Animated, {
 } from "react-native-reanimated";
 import React, { useEffect } from "react";
 
-const PageTest = () => {
+const FootballAnimated = () => {
   const progress = useSharedValue(0);
   const scale = useSharedValue(2);
 
@@ -32,4 +32,4 @@ const PageTest = () => {
   );
 };
 
-export default PageTest;
+export default FootballAnimated;

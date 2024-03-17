@@ -6,9 +6,15 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-
+import PageTest from "./PageTest.js";
 import { LinearGradient } from "expo-linear-gradient";
 const colors = require("../assets/colors/colors.js");
+import Animated, {
+  FadeInLeft,
+  FadeInRight,
+  FadeOut,
+} from "react-native-reanimated";
+import FootballAnimated from "../components/FootballAnimated.js";
 const Welcome = ({ navigation }) => {
   return (
     <View className="flex-1 items-center justify-center relative">
@@ -20,37 +26,36 @@ const Welcome = ({ navigation }) => {
       <LinearGradient
         className="w-full h-full absolute"
         style={{ resizeMode: "stretch" }}
-        start={{ x: 0.0, y: 0.0 }}
-        end={{ x: 0.5, y: 1.0 }}
         colors={["transparent", "rgba(0,0,0,0.8)"]}
       />
       <View className="absolute flex items-center justify-center h-full w-full">
         <View className="mb-10 flex items-center">
-          <Text
-            className="text-white text-6xl"
-            style={{ color: colors.secondColor }}
-          >
-            <Text style={{ color: colors.mainColor }}>PS</Text>core
-          </Text>
+          <Animated.View entering={FadeInLeft.duration(5000)}>
+            <Text
+              className="text-white text-6xl"
+              style={{ color: colors.secondColor }}
+            >
+              <Text style={{ color: colors.mainColor }}>PS</Text>core
+            </Text>
+          </Animated.View>
+
           <View>
-            <Image
-              className="rounded-full"
-              style={{ width: 200, height: 200 }}
-              source={require("../assets/images/football.jpg")}
-            />
+            <FootballAnimated />
           </View>
         </View>
       </View>
       <View className="absolute flex items-center justify-end h-full w-full ">
-        <TouchableOpacity
-          onPress={() => navigation.navigate("PageTest", { name: "Jane" })}
-          className="px-20 py-5 rounded-xl mb-40"
-          style={{ backgroundColor: colors.mainColor }}
-        >
-          <Text className="text-xl" style={{ color: colors.secondColor }}>
-            Start Your Journey
-          </Text>
-        </TouchableOpacity>
+        <Animated.View entering={FadeInLeft.duration(2000)}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("MainPage")}
+            className="px-20 py-5 rounded-xl mb-40"
+            style={{ backgroundColor: colors.mainColor }}
+          >
+            <Text className="text-xl" style={{ color: colors.secondColor }}>
+              Start Your Journey
+            </Text>
+          </TouchableOpacity>
+        </Animated.View>
       </View>
     </View>
   );
