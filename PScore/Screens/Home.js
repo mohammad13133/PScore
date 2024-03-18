@@ -13,10 +13,7 @@ import React from "react";
 import Header from "../components/Header.js";
 const colors = require("../assets/colors/colors.js");
 import GameCard from "../components/GameCard.js";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+
 import { Formik } from "formik";
 import Line from "../components/Line.js";
 import DayPicker from "../components/DayPicker.js";
