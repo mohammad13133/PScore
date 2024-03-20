@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import React from "react";
 import colors from "../assets/colors/colors";
+import { Formik } from "formik";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
