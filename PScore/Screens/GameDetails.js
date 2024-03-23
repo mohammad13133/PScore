@@ -20,6 +20,7 @@ import LineUP from "../components/GameDetailsComponents/LineUP";
 import GameInfo from "../components/GameDetailsComponents/GameInfo";
 import OtherPlayers from "../components/GameDetailsComponents/OtherPlayers";
 import Marker from "../components/GameDetailsComponents/Marker";
+import MatchDetails from "../components/GameDetailsComponents/MatchDetails";
 const GameDetails = ({ navigation }) => {
   const [activeBell, setActiveBell] = useState(false);
   const [activeTeam1, setActiveTeam1] = useState(false);
@@ -102,10 +103,12 @@ const GameDetails = ({ navigation }) => {
         </View>
         {/*map*/}
         <LineUP />
+
         <Marker>GameInfo</Marker>
         <GameInfo />
         <Marker>OtherPlayers</Marker>
         <OtherPlayers />
+        <MatchDetails />
       </ScrollView>
     </View>
   );

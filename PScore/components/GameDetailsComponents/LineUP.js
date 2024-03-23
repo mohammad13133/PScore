@@ -29,8 +29,8 @@ const LineUP = () => {
           left={"50%"}
           ImageProp={require("../../assets/images/players/ederson.png")}
         />
-        <Player top={"70%"} left={"20%"} goals={2} />
-        <Player top={"70%"} left={"80%"} goals={5} />
+        <Player top={"70%"} left={"35%"} goals={3} assists={1} />
+        <Player top={"70%"} left={"65%"} goals={9} />
         <Player
           top={"20%"}
           left={"50%"}
@@ -41,7 +41,7 @@ const LineUP = () => {
     </View>
   );
 };
-const Player = ({ top, left, ImageProp, goals }) => {
+const Player = ({ top, left, ImageProp, goals, assists }) => {
   return (
     <View
       className="absolute flex items-center justify-center"
@@ -53,13 +53,14 @@ const Player = ({ top, left, ImageProp, goals }) => {
         transform: [{ translateX: -50 }, { translateY: -50 }],
       }}
     >
+      {/*goals*/}
       <View
         className="absolute flex items-start justify-start  w-10  z-10"
         style={{ transform: [{ translateX: 30 }, { translateY: -35 }] }}
       >
         {goals > 0 && (
-          <View className="flex-row bg-white/60 rounded-full px-1 space-x-[1px] border border-[#18453B]">
-            {Array(goals)
+          <View className="flex-row bg-white/60 rounded-full px-1 space-x-[3px] border border-[#18453B]">
+            {Array(goals < 3 ? goals : 3)
               .fill()
               .map((_, index) => (
                 <Image
@@ -69,7 +70,32 @@ const Player = ({ top, left, ImageProp, goals }) => {
                   style={{ width: 20, height: 20 }}
                 />
               ))}
-            <Text className="px-1">{goals}</Text>
+            <Text className="px-1 h-5">{goals < 3 ? goals : `(${goals})`}</Text>
+          </View>
+        )}
+      </View>
+
+      {/*assets*/}
+
+      <View
+        className="absolute flex items-start justify-start  w-10  z-10"
+        style={{ transform: [{ translateX: 30 }, { translateY: 10 }] }}
+      >
+        {assists > 0 && (
+          <View className="flex-row bg-white/60 rounded-full px-1 space-x-[3px] border border-[#18453B]">
+            {Array(assists < 3 ? assists : 3)
+              .fill()
+              .map((_, index) => (
+                <Image
+                  key={index}
+                  className=""
+                  source={require("../../assets/images/assists.png")}
+                  style={{ width: 20, height: 20 }}
+                />
+              ))}
+            <Text className="px-1 h-5">
+              {assists < 3 ? assists : `(${assists})`}
+            </Text>
           </View>
         )}
       </View>

@@ -9,10 +9,14 @@ import { useNavigation } from "@react-navigation/native";
 const GameCard = () => {
   return (
     <View
-      className="flex bg-white p-4 rounded-md mt-1"
-      style={{ width: wp(90) }}
+      className="flex bg-white p-4 rounded-md mt-1 mb-4"
+      style={{
+        width: wp(90),
+        shadowColor: "#000",
+        elevation: 2, //android
+      }}
     >
-      <View className="mb-2">
+      <View className="mb-2 ">
         <Text className="font-bold" style={{ color: colors.mainColor }}>
           Ebn Al Haitham
         </Text>
@@ -29,8 +33,19 @@ const SingleGame = () => {
   const navigation = useNavigation();
   return (
     <Pressable
-      className="flex-row justify-center items-center  bg-slate-200 mb-2"
-      style={{ height: 100 }}
+      className="flex-row justify-center items-center  bg-slate-200 mb-5 rounded-lg"
+      style={{
+        height: 100,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 3,
+        },
+        shadowOpacity: 0.27,
+        shadowRadius: 4.65,
+
+        elevation: 6, //android
+      }}
       onPress={() => navigation.navigate("GameDetails")}
     >
       <View
