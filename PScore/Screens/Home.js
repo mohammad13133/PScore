@@ -7,9 +7,12 @@ import {
   TextInput,
   Button,
   ScrollView,
+  Modal,
+  Pressable,
+  Alert,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/Header.js";
 const colors = require("../assets/colors/colors.js");
 import GameCard from "../components/GameCard.js";
@@ -32,10 +35,32 @@ const DATA = [
   },
 ];
 const Home = ({ navigation }) => {
+  const [modalVisible, setModalVisible] = useState(false);
   return (
     <View className="flex-1">
       <StatusBar style="dark" />
-      <Header />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View className="h-full w-48 bg-white">
+            <Text style={styles.modalText}>Hello World!</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Hide Modal</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      <Header modalVisible={modalVisible} setModalVisible={setModalVisible} />
       <DayPicker />
       <ScrollView
         contentContainerStyle={{ display: "flex", alignItems: "center" }}
@@ -69,6 +94,47 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
 });
 export default Home;

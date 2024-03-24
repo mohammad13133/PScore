@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import React from "react";
 import {
   widthPercentageToDP as wp,
@@ -11,10 +11,15 @@ import {
 } from "react-native-heroicons/solid";
 import Marker from "./Marker";
 import DetailsTable from "../DetailsTable";
+import { useNavigation } from "@react-navigation/native";
 const GameInfo = () => {
+  const navigation = useNavigation();
   return (
     <DetailsTable header={"GameInfo"}>
-      <Info first={"betWazan Stadium"} second={"Nablus"} Pin={MapPinIcon} />
+      <Pressable onPress={() => navigation.navigate("MainPage")}>
+        <Info first={"betWazan Stadium"} second={"Nablus"} Pin={MapPinIcon} />
+      </Pressable>
+
       <Info first={"26/11/2024"} second={"16:00"} Pin={CalendarDaysIcon} />
     </DetailsTable>
   );
