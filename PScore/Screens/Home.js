@@ -39,28 +39,7 @@ const Home = ({ navigation }) => {
   return (
     <View className="flex-1">
       <StatusBar style="dark" />
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View className="h-full w-48 bg-white">
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-      <Header modalVisible={modalVisible} setModalVisible={setModalVisible} />
+
       <DayPicker />
       <ScrollView
         contentContainerStyle={{ display: "flex", alignItems: "center" }}

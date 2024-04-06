@@ -45,7 +45,6 @@ const News = () => {
   return (
     <View className="flex-1">
       <StatusBar style="dark" />
-      <Header />
       <FlatList
         showsVerticalScrollIndicator={false}
         data={DATA}

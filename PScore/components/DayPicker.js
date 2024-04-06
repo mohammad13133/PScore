@@ -98,6 +98,9 @@ const DayPicker = () => {
           }}
           horizontal
           data={DATA}
+          // onScroll={(event) => {
+          //   console.log(event.nativeEvent.contentOffset.x);
+          // }}
           onScrollToIndexFailed={() => {}}
           renderItem={({ item, index }) => (
             <Item
