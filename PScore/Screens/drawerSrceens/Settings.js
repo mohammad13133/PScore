@@ -1,6 +1,5 @@
 import { View, Text, Dimensions } from "react-native";
 import React, { useState } from "react";
-import Carousel from "react-native-reanimated-carousel";
 import { Calendar } from "react-native-calendars";
 const colors = [
   "#26292E",

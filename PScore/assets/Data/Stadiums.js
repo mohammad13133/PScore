@@ -6,6 +6,7 @@ const stadiums = [
     name: "Old Trafford",
     city: "Manchester",
     imageUrl: require("../images/stadiums/oldtrafford.jpg"),
+
     imageUrl2: require("../images/stadiums/oldtrafford.jpg"),
     imageUrl3: require("../images/stadiums/oldtrafford.jpg"),
     imageUrl4: require("../images/stadiums/etihad4.jpg"),
