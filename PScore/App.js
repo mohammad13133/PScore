@@ -168,6 +168,7 @@ function MyTabsDrower() {
       screenOptions={{
         headerStyle: {
           backgroundColor: colors.secondColor, // Change header background color
+          elevation: 0,
         },
         headerTintColor: "black", // Change text color of header titles
         drawerActiveTintColor: colors.secondColor,

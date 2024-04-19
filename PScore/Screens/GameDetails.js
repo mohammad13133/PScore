@@ -8,7 +8,7 @@ import {
   NativeEventEmitter,
   Animated,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 
 import { StatusBar } from "expo-status-bar";
 
@@ -18,13 +18,40 @@ import OtherPlayers from "../components/GameDetailsComponents/OtherPlayers";
 import Marker from "../components/GameDetailsComponents/Marker";
 import MatchDetails from "../components/GameDetailsComponents/MatchDetails";
 import GameCard from "../components/GameDetailsComponents/GameCard";
+import colors from "../assets/colors/colors";
+import { useNavigation } from "@react-navigation/native";
+import { BellAlertIcon } from "react-native-heroicons/solid";
+import { BellIcon } from "react-native-heroicons/outline";
+
 const GameDetails = ({ navigation }) => {
+  navigation = useNavigation();
+  const [activeBell, setActiveBell] = useState(false);
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => setActiveBell(!activeBell)}>
+          {activeBell ? (
+            <BellAlertIcon color={"black"} size={28} />
+          ) : (
+            <BellIcon color={"black"} size={28} />
+          )}
+        </TouchableOpacity>
+      ),
+
+      headerShown: true,
+      headerStyle: {
+        backgroundColor: colors.secondColor, // Customize background color
+      },
+    });
+  }, [navigation, activeBell]);
   return (
     <View className="flex-1">
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
       {/*Header */}
-      <GameCard />
+      {/*<GameCard />*/}
+
       <ScrollView showsVerticalScrollIndicator={false}>
+        <GameCard />
         <Marker>GameDetails</Marker>
 
         {/*map*/}

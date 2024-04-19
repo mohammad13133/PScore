@@ -87,7 +87,7 @@ const DayPicker = () => {
         </Modal>
       </View>
       <TouchableOpacity className="p-2" onPress={() => setModalVisible(true)}>
-        <CalendarDaysIcon color={"green"} />
+        <CalendarDaysIcon color={colors.mainColor} />
       </TouchableOpacity>
       <View style={{ width: 300, height: 50 }}>
         <FlatList
@@ -126,19 +126,22 @@ const DayPicker = () => {
           });
         }}
       >
-        <CalendarIcon color={"green"} />
+        <CalendarIcon color={colors.mainColor} />
         <Text>today</Text>
       </TouchableOpacity>
     </View>
   );
 };
 const Item = ({ item, index, chooseDay, setChooseDay }) => {
-  const bgColor = chooseDay == item.id ? colors.mainColor : colors.lightGreen;
-
+  const bgColor = chooseDay == item.id ? colors.mainColor : colors.secondColor;
+  const opacity = chooseDay == item.id ? 1 : 0.6;
   return (
     <Pressable
-      className={"flex items-center border  px-2 py-1 rounded-xl mx-1"}
-      style={{ width: 100, borderColor: bgColor }}
+      className={"flex items-center px-2 py-1 rounded-xl mx-1"}
+      style={{
+        width: 100,
+        backgroundColor: bgColor,
+      }}
       onPress={() => {
         setChooseDay(item.id);
         listViewRef.scrollToIndex({
@@ -148,7 +151,9 @@ const Item = ({ item, index, chooseDay, setChooseDay }) => {
         });
       }}
     >
-      <Text style={{ color: bgColor }}>{item.title}</Text>
+      <Text style={{ color: colors.myWhite, opacity: opacity }}>
+        {item.title}
+      </Text>
     </Pressable>
   );
 };

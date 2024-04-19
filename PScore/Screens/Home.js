@@ -12,7 +12,7 @@ import {
   Alert,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import Header from "../components/Header.js";
 const colors = require("../assets/colors/colors.js");
 import GameCard from "../components/GameCard.js";
@@ -36,8 +36,9 @@ const DATA = [
 ];
 const Home = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
+
   return (
-    <View className="flex-1">
+    <View className="flex-1" style={{ backgroundColor: colors.secondColor }}>
       <StatusBar style="dark" />
 
       <DayPicker />
@@ -47,7 +48,7 @@ const Home = ({ navigation }) => {
         <GameCard />
         <GameCard />
         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-          <Text style={{ color: colors.secondColor }}>Login</Text>
+          <Text style={{ color: colors.mainColor }}>Login</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

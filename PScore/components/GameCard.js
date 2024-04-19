@@ -6,25 +6,25 @@ import {
 } from "react-native-responsive-screen";
 import colors from "../assets/colors/colors";
 import { useNavigation } from "@react-navigation/native";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 const GameCard = () => {
   return (
     <View
-      className="flex bg-white p-4 rounded-md mt-1 mb-4"
+      className="flex  p-4 rounded-md mt-1 mb-4"
       style={{
         width: wp(90),
-        shadowColor: "#000",
-        elevation: 2, //android
       }}
     >
-      <View className="mb-2 ">
-        <Text className="font-bold" style={{ color: colors.mainColor }}>
+      <View className="mb-2 flex-row justify-between items-center">
+        <Text className="text-lg" style={{ color: colors.myWhite }}>
           Ebn Al Haitham
         </Text>
-        <Text>3 Math</Text>
+        <Text style={{ color: colors.myWhite, opacity: 0.6 }}>3 Match</Text>
       </View>
       <SingleGame />
       <SingleGame />
-      <SingleGame2 />
+      <SingleGame />
+      <SingleGame />
     </View>
   );
 };
@@ -33,7 +33,7 @@ const SingleGame = () => {
   const navigation = useNavigation();
   return (
     <Pressable
-      className="flex-row justify-center items-center  bg-slate-200 mb-5 rounded-lg"
+      className="flex-row justify-center items-center   mb-5 rounded-xl"
       style={{
         height: 100,
         shadowColor: "#000",
@@ -45,6 +45,7 @@ const SingleGame = () => {
         shadowRadius: 4.65,
 
         elevation: 6, //android
+        backgroundColor: colors.myWhite,
       }}
       onPress={() => navigation.navigate("GameDetails")}
     >
@@ -52,7 +53,7 @@ const SingleGame = () => {
         className="flex items-end justify-center m-1"
         style={{ width: 100 }}
       >
-        <Text>Arsenal</Text>
+        <Text style={{ color: colors.mainColor }}>Arsenal</Text>
       </View>
 
       <Image
@@ -64,8 +65,12 @@ const SingleGame = () => {
         className="flex items-center  justify-center "
         style={{ width: 100, height: 90 }}
       >
-        <Text>not started</Text>
-        <Text style={{ color: colors.secondColor }}>AM 10:00</Text>
+        <Text className="font-semibold" style={{ color: colors.secondColor }}>
+          not started
+        </Text>
+        <Text style={{ color: colors.secondColor, opacity: 0.7 }}>
+          AM 10:00
+        </Text>
       </View>
       <Image
         source={require("../assets/images/manuntd.png")}
@@ -76,7 +81,9 @@ const SingleGame = () => {
         className="flex items-start justify-center m-1"
         style={{ width: 100 }}
       >
-        <Text className="text-left">Man Untd</Text>
+        <Text className="text-left" style={{ color: colors.mainColor }}>
+          Man Untd
+        </Text>
       </View>
     </Pressable>
   );

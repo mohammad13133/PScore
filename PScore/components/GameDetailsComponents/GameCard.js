@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import colors from "../../assets/colors/colors";
 import { ChevronLeftIcon, BellAlertIcon } from "react-native-heroicons/solid";
 import { BellIcon } from "react-native-heroicons/outline";
@@ -8,7 +8,8 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
-const GameCard = () => {
+{
+  /*const GameCard = () => {
   navigation = useNavigation();
   const [activeBell, setActiveBell] = useState(false);
   return (
@@ -61,6 +62,116 @@ const GameCard = () => {
             className="bg-slate-400 rounded-full"
             style={{ width: wp(15), height: wp(15) }}
           />
+        </View>
+      </View>
+    </View>
+  );
+};*/
+}
+const GameCard = () => {
+  return (
+    <View
+      style={{
+        height: 300,
+        backgroundColor: colors.secondColor,
+        borderBottomEndRadius: 50,
+        borderBottomStartRadius: 50,
+      }}
+      className="flex items-center justify-center relative "
+    >
+      <View
+        className="px-1 rounded-md"
+        style={{
+          position: "absolute",
+          top: 50,
+          backgroundColor: colors.mainColor,
+        }}
+      >
+        <Text style={{ color: colors.lightGreen }}>Uefa champions</Text>
+      </View>
+      <View className="flex-row items-center justify-center space-x-3">
+        <Image
+          source={require("../../assets/images/arsenal.png")}
+          className="bg-slate-400 rounded-full "
+          style={{ width: 100, height: 100 }}
+        />
+        <View
+          className="flex items-center justify-center"
+          style={{ width: 100, height: 100 }}
+        >
+          <Text className="text-l font-bold p-2" style={{ color: "black" }}>
+            ended
+          </Text>
+          <Text className="text-l font-bold p-2" style={{ color: "black" }}>
+            2 - 6
+          </Text>
+        </View>
+        <Image
+          source={require("../../assets/images/manuntd.png")}
+          className="bg-slate-400 rounded-full"
+          style={{ width: 100, height: 100 }}
+        />
+        <View
+          style={{
+            position: "absolute",
+            top: 130,
+            width: "100%",
+          }}
+        >
+          <View className="flex-row justify-around">
+            <View className="flex-row space-x-1">
+              <View
+                className="rounded-full p-4 relative flex items-center justify-center"
+                style={{ backgroundColor: colors.mainColor }}
+              >
+                <Text style={{ color: "white", position: "absolute" }}>W</Text>
+              </View>
+              <View
+                className="rounded-full p-4 relative flex items-center justify-center"
+                style={{ backgroundColor: colors.mainColor }}
+              >
+                <Text style={{ color: "white", position: "absolute" }}>W</Text>
+              </View>
+              <View
+                className="rounded-full p-4 relative flex items-center justify-center"
+                style={{ backgroundColor: colors.mainColor }}
+              >
+                <Text style={{ color: "white", position: "absolute" }}>W</Text>
+              </View>
+              <View
+                className="rounded-full p-4 relative flex items-center justify-center"
+                style={{ backgroundColor: colors.mainColor }}
+              >
+                <Text style={{ color: "white", position: "absolute" }}>W</Text>
+              </View>
+            </View>
+            <View className="flex-row space-x-1">
+              <View
+                className="rounded-full p-4 relative flex items-center justify-center"
+                style={{ backgroundColor: colors.mainColor }}
+              >
+                <Text style={{ color: "white", position: "absolute" }}>W</Text>
+              </View>
+              <View
+                className="rounded-full p-4 relative flex items-center justify-center"
+                style={{ backgroundColor: colors.mainColor }}
+              >
+                <Text style={{ color: "white", position: "absolute" }}>W</Text>
+              </View>
+              <View
+                className="rounded-full p-4 relative flex items-center justify-center"
+                style={{ backgroundColor: colors.mainColor }}
+              >
+                <Text style={{ color: "white", position: "absolute" }}>W</Text>
+              </View>
+              <View
+                className="rounded-full p-4 relative flex items-center justify-center"
+                style={{ backgroundColor: "white" }}
+              >
+                <Text style={{ color: "black", position: "absolute" }}>L</Text>
+              </View>
+            </View>
+          </View>
         </View>
       </View>
     </View>
