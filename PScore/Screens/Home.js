@@ -43,12 +43,19 @@ const Home = ({ navigation }) => {
 
       <DayPicker />
       <ScrollView
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{ display: "flex", alignItems: "center" }}
       >
         <GameCard />
         <GameCard />
         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
           <Text style={{ color: colors.mainColor }}>Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Team")}>
+          <Text style={{ color: colors.mainColor }}>Team</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Search")}>
+          <Text style={{ color: colors.mainColor }}>Search</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

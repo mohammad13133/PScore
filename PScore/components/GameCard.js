@@ -6,7 +6,13 @@ import {
 } from "react-native-responsive-screen";
 import colors from "../assets/colors/colors";
 import { useNavigation } from "@react-navigation/native";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+import Animated, {
+  FadeIn,
+  FadeInLeft,
+  FadeInRight,
+  FadeInUp,
+  FadeOutLeft,
+} from "react-native-reanimated";
 const GameCard = () => {
   return (
     <View
@@ -21,10 +27,18 @@ const GameCard = () => {
         </Text>
         <Text style={{ color: colors.myWhite, opacity: 0.6 }}>3 Match</Text>
       </View>
-      <SingleGame />
-      <SingleGame />
-      <SingleGame />
-      <SingleGame />
+      <Animated.View entering={(entering = FadeInLeft.duration(200))}>
+        <SingleGame />
+      </Animated.View>
+      <Animated.View entering={(entering = FadeInLeft.duration(400))}>
+        <SingleGame />
+      </Animated.View>
+      <Animated.View entering={(entering = FadeInLeft.duration(600))}>
+        <SingleGame />
+      </Animated.View>
+      <Animated.View entering={(entering = FadeInLeft.duration(800))}>
+        <SingleGame />
+      </Animated.View>
     </View>
   );
 };

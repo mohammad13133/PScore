@@ -15,6 +15,8 @@ import {
 } from "react-native-responsive-screen";
 import { CalendarDaysIcon, CalendarIcon } from "react-native-heroicons/outline";
 import colors from "../assets/colors/colors";
+import { Calendar } from "react-native-calendars";
+
 const DATA = [
   {
     id: "1",
@@ -47,18 +49,26 @@ const DATA = [
 ];
 
 const DayPicker = () => {
+  const [selectedDate, setSelectedDate] = useState("");
   const [index, setIndex] = useState(3);
   const [isFlatListReady, setFlatListReady] = useState(false);
   const [chooseDay, setChooseDay] = useState(4);
   const [modalVisible, setModalVisible] = useState(false);
+  const handleDayPress = (date) => {
+    setSelectedDate(date.dateString);
+    setModalVisible(false);
+    console.log(date);
+  };
   useEffect(() => {
     if (isFlatListReady) {
       // Scroll to index 3 when the FlatList is ready
-      listViewRef.scrollToIndex({
-        index: 3,
-        animated: false,
-        viewPosition: 0.5,
-      });
+      if (listViewRef) {
+        listViewRef.scrollToIndex({
+          index: 3,
+          animated: false,
+          viewPosition: 0.5,
+        });
+      }
     }
   }, [isFlatListReady]);
   return (
@@ -75,13 +85,9 @@ const DayPicker = () => {
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>Hello World!</Text>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>Hide Modal</Text>
-              </Pressable>
+              <View className="w-full h-full flex items-center justify-center">
+                <Calendar onDayPress={handleDayPress} />
+              </View>
             </View>
           </View>
         </Modal>
@@ -119,11 +125,13 @@ const DayPicker = () => {
       <TouchableOpacity
         className="p-2 flex items-center"
         onPress={() => {
-          listViewRef.scrollToIndex({
-            index: 3,
-            animated: true,
-            viewPosition: 0.5,
-          });
+          if (listViewRef) {
+            listViewRef.scrollToIndex({
+              index: 3,
+              animated: true,
+              viewPosition: 0.5,
+            });
+          }
         }}
       >
         <CalendarIcon color={colors.mainColor} />
@@ -144,11 +152,13 @@ const Item = ({ item, index, chooseDay, setChooseDay }) => {
       }}
       onPress={() => {
         setChooseDay(item.id);
-        listViewRef.scrollToIndex({
-          index: index,
-          animated: true,
-          viewPosition: 0.5,
-        });
+        if (listViewRef) {
+          listViewRef.scrollToIndex({
+            index: index,
+            animated: true,
+            viewPosition: 0.5,
+          });
+        }
       }}
     >
       <Text style={{ color: colors.myWhite, opacity: opacity }}>
@@ -169,7 +179,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "red",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalView: {

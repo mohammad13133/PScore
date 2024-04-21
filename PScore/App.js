@@ -46,6 +46,8 @@ import Explore from "./Screens/Explore.js";
 import MyGames from "./Screens/drawerSrceens/MyGames.js";
 import Settings from "./Screens/drawerSrceens/Settings.js";
 import Stadium from "./Screens/Stadium.js";
+import Team from "./Screens/Team.js";
+import Search from "./Screens/Search.js";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -68,6 +70,8 @@ export default function App() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Stadium" component={Stadium} />
+        <Stack.Screen name="Team" component={Team} />
+        <Stack.Screen name="Search" component={Search} />
       </Stack.Navigator>
     </NavigationContainer>
   );

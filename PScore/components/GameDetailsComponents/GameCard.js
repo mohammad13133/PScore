@@ -69,6 +69,7 @@ import { useNavigation } from "@react-navigation/native";
 };*/
 }
 const GameCard = () => {
+  const navigation = useNavigation();
   return (
     <View
       style={{
@@ -90,11 +91,14 @@ const GameCard = () => {
         <Text style={{ color: colors.lightGreen }}>Uefa champions</Text>
       </View>
       <View className="flex-row items-center justify-center space-x-3">
-        <Image
-          source={require("../../assets/images/arsenal.png")}
-          className="bg-slate-400 rounded-full "
-          style={{ width: 100, height: 100 }}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate("Team")}>
+          <Image
+            source={require("../../assets/images/arsenal.png")}
+            className="bg-slate-400 rounded-full "
+            style={{ width: 100, height: 100 }}
+          />
+        </TouchableOpacity>
+
         <View
           className="flex items-center justify-center"
           style={{ width: 100, height: 100 }}
@@ -106,11 +110,14 @@ const GameCard = () => {
             2 - 6
           </Text>
         </View>
-        <Image
-          source={require("../../assets/images/manuntd.png")}
-          className="bg-slate-400 rounded-full"
-          style={{ width: 100, height: 100 }}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate("Team")}>
+          <Image
+            source={require("../../assets/images/manuntd.png")}
+            className="bg-slate-400 rounded-full"
+            style={{ width: 100, height: 100 }}
+          />
+        </TouchableOpacity>
+
         <View
           style={{
             position: "absolute",
