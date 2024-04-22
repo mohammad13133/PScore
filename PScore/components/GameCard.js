@@ -13,7 +13,9 @@ import Animated, {
   FadeInUp,
   FadeOutLeft,
 } from "react-native-reanimated";
-const GameCard = () => {
+import dayjs from "dayjs";
+
+const GameCard = ({ matches }) => {
   return (
     <View
       className="flex  p-4 rounded-md mt-1 mb-4"
@@ -23,28 +25,31 @@ const GameCard = () => {
     >
       <View className="mb-2 flex-row justify-between items-center">
         <Text className="text-lg" style={{ color: colors.myWhite }}>
-          Ebn Al Haitham
+          {matches[0]?.competition?.name}
         </Text>
-        <Text style={{ color: colors.myWhite, opacity: 0.6 }}>3 Match</Text>
+        <Text style={{ color: colors.myWhite, opacity: 0.6 }}>
+          {matches?.length} Match
+        </Text>
       </View>
-      <Animated.View entering={(entering = FadeInLeft.duration(200))}>
-        <SingleGame />
-      </Animated.View>
-      <Animated.View entering={(entering = FadeInLeft.duration(400))}>
-        <SingleGame />
-      </Animated.View>
-      <Animated.View entering={(entering = FadeInLeft.duration(600))}>
-        <SingleGame />
-      </Animated.View>
-      <Animated.View entering={(entering = FadeInLeft.duration(800))}>
-        <SingleGame />
-      </Animated.View>
+      {matches &&
+        matches.map((element, index) => (
+          <Animated.View
+            key={index}
+            entering={(entering = FadeInLeft.duration(200 * index))}
+          >
+            <SingleGame key={index} MatchDetails={element} />
+          </Animated.View>
+        ))}
     </View>
   );
 };
 
-const SingleGame = () => {
+const SingleGame = ({ MatchDetails }) => {
   const navigation = useNavigation();
+  const dateString = MatchDetails?.utcDate;
+  const time = dayjs(dateString).format("HH:mm");
+  const isSvg = MatchDetails?.homeTeam?.crest.endsWith(".svg");
+
   return (
     <Pressable
       className="flex-row justify-center items-center   mb-5 rounded-xl"
@@ -67,27 +72,42 @@ const SingleGame = () => {
         className="flex items-end justify-center m-1"
         style={{ width: 100 }}
       >
-        <Text style={{ color: colors.mainColor }}>Arsenal</Text>
+        <Text style={{ color: colors.mainColor }}>
+          {MatchDetails?.homeTeam?.tla}
+        </Text>
       </View>
+      {isSvg ? (
+        <View
+          className="rounded-full bg-slate-700"
+          style={{ width: 35, height: 35 }}
+        ></View>
+      ) : (
+        <Image
+          source={{ uri: MatchDetails?.homeTeam?.crest }}
+          className="rounded-full"
+          style={{ width: 35, height: 35 }}
+        />
+      )}
 
-      <Image
-        source={require("../assets/images/arsenal.png")}
-        className="bg-slate-500 rounded-full"
-        style={{ width: 35, height: 35 }}
-      />
       <View
         className="flex items-center  justify-center "
         style={{ width: 100, height: 90 }}
       >
-        <Text className="font-semibold" style={{ color: colors.secondColor }}>
-          not started
-        </Text>
-        <Text style={{ color: colors.secondColor, opacity: 0.7 }}>
-          AM 10:00
-        </Text>
+        {MatchDetails?.status === "TIMED" ? (
+          <Text className="font-semibold" style={{ color: colors.secondColor }}>
+            Not started
+          </Text>
+        ) : MatchDetails?.status === "FINISHED" ? (
+          <Text className="font-semibold" style={{ color: colors.secondColor }}>
+            {MatchDetails?.score?.fullTime?.home}:
+            {MatchDetails?.score?.fullTime?.away}
+          </Text>
+        ) : null}
+
+        <Text style={{ color: colors.secondColor, opacity: 0.7 }}>{time}</Text>
       </View>
       <Image
-        source={require("../assets/images/manuntd.png")}
+        source={{ uri: MatchDetails?.awayTeam?.crest }}
         className=" rounded-full"
         style={{ width: 35, height: 35 }}
       />
@@ -96,7 +116,7 @@ const SingleGame = () => {
         style={{ width: 100 }}
       >
         <Text className="text-left" style={{ color: colors.mainColor }}>
-          Man Untd
+          {MatchDetails?.awayTeam?.tla}
         </Text>
       </View>
     </Pressable>

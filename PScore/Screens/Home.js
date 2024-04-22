@@ -12,11 +12,12 @@ import {
   Alert,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import Header from "../components/Header.js";
 const colors = require("../assets/colors/colors.js");
 import GameCard from "../components/GameCard.js";
 
+import axios from "axios";
 import { Formik } from "formik";
 import Line from "../components/Line.js";
 import DayPicker from "../components/DayPicker.js";
@@ -36,18 +37,49 @@ const DATA = [
 ];
 const Home = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [day, setDay] = useState("2024-04-24");
+  const [matches, setMatches] = useState([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.football-data.org/v4/competitions/PL/matches/?season=2023&dateFrom=${day}&dateTo=${day}`,
+          {
+            headers: {
+              "X-Auth-Token": "561656b64db54bc8b5d5534f66275f4f", // Replace 'YOUR_TOKEN' with your actual token
+            },
+          }
+        );
+        if (response.data) {
+          const Objects = response.data.matches.map((element, index) => {
+            // Transform each element as needed
+            return element;
+          });
+          setMatches([]);
+          setMatches(Objects);
+        } else {
+          console.log("Table data not available");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle errors
+      }
+    };
+
+    fetchData();
+  }, [day]);
   return (
     <View className="flex-1" style={{ backgroundColor: colors.secondColor }}>
       <StatusBar style="dark" />
 
-      <DayPicker />
+      <DayPicker setDay={setDay} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ display: "flex", alignItems: "center" }}
       >
-        <GameCard />
-        <GameCard />
+        <GameCard matches={matches} />
+
         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
           <Text style={{ color: colors.mainColor }}>Login</Text>
         </TouchableOpacity>

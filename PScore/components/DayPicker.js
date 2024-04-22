@@ -48,7 +48,7 @@ const DATA = [
   },
 ];
 
-const DayPicker = () => {
+const DayPicker = ({ setDay }) => {
   const [selectedDate, setSelectedDate] = useState("");
   const [index, setIndex] = useState(3);
   const [isFlatListReady, setFlatListReady] = useState(false);
@@ -56,6 +56,7 @@ const DayPicker = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const handleDayPress = (date) => {
     setSelectedDate(date.dateString);
+    setDay(date.dateString);
     setModalVisible(false);
     console.log(date);
   };
