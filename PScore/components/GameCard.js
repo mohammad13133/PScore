@@ -14,6 +14,7 @@ import Animated, {
   FadeOutLeft,
 } from "react-native-reanimated";
 import dayjs from "dayjs";
+import { SvgUri } from "react-native-svg";
 
 const GameCard = ({ matches }) => {
   return (
@@ -48,7 +49,8 @@ const SingleGame = ({ MatchDetails }) => {
   const navigation = useNavigation();
   const dateString = MatchDetails?.utcDate;
   const time = dayjs(dateString).format("HH:mm");
-  const isSvg = MatchDetails?.homeTeam?.crest.endsWith(".svg");
+  const isSvgHome = MatchDetails?.homeTeam?.crest.endsWith(".svg");
+  const isSvgAway = MatchDetails?.awayTeam?.crest.endsWith(".svg");
 
   return (
     <Pressable
@@ -76,11 +78,14 @@ const SingleGame = ({ MatchDetails }) => {
           {MatchDetails?.homeTeam?.tla}
         </Text>
       </View>
-      {isSvg ? (
-        <View
-          className="rounded-full bg-slate-700"
-          style={{ width: 35, height: 35 }}
-        ></View>
+      {isSvgHome ? (
+        <View className="rounded-full" style={{ width: 35, height: 35 }}>
+          <SvgUri
+            width="100%"
+            height="100%"
+            uri={MatchDetails?.homeTeam?.crest}
+          />
+        </View>
       ) : (
         <Image
           source={{ uri: MatchDetails?.homeTeam?.crest }}
@@ -103,14 +108,30 @@ const SingleGame = ({ MatchDetails }) => {
             {MatchDetails?.score?.fullTime?.away}
           </Text>
         ) : null}
-
-        <Text style={{ color: colors.secondColor, opacity: 0.7 }}>{time}</Text>
+        {MatchDetails?.status === "FINISHED" ? (
+          <Text style={{ color: colors.secondColor, opacity: 0.7 }}>ended</Text>
+        ) : (
+          <Text style={{ color: colors.secondColor, opacity: 0.7 }}>
+            {time}
+          </Text>
+        )}
       </View>
-      <Image
-        source={{ uri: MatchDetails?.awayTeam?.crest }}
-        className=" rounded-full"
-        style={{ width: 35, height: 35 }}
-      />
+
+      {isSvgAway ? (
+        <View className="rounded-full" style={{ width: 35, height: 35 }}>
+          <SvgUri
+            width="100%"
+            height="100%"
+            uri={MatchDetails?.awayTeam?.crest}
+          />
+        </View>
+      ) : (
+        <Image
+          source={{ uri: MatchDetails?.awayTeam?.crest }}
+          className="rounded-full"
+          style={{ width: 35, height: 35 }}
+        />
+      )}
       <View
         className="flex items-start justify-center m-1"
         style={{ width: 100 }}

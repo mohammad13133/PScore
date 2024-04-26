@@ -16,39 +16,47 @@ import {
 import { CalendarDaysIcon, CalendarIcon } from "react-native-heroicons/outline";
 import colors from "../assets/colors/colors";
 import { Calendar } from "react-native-calendars";
+import dayjs from "dayjs";
 
 const DATA = [
   {
     id: "1",
     title: "13/3",
+    date: "2024-04-26",
   },
   {
     id: "2",
     title: "14/3",
+    date: "2024-04-24",
   },
   {
     id: "3",
     title: "yesterday",
+    date: "2024-04-26",
   },
   {
     id: "4",
     title: "today",
+    date: "2024-04-26",
   },
   {
     id: "5",
     title: "tomorrow",
+    date: "2024-04-26",
   },
   {
     id: "6",
     title: "18/3",
+    date: "2024-04-26",
   },
   {
     id: "7",
     title: "19/3",
+    date: "2024-04-26",
   },
 ];
 
-const DayPicker = ({ setDay }) => {
+const DayPicker = ({ day, setDay }) => {
   const [selectedDate, setSelectedDate] = useState("");
   const [index, setIndex] = useState(3);
   const [isFlatListReady, setFlatListReady] = useState(false);
@@ -72,6 +80,18 @@ const DayPicker = ({ setDay }) => {
       }
     }
   }, [isFlatListReady]);
+  useEffect(() => {
+    const todayDate = dayjs().format("YYYY-MM-DD");
+    DATA[3].date = todayDate;
+
+    const currentDate = dayjs();
+
+    const yesterdayDate = currentDate.subtract(1, "day");
+    DATA[2].date = yesterdayDate.format("YYYY-MM-DD");
+
+    const tomorrowDate = currentDate.add(1, "day");
+    DATA[4].date = tomorrowDate.format("YYYY-MM-DD");
+  }, []);
   return (
     <View className="flex-row items-center justify-center ">
       <View className=" ">
@@ -87,7 +107,16 @@ const DayPicker = ({ setDay }) => {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <View className="w-full h-full flex items-center justify-center">
-                <Calendar onDayPress={handleDayPress} />
+                <Calendar
+                  onDayPress={handleDayPress}
+                  markedDates={{
+                    [day]: {
+                      selected: true,
+                      disableTouchEvent: true,
+                      selectedColor: colors.secondColor,
+                    },
+                  }}
+                />
               </View>
             </View>
           </View>
@@ -113,6 +142,7 @@ const DayPicker = ({ setDay }) => {
             <Item
               chooseDay={chooseDay}
               setChooseDay={setChooseDay}
+              setDay={setDay}
               item={item}
               index={index}
             />
@@ -141,7 +171,7 @@ const DayPicker = ({ setDay }) => {
     </View>
   );
 };
-const Item = ({ item, index, chooseDay, setChooseDay }) => {
+const Item = ({ item, index, chooseDay, setChooseDay, setDay }) => {
   const bgColor = chooseDay == item.id ? colors.mainColor : colors.secondColor;
   const opacity = chooseDay == item.id ? 1 : 0.6;
   return (
@@ -153,6 +183,7 @@ const Item = ({ item, index, chooseDay, setChooseDay }) => {
       }}
       onPress={() => {
         setChooseDay(item.id);
+        setDay(item.date);
         if (listViewRef) {
           listViewRef.scrollToIndex({
             index: index,

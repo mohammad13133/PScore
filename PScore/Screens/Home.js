@@ -37,14 +37,14 @@ const DATA = [
 ];
 const Home = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [day, setDay] = useState("2024-04-24");
+  const [day, setDay] = useState("2024-04-22");
   const [matches, setMatches] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://api.football-data.org/v4/competitions/PL/matches/?season=2023&dateFrom=${day}&dateTo=${day}`,
+          `https://api.football-data.org/v4/competitions/PD/matches/?season=2023&dateFrom=${day}&dateTo=${day}`,
           {
             headers: {
               "X-Auth-Token": "561656b64db54bc8b5d5534f66275f4f", // Replace 'YOUR_TOKEN' with your actual token
@@ -73,7 +73,7 @@ const Home = ({ navigation }) => {
     <View className="flex-1" style={{ backgroundColor: colors.secondColor }}>
       <StatusBar style="dark" />
 
-      <DayPicker setDay={setDay} />
+      <DayPicker day={day} setDay={setDay} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ display: "flex", alignItems: "center" }}
@@ -83,8 +83,10 @@ const Home = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
           <Text style={{ color: colors.mainColor }}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Team")}>
-          <Text style={{ color: colors.mainColor }}>Team</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Team", matches)}>
+          <Text style={{ color: colors.mainColor }}>
+            {matches[0]?.competition?.name}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("Search")}>
           <Text style={{ color: colors.mainColor }}>Search</Text>

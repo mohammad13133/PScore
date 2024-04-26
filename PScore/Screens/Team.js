@@ -14,7 +14,9 @@ import { useNavigation } from "@react-navigation/native";
 import DayPicker from "../components/DayPicker";
 import GameCard from "../components/GameCard";
 
-const Team = ({ navigation }) => {
+const Team = ({ navigation, route }) => {
+  const matches = route.params;
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -23,7 +25,7 @@ const Team = ({ navigation }) => {
       },
     });
   }, [navigation]);
-  const [page, setPage] = useState("games");
+  const [page, setPage] = useState("news");
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true);
@@ -38,7 +40,7 @@ const Team = ({ navigation }) => {
         return loading ? (
           <ActivityIndicator size="large" color={colors.mainColor} />
         ) : (
-          <GamesComponent />
+          <GamesComponent matches={matches} />
         );
       case "players":
         return <PlayersComponent />;
@@ -60,7 +62,7 @@ const Team = ({ navigation }) => {
         className="flex items-center justify-center relative "
       >
         <View className="absolute top-10">
-          <Text>Man City</Text>
+          <Text>{matches && matches[0]?.competition?.name}</Text>
         </View>
 
         <View
@@ -97,12 +99,12 @@ const Team = ({ navigation }) => {
   );
 };
 
-const GamesComponent = () => {
+const GamesComponent = ({ matches }) => {
   return (
     <View>
-      <DayPicker />
+      {/* <DayPicker /> */}
       <View className="flex items-center justify-center">
-        <GameCard />
+        <GameCard matches={matches} />
       </View>
     </View>
   );
