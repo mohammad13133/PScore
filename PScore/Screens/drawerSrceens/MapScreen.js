@@ -15,8 +15,6 @@ const MapScreen = () => {
         console.error("Permission to access location was denied");
         return;
       }
-
-      // Get user's current location
       let location = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
       const newRegion = {
@@ -30,14 +28,14 @@ const MapScreen = () => {
       mapViewRef.current.animateToRegion(newRegion);
     })();
   }, []);
-  const goToNewLocation = () => {
+  const goToMyLocation = () => {
     mapViewRef.current.animateToRegion({
       ...region,
       latitudeDelta: 0.01,
       longitudeDelta: 0.01,
     });
   };
-  const goToMyLocation = () => {
+  const goToNewLocation = () => {
     const newLocation = { latitude: 37.78825, longitude: -122.4324 }; // Example new location coordinates
     mapViewRef.current.animateToRegion({
       ...newLocation,
