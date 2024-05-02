@@ -39,6 +39,7 @@ import {
   GlobeAsiaAustraliaIcon as GlobeAsiaAustraliaIconLine,
   ArchiveBoxArrowDownIcon as ArchiveBoxArrowDownIconLine,
   Cog6ToothIcon,
+  MapIcon,
 } from "react-native-heroicons/outline";
 import Profile from "./Screens/Profile.js";
 import GameDetails from "./Screens/GameDetails.js";
@@ -48,6 +49,7 @@ import Settings from "./Screens/drawerSrceens/Settings.js";
 import Stadium from "./Screens/Stadium.js";
 import Team from "./Screens/Team.js";
 import Search from "./Screens/Search.js";
+import MapScreen from "./Screens/drawerSrceens/MapScreen.js";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -209,6 +211,13 @@ function MyTabsDrower() {
           drawerIcon: () => <Cog6ToothIcon color={colors.secondColor} />,
         }}
         component={Settings}
+      />
+      <Drawer.Screen
+        name="MapScreen"
+        options={{
+          drawerIcon: () => <MapIcon color={colors.secondColor} />,
+        }}
+        component={MapScreen}
       />
     </Drawer.Navigator>
   );
