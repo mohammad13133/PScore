@@ -3,29 +3,47 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 
 import "./index.css";
-import { createBrowserRouter, Link, RouterProvider } from "react-router-dom";
-import Root from "./routes/Root.jsx";
+import {
+  createBrowserRouter,
+  Link,
+  Outlet,
+  Route,
+  RouterProvider,
+  Routes,
+} from "react-router-dom";
+import AdminRoot from "./routes/AdminRoot.jsx";
 import Dashboard from "./components/Dashboard.jsx";
+import {
+  SidebarBottomData,
+  SidebarTopData,
+} from "./lib/constants/navigation.jsx";
+import MainRoot from "./routes/MainRoot.jsx";
+import Login from "./components/mainPage/Login.jsx";
+import AddStadium from "./components/Admin/AddStadium.jsx";
+
+const SidebarData = [...SidebarTopData, ...SidebarBottomData];
+
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: <MainRoot />,
     children: [
       {
-        path: "",
-        element: <Dashboard />,
-      },
-
-      {
-        path: "reservations",
-        element: (
-          <>
-            <p>this is reservations page</p>
-            <Link to={"/"}>Dashboard</Link>
-          </>
-        ),
+        path: "/login",
+        element: <Login />,
       },
     ],
+  },
+
+  {
+    path: "/admin",
+    element: <AdminRoot />,
+    children: SidebarData.map((item) => ({
+      path: item.path,
+      element: (
+        <>{item.path == "addStadium" ? <AddStadium /> : <p>{item.label}</p>}</>
+      ),
+    })),
   },
 ]);
 
