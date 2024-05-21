@@ -20,6 +20,7 @@ import {
 import MainRoot from "./routes/MainRoot.jsx";
 import Login from "./components/mainPage/Login.jsx";
 import AddStadium from "./components/Admin/AddStadium.jsx";
+import Reservations from "./components/Admin/Reservations.jsx";
 
 const SidebarData = [...SidebarTopData, ...SidebarBottomData];
 
@@ -41,7 +42,9 @@ const router = createBrowserRouter([
     children: SidebarData.map((item) => ({
       path: item.path,
       element: (
-        <>{item.path == "addStadium" ? <AddStadium /> : <p>{item.label}</p>}</>
+        <>
+          {item.path == "addStadium" ? <Reservations /> : <p>{item.label}</p>}
+        </>
       ),
     })),
   },

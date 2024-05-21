@@ -50,6 +50,7 @@ import Stadium from "./Screens/Stadium.js";
 import Team from "./Screens/Team.js";
 import Search from "./Screens/Search.js";
 import MapScreen from "./Screens/drawerSrceens/MapScreen.js";
+import Player from "./Screens/Player.js";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -73,6 +74,8 @@ export default function App() {
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Stadium" component={Stadium} />
         <Stack.Screen name="Team" component={Team} />
+        <Stack.Screen name="Player" component={Player} />
+
         <Stack.Screen name="Search" component={Search} />
       </Stack.Navigator>
     </NavigationContainer>
