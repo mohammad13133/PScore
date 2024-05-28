@@ -35,7 +35,7 @@ const DATA = [
     title: "Third Item",
   },
 ];
-const Home = ({ navigation }) => {
+const Home = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [day, setDay] = useState("2024-04-22");
   const [matches, setMatches] = useState([]);

@@ -5,76 +5,40 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 const LineUP = () => {
-  const [activeTeam1, setActiveTeam1] = useState(false);
-  const [activeTeam2, setActiveTeam2] = useState(true);
-
-  activeTeamStyle1 =
-    activeTeam1 == true ? "bg-slate-100 border border-emerald-950" : "";
-
-  activeTeamStyle2 =
-    activeTeam2 == true ? "bg-slate-100 border border-emerald-950" : "";
   return (
-    <>
-      <View className="w-full flex items-center justify-center ">
-        <View className="bg-slate-400 flex-row  rounded-lg">
-          <Pressable
-            onPress={() => {
-              setActiveTeam1(true);
-              setActiveTeam2(false);
-            }}
-            className={"px-6 py-2 rounded-lg " + activeTeamStyle1}
-          >
-            <Text>Team 1</Text>
-          </Pressable>
-
-          <Pressable
-            onPress={() => {
-              setActiveTeam2(true);
-              setActiveTeam1(false);
-            }}
-            className={"px-6 py-2 rounded-lg " + activeTeamStyle2}
-          >
-            <Text>Team 2</Text>
-          </Pressable>
-        </View>
+    <View className="w-full flex items-center justify-center mt-4 relative">
+      <View
+        style={{
+          width: wp(130),
+          height: hp(50),
+        }}
+      >
+        <Image
+          source={require("../../assets/images/footballground.png")}
+          style={{ resizeMode: "stretch", width: "100%", height: "100%" }}
+        />
+        {/*Gk */}
+        <Player
+          top={"90%"}
+          left={"50%"}
+          ImageProp={require("../../assets/images/players/ederson.png")}
+          Name={"GoalK"}
+        />
+        {/*defence*/}
+        <Player top={"50%"} left={"50%"} Name={"Def"} />
+        <Player top={"70%"} left={"35%"} Name={"Def"} />
+        <Player top={"70%"} left={"65%"} Name={"Def"} />
+        <Player
+          top={"20%"}
+          left={"50%"}
+          ImageProp={require("../../assets/images/players/haaland.png")}
+          Name={"striker"}
+        />
       </View>
-      <View className="w-full flex items-center justify-center mt-4 relative">
-        <View
-          style={{
-            width: wp(130),
-            height: hp(50),
-          }}
-        >
-          <Image
-            source={require("../../assets/images/footballground.png")}
-            style={{ resizeMode: "stretch", width: "100%", height: "100%" }}
-          />
-          {/*Gk */}
-          <Player
-            top={"90%"}
-            left={"50%"}
-            ImageProp={require("../../assets/images/players/ederson.png")}
-          />
-          {/*defence*/}
-          <Player
-            top={"50%"}
-            left={"50%"}
-            ImageProp={require("../../assets/images/players/ederson.png")}
-          />
-          <Player top={"70%"} left={"35%"} goals={3} assists={1} />
-          <Player top={"70%"} left={"65%"} goals={9} />
-          <Player
-            top={"20%"}
-            left={"50%"}
-            ImageProp={require("../../assets/images/players/haaland.png")}
-            goals={5}
-          />
-        </View>
-      </View>
-    </>
+    </View>
   );
 };
-const Player = ({ top, left, ImageProp, goals, assists }) => {
+const Player = ({ top, left, ImageProp, goals, assists, Name }) => {
   return (
     <View
       className="absolute flex items-center justify-center"
@@ -141,7 +105,7 @@ const Player = ({ top, left, ImageProp, goals, assists }) => {
         />
       </View>
 
-      <Text className="text-white">ederson</Text>
+      <Text className="text-white">{Name}</Text>
     </View>
   );
 };

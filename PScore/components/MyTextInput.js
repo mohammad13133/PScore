@@ -8,7 +8,18 @@ import {
 import React, { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "react-native-heroicons/outline";
 import colors from "../assets/colors/colors";
-const MyTextInput = ({ placeholder, label, Icon, password }) => {
+const MyTextInput = ({
+  placeholder,
+  label,
+  Icon,
+  password,
+  onChangeText,
+  onBlur,
+  value,
+  showDatePicker,
+  isDate,
+  dateText,
+}) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
     <View className="mt-6">
@@ -17,11 +28,28 @@ const MyTextInput = ({ placeholder, label, Icon, password }) => {
         <View className="mx-1">
           <Icon color={colors.mainColor} />
         </View>
-        <TextInput
-          style={styles.input}
-          placeholder={placeholder}
-          secureTextEntry={password}
-        />
+        {!isDate && (
+          <TextInput
+            style={styles.input}
+            placeholder={placeholder}
+            secureTextEntry={password && !showPassword ? true : false}
+            onChangeText={onChangeText}
+            onBlur={onBlur}
+            value={value}
+          />
+        )}
+        {isDate && (
+          <TouchableOpacity onPress={showDatePicker}>
+            <TextInput
+              style={styles.input}
+              placeholder={dateText}
+              onChangeText={onChangeText}
+              onBlur={onBlur}
+              value={dateText}
+              editable={false}
+            />
+          </TouchableOpacity>
+        )}
         {/*for password*/}
         {password === true &&
           (() => {

@@ -104,15 +104,15 @@ const GameCard = () => {
           style={{ width: 100, height: 100 }}
         >
           <Text className="text-l font-bold p-2" style={{ color: "black" }}>
-            ended
+            Waited
           </Text>
           <Text className="text-l font-bold p-2" style={{ color: "black" }}>
-            2 - 6
+            ..
           </Text>
         </View>
         <TouchableOpacity onPress={() => navigation.navigate("Team")}>
           <Image
-            source={require("../../assets/images/manuntd.png")}
+            source={require("../../assets/images/MancityTeam.jpg")}
             className="bg-slate-400 rounded-full"
             style={{ width: 100, height: 100 }}
           />

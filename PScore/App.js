@@ -75,7 +75,6 @@ export default function App() {
         <Stack.Screen name="Stadium" component={Stadium} />
         <Stack.Screen name="Team" component={Team} />
         <Stack.Screen name="Player" component={Player} />
-
         <Stack.Screen name="Search" component={Search} />
       </Stack.Navigator>
     </NavigationContainer>

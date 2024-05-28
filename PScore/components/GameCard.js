@@ -44,7 +44,46 @@ const GameCard = ({ matches }) => {
     </View>
   );
 };
-
+const ff = {
+  data: [
+    {
+      nameStad: "betWazan",
+      id: 1,
+      matces: [
+        {
+          id: 2009,
+          homeTeam: { teamName: "rafediTeam", goals: 2, teamimage: "ssss" },
+          awayTeam: { teamName: "awayTeam", goals: 2, teamimage: "ssss" },
+          status: "TIMED",
+        },
+        {
+          id: 2010,
+          homeTeam: { teamName: "rafediTeam", goals: 2, teamimage: "ssss" },
+          awayTeam: { teamName: "awayTeam", goals: 2, teamimage: "ssss" },
+          status: "TIMED",
+        },
+      ],
+    },
+    {
+      nameStad: "betWazan",
+      id: 1,
+      matces: [
+        {
+          id: 2009,
+          homeTeam: { teamName: "rafediTeam", goals: 2, teamimage: "ssss" },
+          awayTeam: { teamName: "awayTeam", goals: 2, teamimage: "ssss" },
+          status: "TIMED",
+        },
+        {
+          id: 2010,
+          homeTeam: { teamName: "rafediTeam", goals: 2, teamimage: "ssss" },
+          awayTeam: { teamName: "awayTeam", goals: 2, teamimage: "ssss" },
+          status: "TIMED",
+        },
+      ],
+    },
+  ],
+};
 const SingleGame = ({ MatchDetails }) => {
   const navigation = useNavigation();
   const dateString = MatchDetails?.utcDate;

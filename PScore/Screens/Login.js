@@ -5,8 +5,9 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import colors from "../assets/colors/colors";
 import { Formik } from "formik";
 import {
@@ -22,7 +23,43 @@ import {
 } from "react-native-heroicons/outline";
 import { BackwardIcon, ChevronLeftIcon } from "react-native-heroicons/solid";
 import Line from "../components/Line";
+import axios from "axios";
 const Login = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
+  const [loginText, setLoginText] = useState("");
+  const [loginTextColor, setLoginTextColor] = useState();
+
+  const handleLogin = async (values) => {
+    setLoading(true); // Start loading
+    try {
+      const response = await axios.post(
+        "https://pscore-backend.vercel.app/auth/signin",
+        {
+          email: values.email,
+          password: values.password,
+        }
+      );
+      if (response?.data?.message === "success") {
+        setLoginText("login Sccess");
+        setLoginTextColor("green");
+
+        navigation.navigate("Home", response.data);
+      } else {
+        console.log("no login:", response.data);
+
+        setLoginText(response?.data?.message);
+        setLoginTextColor("red");
+      }
+
+      // Handle successful login here (e.g., navigate to another screen)
+    } catch (error) {
+      console.error("Login error:", error);
+      // Handle login error here (e.g., show error message)
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
+
   return (
     <View className="flex-1 justify-center items-center relative">
       <TouchableOpacity
@@ -41,26 +78,55 @@ const Login = ({ navigation }) => {
         </Text>
       </View>
       {/*user Name*/}
-      <MyTextInput
-        Icon={EnvelopeIcon}
-        placeholder={"userName"}
-        label={"UserName"}
-      />
-
-      {/*password*/}
-      <MyTextInput
-        Icon={LockClosedIcon}
-        placeholder={"*******"}
-        label={"password"}
-        password={true}
-      />
-      <TouchableOpacity
-        onPress={() => {}}
-        className="px-14 py-5 rounded-xl mt-8 flex items-center"
-        style={{ backgroundColor: colors.mainColor, width: 300 }}
+      <Formik
+        initialValues={{ email: "", password: "" }}
+        onSubmit={(values) => handleLogin(values)}
       >
-        <Text style={{ color: colors.secondColor }}>Login</Text>
-      </TouchableOpacity>
+        {({ handleChange, handleBlur, handleSubmit, values }) => (
+          <View>
+            <MyTextInput
+              Icon={EnvelopeIcon}
+              placeholder={"userName"}
+              label={"UserName"}
+              onChangeText={handleChange("email")}
+              onBlur={handleBlur("email")}
+              value={values.email}
+            />
+
+            {/*password*/}
+            <MyTextInput
+              Icon={LockClosedIcon}
+              placeholder={"*******"}
+              label={"password"}
+              password={true}
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
+              value={values.password}
+            />
+
+            <Text
+              style={{
+                marginTop: 32,
+                textAlign: "center",
+                color: loginTextColor,
+              }}
+            >
+              {loginText}
+            </Text>
+            <TouchableOpacity
+              onPress={handleSubmit}
+              className="px-14 py-5 rounded-xl flex mt-1 items-center"
+              style={{ backgroundColor: colors.mainColor, width: 300 }}
+            >
+              {loading ? (
+                <ActivityIndicator color={colors.secondColor} />
+              ) : (
+                <Text style={{ color: colors.secondColor }}>Login</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        )}
+      </Formik>
       <Line />
       <TouchableOpacity
         onPress={() => {}}

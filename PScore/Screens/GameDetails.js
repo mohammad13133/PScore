@@ -22,10 +22,17 @@ import colors from "../assets/colors/colors";
 import { useNavigation } from "@react-navigation/native";
 import { BellAlertIcon } from "react-native-heroicons/solid";
 import { BellIcon } from "react-native-heroicons/outline";
+import Pending from "../components/GameDetailsComponents/Pending";
+import ChoosableLineUp from "../components/GameDetailsComponents/ChoosableLineUp";
+import SlidesPicker from "../components/MyComp/SlidesPicker";
 
 const GameDetails = ({ navigation }) => {
   navigation = useNavigation();
   const [activeBell, setActiveBell] = useState(false);
+  const [allPlayers, setAllPlayers] = useState({});
+
+  const [players, setPlayers] = useState({});
+  const [others, setOthers] = useState({});
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -44,25 +51,57 @@ const GameDetails = ({ navigation }) => {
       },
     });
   }, [navigation, activeBell]);
+  const handleSubmit = () => {
+    setAllPlayers({
+      ...players,
+      ...others,
+    });
+  };
+
+  const [page, setPage] = useState("stats");
+  const renderComponent = () => {
+    switch (page) {
+      case "Posts":
+        return <LineUP />;
+      case "games":
+        return <ChoosableLineUp />;
+      case "stats":
+        return <Text>stats</Text>;
+      default:
+        return null;
+    }
+  };
+
   return (
     <View className="flex-1">
       <StatusBar style="dark" />
       {/*Header */}
       {/*<GameCard />*/}
-
       <ScrollView showsVerticalScrollIndicator={false}>
         <GameCard />
-        <Marker>GameDetails</Marker>
 
+        <Marker>GameDetails</Marker>
+        <SlidesPicker>
+          <ChoosableLineUp
+            dispalyName={"yourLineUp"}
+            players={players}
+            setPlayers={setPlayers}
+            others={others}
+            setOthers={setOthers}
+          />
+          <LineUP dispalyName={"enemyLineUp"} />
+        </SlidesPicker>
         {/*map*/}
-        <LineUP />
-        <View className="mt-10">
+
+        {/* <View className="mt-10">
           <MatchDetails />
-        </View>
+        </View> */}
         <Marker>GameInfo</Marker>
         <GameInfo />
-        <Marker>OtherPlayers</Marker>
-        <OtherPlayers />
+
+        <Marker>Pending</Marker>
+        <Pending onPress={() => handleSubmit()} />
+        <Pending onPress={() => console.log(allPlayers)} />
       </ScrollView>
     </View>
   );
