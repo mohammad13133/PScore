@@ -1,16 +1,31 @@
-import { View, Text, Dimensions, Button } from "react-native";
+import {
+  View,
+  Text,
+  Dimensions,
+  Button,
+  Image,
+  StyleSheet,
+} from "react-native";
 import React, { useState } from "react";
 import { Calendar } from "react-native-calendars";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import dayjs from "dayjs";
+import {
+  CameraIcon,
+  EnvelopeIcon,
+  PhoneIcon,
+  UserIcon,
+} from "react-native-heroicons/outline";
+import MyTextInput from "../../components/MyTextInput";
 
-const colors = [
-  "#26292E",
-  "#899F9C",
-  "#B3C680",
-  "#5C6265",
-  "#F5D399",
-  "#F1F1F1",
+import SelectDropdown from "react-native-select-dropdown";
+import colors from "../../assets/colors/colors";
+import { TouchableOpacity } from "react-native-gesture-handler";
+const positions = [
+  { title: "striker", icon: "emoticon-happy-outline" },
+  { title: "goalkeeper", icon: "emoticon-cool-outline" },
+  { title: "mid", icon: "emoticon-lol-outline" },
+  { title: "defend", icon: "emoticon-lol-outline" },
 ];
 
 const width = Dimensions.get("window").width;
@@ -91,19 +106,123 @@ export default Settings = () => {
   };
   const formattedDate = dayjs(date).format("DD-MM-YYYY");
   return (
-    <View>
-      <Button onPress={showDatepicker} title="Show date picker!" />
-      <Button onPress={showTimepicker} title="Show time picker!" />
-      <Text>selected: {date.toLocaleString()}</Text>
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          onChange={onChange}
+    <View className="flex-1">
+      <View className="flex items-center justify-center mt-6">
+        <View
+          className="relative rounded-full border "
+          style={{ backgroundColor: colors.mainColor }}
+        >
+          <Image
+            className="rounded-full "
+            style={{
+              width: 120,
+              height: 120,
+              resizeMode: "cover",
+            }}
+            source={require("../../assets/images/players/Mohammad.jpg")}
+          />
+          <View className="absolute top-0 right-0 bg-white rounded-full p-1">
+            <CameraIcon size={30} color={"black"} />
+          </View>
+        </View>
+        <MyTextInput
+          Icon={UserIcon}
+          placeholder={"userName"}
+          label={"UserName"}
+          value={"mohammad khaled"}
+          editable={false}
         />
-      )}
+        <MyTextInput
+          Icon={EnvelopeIcon}
+          placeholder={"email"}
+          label={"email"}
+          value={"mohammad@gmail.com"}
+          editable={false}
+        />
+        <MyTextInput Icon={PhoneIcon} placeholder={"number"} label={"number"} />
+        <View className="mt-6 w-[300px]">
+          <Text>position</Text>
+          <SelectDropdown
+            data={positions}
+            onSelect={(selectedItem, index) => {
+              console.log(selectedItem, index);
+            }}
+            renderButton={(selectedItem, isOpened) => {
+              return (
+                <View style={styles.dropdownButtonStyle}>
+                  <Text className="font-medium text-lg">
+                    {(selectedItem && selectedItem.title) || "Select your mood"}
+                  </Text>
+                </View>
+              );
+            }}
+            renderItem={(item, index, isSelected) => {
+              return (
+                <View
+                  style={{
+                    ...styles.dropdownItemStyle,
+                    ...(isSelected && { backgroundColor: "#D2D9DF" }),
+                  }}
+                >
+                  <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
+                </View>
+              );
+            }}
+            showsVerticalScrollIndicator={false}
+            dropdownStyle={styles.dropdownMenuStyle}
+          />
+        </View>
+        <TouchableOpacity className="bg-green-400 px-8 py-2 rounded-md mt-6">
+          <Text>save</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
+const styles = StyleSheet.create({
+  dropdownButtonStyle: {
+    width: 300,
+    height: 50,
+    borderWidth: 1,
+    borderColor: colors.mainColor,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 12,
+  },
+  dropdownButtonTxtStyle: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#151E26",
+  },
+  dropdownButtonArrowStyle: {
+    fontSize: 28,
+  },
+  dropdownButtonIconStyle: {
+    fontSize: 28,
+    marginRight: 8,
+  },
+  dropdownMenuStyle: {
+    backgroundColor: "#E9ECEF",
+    borderRadius: 8,
+  },
+  dropdownItemStyle: {
+    width: "100%",
+    flexDirection: "row",
+    paddingHorizontal: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 8,
+  },
+  dropdownItemTxtStyle: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#151E26",
+  },
+  dropdownItemIconStyle: {
+    fontSize: 28,
+    marginRight: 8,
+  },
+});

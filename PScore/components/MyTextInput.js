@@ -19,6 +19,7 @@ const MyTextInput = ({
   showDatePicker,
   isDate,
   dateText,
+  ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
@@ -36,6 +37,7 @@ const MyTextInput = ({
             onChangeText={onChangeText}
             onBlur={onBlur}
             value={value}
+            {...props}
           />
         )}
         {isDate && (
