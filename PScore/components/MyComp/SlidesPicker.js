@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import colors from "../../assets/colors/colors";
 
 const SlidesPicker = ({ Slides, children }) => {
-  const firstChildDisplayName = React.Children.toArray(children)[0].type.name;
+  const firstChildDisplayName =
+    React.Children.toArray(children)[0].props.dispalyName;
   const [page, setPage] = useState(firstChildDisplayName);
 
   const renderComponent = () => {
     {
       return React.Children.map(children, (child) =>
-        page == child.type.name ? child : null
+        page == child.props.dispalyName ? child : null
       );
     }
   };
@@ -24,7 +25,7 @@ const SlidesPicker = ({ Slides, children }) => {
           {React.Children.map(children, (child, index) => (
             <Slide
               key={index}
-              name={child.type.name}
+              name={child.props.dispalyName}
               dispalyName={child.props.dispalyName}
               page={page}
               setPage={setPage}

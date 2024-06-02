@@ -51,6 +51,8 @@ import Team from "./Screens/Team.js";
 import Search from "./Screens/Search.js";
 import MapScreen from "./Screens/drawerSrceens/MapScreen.js";
 import Player from "./Screens/Player.js";
+import { AuthProvider } from "./contexts/AuthContext.js";
+import PlayerDetails from "./Screens/PlayerDetails.js";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -58,26 +60,29 @@ const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="MainPage"
-        screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen
-          name="Welcome"
-          component={Welcome}
-          options={{ title: "Welcome" }}
-        />
-        <Stack.Screen name="MainPage" component={MyTabsDrower} />
-        <Stack.Screen name="GameDetails" component={GameDetails} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="Stadium" component={Stadium} />
-        <Stack.Screen name="Team" component={Team} />
-        <Stack.Screen name="Player" component={Player} />
-        <Stack.Screen name="Search" component={Search} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="MainPage"
+          screenOptions={{ headerShown: false }}
+        >
+          <Stack.Screen
+            name="Welcome"
+            component={Welcome}
+            options={{ title: "Welcome" }}
+          />
+          <Stack.Screen name="MainPage" component={MyTabsDrower} />
+          <Stack.Screen name="GameDetails" component={GameDetails} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen name="Stadium" component={Stadium} />
+          <Stack.Screen name="Team" component={Team} />
+          <Stack.Screen name="Player" component={Player} />
+          <Stack.Screen name="Search" component={Search} />
+          <Stack.Screen name="PlayerDetails" component={PlayerDetails} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
 

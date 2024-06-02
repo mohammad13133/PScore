@@ -1,11 +1,14 @@
 import { View, Text, Image, Pressable } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import colors from "../assets/colors/colors";
 import { CameraIcon, HeartIcon } from "react-native-heroicons/outline";
 import { ScrollView } from "react-native-gesture-handler";
+import AuthContext from "../contexts/AuthContext";
 
 const Profile = () => {
+  const { token, decodeToken } = useContext(AuthContext);
   const [page, setPage] = useState("stats");
+  const [decoded, setDecoded] = useState();
   const renderComponent = () => {
     switch (page) {
       case "Posts":
@@ -18,6 +21,15 @@ const Profile = () => {
         return null;
     }
   };
+  useEffect(() => {
+    if (token) {
+      console.log(token);
+      const decoded = decodeToken(token);
+      setDecoded(decoded);
+      // Store the decoded token in state
+    }
+  }, [token, page]);
+
   return (
     <ScrollView>
       <View className="h-[300px] flex items-center justify-center relative space-y-1">
@@ -40,6 +52,7 @@ const Profile = () => {
         </View>
         <Text>Mohammad Khaled</Text>
         <Text>Nablus</Text>
+        <Text>Token :{decoded?.id}</Text>
 
         <View
           className="flex-row justify-between rounded-md p-1"

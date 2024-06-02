@@ -1,6 +1,14 @@
-import { View, Text, Image, FlatList, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 import players from "../../assets/Data/Players";
+import { useNavigation } from "@react-navigation/native";
 const { width } = Dimensions.get("window");
 const TopPlayers = () => {
   return (
@@ -27,8 +35,10 @@ const TopPlayers = () => {
 };
 
 const ItemPlayer = ({ item, index }) => {
+  const navigation = useNavigation();
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => navigation.navigate("PlayerDetails")}
       className="w-[150px] h-[200px] mt-4 bg-white mx-[10px] flex items-center justify-center rounded-md"
       style={{
         shadowColor: "#000",
@@ -56,7 +66,7 @@ const ItemPlayer = ({ item, index }) => {
           9Goals 180Min 3Games
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 export default TopPlayers;

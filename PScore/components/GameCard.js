@@ -49,7 +49,7 @@ const ff = {
     {
       nameStad: "betWazan",
       id: 1,
-      matces: [
+      matches: [
         {
           id: 2009,
           homeTeam: { teamName: "rafediTeam", goals: 2, teamimage: "ssss" },

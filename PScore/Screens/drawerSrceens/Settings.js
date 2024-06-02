@@ -5,10 +5,12 @@ import {
   Button,
   Image,
   StyleSheet,
+  Platform,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
-import { Calendar } from "react-native-calendars";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import * as ImagePicker from "expo-image-picker";
+
 import dayjs from "dayjs";
 import {
   CameraIcon,
@@ -27,104 +29,74 @@ const positions = [
   { title: "mid", icon: "emoticon-lol-outline" },
   { title: "defend", icon: "emoticon-lol-outline" },
 ];
-
+const countries = [
+  { countryName: "Palestine", icon: "https://flagsapi.com/PS/flat/64.png" },
+  { countryName: "Jordan", icon: "https://flagsapi.com/JO/flat/64.png" },
+];
 const width = Dimensions.get("window").width;
-// const Settings = () => {
-//   const [pagingEnabled, setPagingEnabled] = useState(true);
-//   const [snapEnabled, setSnapEnabled] = useState(true);
-//   const [autoPlay, setAutoPlay] = useState(false);
-//   const [selectedDate, setSelectedDate] = useState("");
-//   const handleDayPress = (date) => {
-//     setSelectedDate(date.dateString);
-//     console.log(date);
-//   };
-//   const vacation = { key: "vacation", color: "red", selectedDotColor: "blue" };
-//   const massage = { key: "massage", color: "blue", selectedDotColor: "blue" };
-//   const workout = { key: "workout", color: "green" };
 
-//   return (
-//     <View className="flex-1">
-//       <Calendar
-//         // Pass the handleDayPress function to onDayPress prop
-//         onDayPress={handleDayPress}
-//         // Pass markedDates prop to mark the selected date
-//         markingType={"period"}
-//         markedDates={{
-//           [selectedDate]: {
-//             selected: true,
-//             marked: true,
-
-//             textColor: "black",
-//           },
-//           "2024-04-09": {
-//             startingDay: true,
-//             color: "#E72929",
-//             textColor: "white",
-//           },
-//           "2024-04-10": {
-//             color: "#FF8080",
-//             textColor: "white",
-//           },
-//           "2024-04-11": {
-//             color: "#FF8080",
-//             textColor: "white",
-//           },
-//           "2024-04-12": {
-//             endingDay: true,
-//             color: "#E72929",
-//             textColor: "white",
-//           },
-//         }}
-//       />
-//     </View>
-//   );
-// };
-
-// export default Settings;
 export default Settings = () => {
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState("date");
-  const [show, setShow] = useState(false);
+  const [image, setImage] = useState(null);
+  const pickImage = async () => {
+    // Ask for permission to access media library
+    if (Platform.OS !== "web") {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+        return;
+      }
+    }
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setShow(false);
-    setDate(currentDate);
+    // Open image picker
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [3, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
   };
 
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
-
-  const showDatepicker = () => {
-    showMode("date");
-  };
-
-  const showTimepicker = () => {
-    showMode("time");
-  };
-  const formattedDate = dayjs(date).format("DD-MM-YYYY");
   return (
-    <View className="flex-1">
+    <ScrollView showsVerticalScrollIndicator={false}>
       <View className="flex items-center justify-center mt-6">
-        <View
+        <TouchableOpacity
+          onPress={pickImage}
           className="relative rounded-full border "
           style={{ backgroundColor: colors.mainColor }}
         >
-          <Image
-            className="rounded-full "
-            style={{
-              width: 120,
-              height: 120,
-              resizeMode: "cover",
-            }}
-            source={require("../../assets/images/players/Mohammad.jpg")}
-          />
+          {image ? (
+            <Image
+              source={{ uri: image }}
+              className="rounded-full "
+              style={{
+                width: 120,
+                height: 120,
+                resizeMode: "cover",
+              }}
+            />
+          ) : (
+            <Image
+              className="rounded-full "
+              style={{
+                width: 120,
+                height: 120,
+                resizeMode: "cover",
+              }}
+              source={require("../../assets/images/players/Mohammad.jpg")}
+            />
+          )}
+
           <View className="absolute top-0 right-0 bg-white rounded-full p-1">
             <CameraIcon size={30} color={"black"} />
           </View>
-        </View>
+        </TouchableOpacity>
         <MyTextInput
           Icon={UserIcon}
           placeholder={"userName"}
@@ -172,11 +144,62 @@ export default Settings = () => {
             dropdownStyle={styles.dropdownMenuStyle}
           />
         </View>
+        <View className="mt-6 w-[300px]">
+          <Text>select country</Text>
+          <SelectDropdown
+            data={countries}
+            onSelect={(selectedItem, index) => {
+              console.log(selectedItem, index);
+            }}
+            renderButton={(selectedItem, isOpened) => {
+              return (
+                <View style={styles.dropdownButtonStyle}>
+                  <Text className="font-medium text-lg">
+                    {(selectedItem && selectedItem.countryName) ||
+                      "Select your mood"}
+                  </Text>
+                  <Image
+                    style={{
+                      width: 25,
+                      height: 25,
+                      resizeMode: "cover",
+                    }}
+                    source={{ uri: selectedItem?.icon }}
+                  />
+                </View>
+              );
+            }}
+            renderItem={(item, index, isSelected) => {
+              return (
+                <View
+                  style={{
+                    ...styles.dropdownItemStyle,
+                    ...(isSelected && { backgroundColor: "#D2D9DF" }),
+                  }}
+                >
+                  <Text style={styles.dropdownItemTxtStyle}>
+                    {item.countryName}
+                  </Text>
+                  <Image
+                    style={{
+                      width: 25,
+                      height: 25,
+                      resizeMode: "cover",
+                    }}
+                    source={{ uri: item.icon }}
+                  />
+                </View>
+              );
+            }}
+            showsVerticalScrollIndicator={false}
+            dropdownStyle={styles.dropdownMenuStyle}
+          />
+        </View>
         <TouchableOpacity className="bg-green-400 px-8 py-2 rounded-md mt-6">
           <Text>save</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
@@ -186,7 +209,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.mainColor,
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 12,
   },

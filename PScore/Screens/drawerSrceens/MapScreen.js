@@ -1,10 +1,26 @@
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet, Button, Image, Alert } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 
 const MapScreen = () => {
   const [region, setRegion] = useState(null);
+  const locations = [
+    {
+      id: 1,
+      title: "Location 1",
+      latitude: 32.23257817189633,
+      longitude: 35.21605422702873,
+      image: "https://via.placeholder.com/150",
+    },
+    {
+      id: 2,
+      title: "Location 2",
+      latitude: 32.22210841485003,
+      longitude: 35.25456093346338,
+      image: "https://via.placeholder.com/150",
+    },
+  ];
 
   const mapViewRef = useRef(null);
   useEffect(() => {
@@ -52,6 +68,29 @@ const MapScreen = () => {
           provider={PROVIDER_GOOGLE}
           initialRegion={region}
         >
+          {locations.map((location) => (
+            <Marker
+              key={location.id}
+              coordinate={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+              }}
+              title={location.title}
+            >
+              <Callout>
+                <Image
+                  source={require("../../assets/images/stadiums/etihad.jpg")}
+                  style={{ resizeMode: "cover", width: "100%", height: 100 }}
+                  alt="ssss"
+                />
+                <Text>ddd</Text>
+                <Button
+                  title="Details"
+                  onPress={() => Alert(`Details of ${location.title}`)}
+                />
+              </Callout>
+            </Marker>
+          ))}
           <Marker
             coordinate={{
               latitude: region.latitude,
@@ -66,5 +105,17 @@ const MapScreen = () => {
     </View>
   );
 };
+const styles = StyleSheet.create({
+  callout: {
+    display: "flex",
+    alignItems: "center",
+  },
+  image: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
+    resizeMode: "cover",
+  },
+});
 
 export default MapScreen;

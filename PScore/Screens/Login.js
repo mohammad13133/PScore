@@ -7,28 +7,20 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import colors from "../assets/colors/colors";
 import { Formik } from "formik";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
 import MyTextInput from "../components/MyTextInput";
-import { LinearGradient } from "expo-linear-gradient";
-import {
-  EnvelopeIcon,
-  LockClosedIcon,
-  UserIcon,
-} from "react-native-heroicons/outline";
-import { BackwardIcon, ChevronLeftIcon } from "react-native-heroicons/solid";
+import { EnvelopeIcon, LockClosedIcon } from "react-native-heroicons/outline";
+import { ChevronLeftIcon } from "react-native-heroicons/solid";
 import Line from "../components/Line";
 import axios from "axios";
+import AuthContext from "../contexts/AuthContext";
 const Login = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [loginText, setLoginText] = useState("");
   const [loginTextColor, setLoginTextColor] = useState();
-
+  const { setToken } = useContext(AuthContext);
   const handleLogin = async (values) => {
     setLoading(true); // Start loading
     try {
@@ -42,8 +34,8 @@ const Login = ({ navigation }) => {
       if (response?.data?.message === "success") {
         setLoginText("login Sccess");
         setLoginTextColor("green");
-
-        navigation.navigate("Home", response.data);
+        setToken(response?.data?.token);
+        navigation.navigate("Home");
       } else {
         console.log("no login:", response.data);
 
