@@ -8,13 +8,15 @@ import {
   Image,
   Alert,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import OtherPlayers from "./OtherPlayers";
+import SelectDropdown from "react-native-select-dropdown";
+import colors from "../../assets/colors/colors";
 const PLAYEERS = [
   {
     id: 1,
@@ -48,6 +50,13 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isOther, setIsOther] = useState(false);
   const [playerCount, setPlayerCount] = useState(5);
+  const [DATA, setDATA] = useState();
+
+  useEffect(() => {
+    //here get the players avilable
+    setDATA(PLAYEERS);
+  }, []);
+
   const handlePlayerPress = (position) => {
     setSelectedPlayer(position);
     setIsOther(false);
@@ -58,23 +67,28 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
     setModalVisible(true);
   };
   const handleAddOther = (newOther) => {
-    if (Object.values(others).some((player) => player.id === newOther.id)) {
+    if (
+      Object.values(others).some((player) => player.id === newOther.id) ||
+      Object.values(players).some((player) => player.id === newOther.id)
+    ) {
       console.log("Duplicate ID", "This player ID already exists.");
 
       setModalVisible(false);
       return;
     }
-
-    const newPlayerKey = `player${playerCount + 1}`;
-    setOthers((prevOthers) => ({
-      ...prevOthers,
-      [newPlayerKey]: newOther, // Adding the new player
-    }));
-    setPlayerCount((prevCount) => prevCount + 1);
-
+    setOthers([...others, newOther]);
     setModalVisible(false);
   };
   const handleChoiceSelection = (choice) => {
+    if (
+      Object.values(others).some((player) => player.id === choice.id) ||
+      Object.values(players).some((player) => player.id === choice.id)
+    ) {
+      console.log("Duplicate ID", "This player ID already exists.");
+
+      setModalVisible(false);
+      return;
+    }
     setPlayers((prevPlayers) => ({
       ...prevPlayers,
       [selectedPlayer]: choice,
@@ -144,7 +158,7 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <FlatList
-                data={PLAYEERS}
+                data={DATA}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                   <TouchableOpacity

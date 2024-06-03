@@ -6,9 +6,10 @@ import { ScrollView } from "react-native-gesture-handler";
 import AuthContext from "../contexts/AuthContext";
 
 const Profile = () => {
-  const { token, decodeToken } = useContext(AuthContext);
+  const { token, decodeToken, getUser } = useContext(AuthContext);
   const [page, setPage] = useState("stats");
   const [decoded, setDecoded] = useState();
+  const [user, setUser] = useState();
   const renderComponent = () => {
     switch (page) {
       case "Posts":
@@ -24,11 +25,13 @@ const Profile = () => {
   useEffect(() => {
     if (token) {
       console.log(token);
-      const decoded = decodeToken(token);
-      setDecoded(decoded);
+      // const decoded = decodeToken(token);
+      const user = getUser(token);
+      console.log(user);
+      setUser(user);
       // Store the decoded token in state
     }
-  }, [token, page]);
+  }, [token]);
 
   return (
     <ScrollView>
@@ -50,7 +53,7 @@ const Profile = () => {
             <CameraIcon size={30} color={"black"} />
           </View>
         </View>
-        <Text>Mohammad Khaled</Text>
+        <Text>{user ? user.username : "no login"}</Text>
         <Text>Nablus</Text>
         <Text>Token :{decoded?.id}</Text>
 

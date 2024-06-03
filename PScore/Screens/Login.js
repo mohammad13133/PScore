@@ -35,7 +35,7 @@ const Login = ({ navigation }) => {
         setLoginText("login Sccess");
         setLoginTextColor("green");
         setToken(response?.data?.token);
-        navigation.navigate("Home");
+        navigation.navigate("MainPage");
       } else {
         console.log("no login:", response.data);
 

@@ -1,8 +1,8 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import React, { useLayoutEffect } from "react";
 import colors from "../assets/colors/colors";
 import SlidesPicker from "../components/MyComp/SlidesPicker";
-import { HeartIcon } from "react-native-heroicons/outline";
+import { HeartIcon, PlusIcon } from "react-native-heroicons/outline";
 
 const PlayerDetails = ({ navigation }) => {
   useLayoutEffect(() => {
@@ -11,6 +11,13 @@ const PlayerDetails = ({ navigation }) => {
       headerStyle: {
         backgroundColor: colors.secondColor, // Customize background color
       },
+      headerRight: () => (
+        <View style={{ flexDirection: "row", marginRight: 10 }}>
+          <TouchableOpacity>
+            <PlusIcon size={24} color={"black"} />
+          </TouchableOpacity>
+        </View>
+      ),
     });
   }, [navigation]);
   return (

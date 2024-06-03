@@ -7,10 +7,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Pressable,
 } from "react-native";
 import colors from "../assets/colors/colors";
 import { Platform } from "react-native";
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import Constants from "expo-constants";
 import {
   ChevronLeftIcon,
@@ -24,6 +28,7 @@ import {
 import stadiumDetails from "../assets/Data/StadiumsDetails";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { Calendar, CalendarList } from "react-native-calendars";
+import { useNavigation } from "@react-navigation/native";
 
 const Stadium = ({ route, navigation }) => {
   const { name, city } = route.params;
@@ -179,11 +184,124 @@ const Stadium = ({ route, navigation }) => {
         <View>
           <Text className="pl-4 mt-2 font-bold">booking Details</Text>
         </View>
-        <View
-          style={{ backgroundColor: colors.lightGreen, height: 800 }}
-        ></View>
+        <View className="items-center" style={{ height: 800 }}>
+          <View
+            className="flex  p-4 rounded-md mt-1 mb-4"
+            style={{
+              width: wp(90),
+            }}
+          >
+            <SingleGameBook time={"12:30-14"} />
+            <SingleGameBook time={"16-18"} />
+            <SingleGameBook time={"18-20"} />
+          </View>
+        </View>
       </ScrollView>
     </View>
+  );
+};
+const SingleGameBook = ({ time }) => {
+  const navigation = useNavigation();
+  return (
+    <Pressable
+      className="flex-row justify-center items-center mb-5 rounded-xl"
+      style={{
+        height: 100,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 3,
+        },
+        shadowOpacity: 0.27,
+        shadowRadius: 4.65,
+
+        elevation: 6, //android
+        backgroundColor: colors.myWhite,
+      }}
+      onPress={() =>
+        navigation.navigate("GameDetails", {
+          type: "empty",
+        })
+      }
+    >
+      <View
+        className="flex items-end justify-center m-1 "
+        style={{ width: 100 }}
+      >
+        <Text style={{ color: colors.mainColor }}>..</Text>
+      </View>
+      <View
+        className="rounded-full bg-slate-600"
+        style={{ width: 35, height: 35 }}
+      />
+      {/* {isSvgHome ? (
+        <View className="rounded-full" style={{ width: 35, height: 35 }}>
+          <SvgUri
+            width="100%"
+            height="100%"
+            uri={MatchDetails?.homeTeam?.crest}
+          />
+        </View>
+      ) : (
+        <Image
+          source={{ uri: MatchDetails?.homeTeam?.crest }}
+          className="rounded-full"
+          style={{ width: 35, height: 35 }}
+        />
+      )} */}
+
+      <View
+        className="flex items-center  justify-center "
+        style={{ width: 100, height: 90 }}
+      >
+        {/* {MatchDetails?.status === "TIMED" ? (
+          <Text className="font-semibold" style={{ color: colors.secondColor }}>
+            Not started
+          </Text>
+        ) : MatchDetails?.status === "FINISHED" ? (
+          <Text className="font-semibold" style={{ color: colors.secondColor }}>
+            {MatchDetails?.score?.fullTime?.home}:
+            {MatchDetails?.score?.fullTime?.away}
+          </Text>
+        ) : null}
+        {MatchDetails?.status === "FINISHED" ? (
+          <Text style={{ color: colors.secondColor, opacity: 0.7 }}>ended</Text>
+        ) : (
+          <Text style={{ color: colors.secondColor, opacity: 0.7 }}>
+            {time}
+          </Text>
+        )} */}
+        <Text>{time}</Text>
+      </View>
+      <View
+        className="rounded-full bg-slate-600"
+        style={{ width: 35, height: 35 }}
+      />
+      {/* {isSvgAway ? (
+        <View className="rounded-full" style={{ width: 35, height: 35 }}>
+          <SvgUri
+            width="100%"
+            height="100%"
+            uri={MatchDetails?.awayTeam?.crest}
+          />
+        </View>
+      ) : (
+        <Image
+          source={{ uri: MatchDetails?.awayTeam?.crest }}
+          className="rounded-full"
+          style={{ width: 35, height: 35 }}
+        />
+      )} */}
+
+      <View
+        className="flex items-start justify-center m-1"
+        style={{ width: 100 }}
+      >
+        <Text className="text-left" style={{ color: colors.mainColor }}>
+          ..
+        </Text>
+      </View>
+    </Pressable>
   );
 };
 const MyCalender = () => {

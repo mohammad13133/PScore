@@ -68,7 +68,7 @@ import { useNavigation } from "@react-navigation/native";
   );
 };*/
 }
-const GameCard = () => {
+const GameCard = ({ header, discreption, score, team1, team2 }) => {
   const navigation = useNavigation();
   return (
     <View
@@ -88,14 +88,18 @@ const GameCard = () => {
           backgroundColor: colors.mainColor,
         }}
       >
-        <Text style={{ color: colors.lightGreen }}>Uefa champions</Text>
+        <Text style={{ color: colors.lightGreen }}>{header}</Text>
       </View>
       <View className="flex-row items-center justify-center space-x-3">
         <TouchableOpacity onPress={() => navigation.navigate("Team")}>
           <Image
-            source={require("../../assets/images/arsenal.png")}
-            className="bg-slate-400 rounded-full "
-            style={{ width: 100, height: 100 }}
+            source={team1 ? team1 : ""}
+            className=" rounded-full "
+            style={{
+              width: 100,
+              height: 100,
+              backgroundColor: colors.mainColor,
+            }}
           />
         </TouchableOpacity>
 
@@ -104,17 +108,21 @@ const GameCard = () => {
           style={{ width: 100, height: 100 }}
         >
           <Text className="text-l font-bold p-2" style={{ color: "black" }}>
-            Waited
+            {discreption}
           </Text>
           <Text className="text-l font-bold p-2" style={{ color: "black" }}>
-            ..
+            {score}
           </Text>
         </View>
         <TouchableOpacity onPress={() => navigation.navigate("Team")}>
           <Image
-            source={require("../../assets/images/MancityTeam.jpg")}
+            source={team2 ? team2 : ""}
             className="bg-slate-400 rounded-full"
-            style={{ width: 100, height: 100 }}
+            style={{
+              width: 100,
+              height: 100,
+              backgroundColor: colors.mainColor,
+            }}
           />
         </TouchableOpacity>
 

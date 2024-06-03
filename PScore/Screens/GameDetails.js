@@ -26,13 +26,16 @@ import Pending from "../components/GameDetailsComponents/Pending";
 import ChoosableLineUp from "../components/GameDetailsComponents/ChoosableLineUp";
 import SlidesPicker from "../components/MyComp/SlidesPicker";
 
-const GameDetails = ({ navigation }) => {
+const GameDetails = ({ navigation, route }) => {
   navigation = useNavigation();
+  const { type } = route?.params || {};
+
+  console.log(type);
   const [activeBell, setActiveBell] = useState(false);
   const [allPlayers, setAllPlayers] = useState({});
 
   const [players, setPlayers] = useState({});
-  const [others, setOthers] = useState({});
+  const [others, setOthers] = useState([]);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -54,23 +57,19 @@ const GameDetails = ({ navigation }) => {
   const handleSubmit = () => {
     setAllPlayers({
       ...players,
-      ...others,
+      ["others"]: others,
     });
   };
 
   const [page, setPage] = useState("stats");
-  const renderComponent = () => {
-    switch (page) {
-      case "Posts":
-        return <LineUP />;
-      case "games":
-        return <ChoosableLineUp />;
-      case "stats":
-        return <Text>stats</Text>;
-      default:
-        return null;
-    }
-  };
+  const typeText =
+    type === "empty"
+      ? "12:30 - 14"
+      : type === "pending"
+      ? "pending"
+      : type === "waited"
+      ? "16:00 - 18"
+      : "";
 
   return (
     <View className="flex-1">
@@ -78,19 +77,54 @@ const GameDetails = ({ navigation }) => {
       {/*Header */}
       {/*<GameCard />*/}
       <ScrollView showsVerticalScrollIndicator={false}>
-        <GameCard />
-
+        <GameCard
+          header={"friendly match"}
+          discreption={typeText}
+          score={".."}
+          team1={
+            type == "pending" || type == "waited"
+              ? require("../assets/images/arsenal.png")
+              : ""
+          }
+          team2={
+            type == "waited" ? require("../assets/images/manuntd.png") : ""
+          }
+        />
         <Marker>GameDetails</Marker>
-        <SlidesPicker>
-          <ChoosableLineUp
-            dispalyName={"yourLineUp"}
-            players={players}
-            setPlayers={setPlayers}
-            others={others}
-            setOthers={setOthers}
-          />
-          <LineUP dispalyName={"enemyLineUp"} />
-        </SlidesPicker>
+        {type == "empty" ? (
+          <SlidesPicker>
+            <ChoosableLineUp
+              dispalyName={"team1"}
+              players={players}
+              setPlayers={setPlayers}
+              others={others}
+              setOthers={setOthers}
+            />
+            {/* <LineUP dispalyName={"team1"} /> */}
+          </SlidesPicker>
+        ) : type == "pending" ? (
+          <SlidesPicker>
+            <ChoosableLineUp
+              dispalyName={"team1"}
+              players={players}
+              setPlayers={setPlayers}
+              others={others}
+              setOthers={setOthers}
+            />
+            <LineUP dispalyName={"team2"} />
+          </SlidesPicker>
+        ) : type == "waited" ? (
+          <SlidesPicker>
+            <LineUP dispalyName={"team1"} />
+            <LineUP dispalyName={"team2"} />
+          </SlidesPicker>
+        ) : (
+          <SlidesPicker>
+            <LineUP dispalyName={"team"} />
+            <LineUP dispalyName={"team2"} />{" "}
+          </SlidesPicker>
+        )}
+
         {/*map*/}
 
         {/* <View className="mt-10">

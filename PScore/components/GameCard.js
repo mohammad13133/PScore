@@ -107,7 +107,11 @@ const SingleGame = ({ MatchDetails }) => {
         elevation: 6, //android
         backgroundColor: colors.myWhite,
       }}
-      onPress={() => navigation.navigate("GameDetails")}
+      onPress={() =>
+        navigation.navigate("GameDetails", {
+          type: "waited",
+        })
+      }
     >
       <View
         className="flex items-end justify-center m-1"

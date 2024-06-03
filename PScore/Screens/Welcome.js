@@ -47,9 +47,9 @@ const Welcome = ({ navigation }) => {
       <View className="absolute flex items-center justify-end h-full w-full ">
         <Animated.View entering={FadeInLeft.duration(2000)}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("MainPage")}
-            className="px-20 py-5 rounded-xl mb-40"
-            style={{ backgroundColor: colors.mainColor }}
+            onPress={() => navigation.navigate("Login")}
+            className="px-12 py-5 rounded-xl mb-40"
+            style={{ backgroundColor: "#333333" }}
           >
             <Text className="text-xl" style={{ color: colors.secondColor }}>
               Start Your Journey

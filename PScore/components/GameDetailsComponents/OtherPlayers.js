@@ -42,10 +42,9 @@ const OtherPlayers = ({ choosable, onPress, others }) => {
   return (
     <>
       <DetailsTable header={"OtherPlayers"}>
-        {Object.keys(others).map((key) => (
-          <Info key={key} first={others[key].playername} position={"st"} />
+        {others.map((key) => (
+          <Info key={key} first={key.playername} position={"st"} />
         ))}
-
         {choosable && <Plus onPress={onPress} />}
       </DetailsTable>
     </>

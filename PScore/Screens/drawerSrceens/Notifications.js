@@ -94,7 +94,11 @@ const Notifications = ({ navigation }) => {
           <View className="flex items-start  justify-center">
             <Text>MancityTeam Request A play</Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate("GameDetails")}
+              onPress={() =>
+                navigation.navigate("GameDetails", {
+                  type: "pending",
+                })
+              }
               className="bg-green-400 py-2 px-4 rounded-md"
             >
               <Text>View</Text>
