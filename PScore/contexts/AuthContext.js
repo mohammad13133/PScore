@@ -32,6 +32,7 @@ export const AuthProvider = ({ children }) => {
       return null;
     }
   };
+
   return (
     <AuthContext.Provider value={{ token, setToken, decodeToken, getUser }}>
       {children}

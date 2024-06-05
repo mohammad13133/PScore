@@ -96,7 +96,7 @@ const Notifications = ({ navigation }) => {
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("GameDetails", {
-                  type: "pending",
+                  type: "PENDING",
                 })
               }
               className="bg-green-400 py-2 px-4 rounded-md"

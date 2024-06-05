@@ -57,7 +57,7 @@ const Login = ({ navigation }) => {
       <TouchableOpacity
         className="absolute top-0 left-0 mt-8 ml-5 p-1 rounded-full"
         style={{ backgroundColor: colors.lightGreen }}
-        onPress={() => navigation.navigate("MainPage")}
+        onPress={() => navigation.navigate("Welcome")}
       >
         <ChevronLeftIcon color={colors.mainColor} size={40} />
       </TouchableOpacity>

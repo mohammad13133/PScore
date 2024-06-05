@@ -220,12 +220,12 @@ const SingleGameBook = ({ time }) => {
       }}
       onPress={() =>
         navigation.navigate("GameDetails", {
-          type: "empty",
+          type: "EMPTY",
         })
       }
     >
       <View
-        className="flex items-end justify-center m-1 "
+        className="flex items-end justify-center m-1 pr-2"
         style={{ width: 100 }}
       >
         <Text style={{ color: colors.mainColor }}>..</Text>
@@ -234,43 +234,11 @@ const SingleGameBook = ({ time }) => {
         className="rounded-full bg-slate-600"
         style={{ width: 35, height: 35 }}
       />
-      {/* {isSvgHome ? (
-        <View className="rounded-full" style={{ width: 35, height: 35 }}>
-          <SvgUri
-            width="100%"
-            height="100%"
-            uri={MatchDetails?.homeTeam?.crest}
-          />
-        </View>
-      ) : (
-        <Image
-          source={{ uri: MatchDetails?.homeTeam?.crest }}
-          className="rounded-full"
-          style={{ width: 35, height: 35 }}
-        />
-      )} */}
 
       <View
         className="flex items-center  justify-center "
         style={{ width: 100, height: 90 }}
       >
-        {/* {MatchDetails?.status === "TIMED" ? (
-          <Text className="font-semibold" style={{ color: colors.secondColor }}>
-            Not started
-          </Text>
-        ) : MatchDetails?.status === "FINISHED" ? (
-          <Text className="font-semibold" style={{ color: colors.secondColor }}>
-            {MatchDetails?.score?.fullTime?.home}:
-            {MatchDetails?.score?.fullTime?.away}
-          </Text>
-        ) : null}
-        {MatchDetails?.status === "FINISHED" ? (
-          <Text style={{ color: colors.secondColor, opacity: 0.7 }}>ended</Text>
-        ) : (
-          <Text style={{ color: colors.secondColor, opacity: 0.7 }}>
-            {time}
-          </Text>
-        )} */}
         <Text>{time}</Text>
       </View>
       <View
@@ -294,7 +262,7 @@ const SingleGameBook = ({ time }) => {
       )} */}
 
       <View
-        className="flex items-start justify-center m-1"
+        className="flex items-start justify-center m-1 pl-2"
         style={{ width: 100 }}
       >
         <Text className="text-left" style={{ color: colors.mainColor }}>

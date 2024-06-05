@@ -28,8 +28,8 @@ export default function Sidebar() {
 function SidebarLink({ item }) {
   const { pathname } = useLocation();
   const dd =
-    pathname == item.path ? "bg-slate-700 text-white" : "text-slate-300";
-  console.log(pathname);
+    pathname == item.curruntPath ? "bg-slate-700 text-white" : "text-slate-300";
+  console.log(item.curruntPath);
   return (
     <Link
       to={item.path}

@@ -30,6 +30,8 @@ import dayjs from "dayjs";
 import axios from "axios";
 
 import { Formik } from "formik";
+import SelectDropdown from "react-native-select-dropdown";
+const userTypes = ["user", "player", "manager"];
 const SignUp = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
@@ -67,7 +69,7 @@ const SignUp = ({ navigation }) => {
           userName: values.userName,
           email: values.email,
           password: values.password,
-          userType: "admin",
+          userType: values.userType,
           birthDate: values.birthDate,
         }
       );
@@ -114,6 +116,7 @@ const SignUp = ({ navigation }) => {
           initialValues={{
             userName: "",
             email: "",
+            userType: "",
             birthDate: "",
             password: "",
           }}
@@ -143,6 +146,39 @@ const SignUp = ({ navigation }) => {
                 onBlur={handleBlur("email")}
                 value={values.email}
               />
+              <View className="mt-6 w-[300px]">
+                <Text>userType</Text>
+                <SelectDropdown
+                  data={userTypes}
+                  onSelect={(selectedItem, index) => {
+                    setFieldValue("userType", selectedItem); // Update Formik state
+                  }}
+                  renderButton={(selectedItem, isOpened) => {
+                    return (
+                      <View style={styles.dropdownButtonStyle}>
+                        <Text className=" text-lg">
+                          {(selectedItem && selectedItem) ||
+                            "Select user typer"}
+                        </Text>
+                      </View>
+                    );
+                  }}
+                  renderItem={(item, index, isSelected) => {
+                    return (
+                      <View
+                        style={{
+                          ...styles.dropdownItemStyle,
+                          ...(isSelected && { backgroundColor: "#D2D9DF" }),
+                        }}
+                      >
+                        <Text style={styles.dropdownItemTxtStyle}>{item}</Text>
+                      </View>
+                    );
+                  }}
+                  showsVerticalScrollIndicator={false}
+                  dropdownStyle={styles.dropdownMenuStyle}
+                />
+              </View>
               {/*date*/}
               <MyTextInput
                 Icon={CalendarDaysIcon}
@@ -215,6 +251,7 @@ const SignUp = ({ navigation }) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   input: {
     height: 40,
@@ -225,6 +262,51 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 60,
     width: 300,
+  },
+  dropdownButtonStyle: {
+    width: 300,
+    height: 50,
+    borderWidth: 1,
+    borderColor: colors.mainColor,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 12,
+  },
+  dropdownButtonTxtStyle: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#151E26",
+  },
+  dropdownButtonArrowStyle: {
+    fontSize: 28,
+  },
+  dropdownButtonIconStyle: {
+    fontSize: 28,
+    marginRight: 8,
+  },
+  dropdownMenuStyle: {
+    backgroundColor: "#E9ECEF",
+    borderRadius: 8,
+  },
+  dropdownItemStyle: {
+    width: "100%",
+    flexDirection: "row",
+    paddingHorizontal: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 8,
+  },
+  dropdownItemTxtStyle: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#151E26",
+  },
+  dropdownItemIconStyle: {
+    fontSize: 28,
+    marginRight: 8,
   },
 });
 

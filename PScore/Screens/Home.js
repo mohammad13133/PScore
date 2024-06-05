@@ -91,6 +91,12 @@ const Home = ({ navigation, route }) => {
         <TouchableOpacity onPress={() => navigation.navigate("Search")}>
           <Text style={{ color: colors.mainColor }}>Search</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("MessagesScreen")}>
+          <Text style={{ color: colors.mainColor }}>MessagesScreen</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Chat")}>
+          <Text style={{ color: colors.mainColor }}>chat</Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );

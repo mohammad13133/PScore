@@ -40,6 +40,7 @@ import {
   ArchiveBoxArrowDownIcon as ArchiveBoxArrowDownIconLine,
   Cog6ToothIcon,
   MapIcon,
+  ArrowLeftStartOnRectangleIcon,
 } from "react-native-heroicons/outline";
 import Profile from "./Screens/Profile.js";
 import GameDetails from "./Screens/GameDetails.js";
@@ -52,7 +53,12 @@ import Search from "./Screens/Search.js";
 import MapScreen from "./Screens/drawerSrceens/MapScreen.js";
 import Player from "./Screens/Player.js";
 import { AuthProvider } from "./contexts/AuthContext.js";
+import { ChatsProvider } from "./contexts/ChatsContext.js";
 import PlayerDetails from "./Screens/PlayerDetails.js";
+import LogOut from "./Screens/drawerSrceens/LogOut.js";
+import MassegesScreen from "./Screens/MessagesScreen.js";
+import Chat from "./Screens/Chat.js";
+import MessagesScreen from "./Screens/MessagesScreen.js";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -61,27 +67,31 @@ const Drawer = createDrawerNavigator();
 export default function App() {
   return (
     <AuthProvider>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="MainPage"
-          screenOptions={{ headerShown: false }}
-        >
-          <Stack.Screen
-            name="Welcome"
-            component={Welcome}
-            options={{ title: "Welcome" }}
-          />
-          <Stack.Screen name="MainPage" component={MyTabsDrower} />
-          <Stack.Screen name="GameDetails" component={GameDetails} />
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="SignUp" component={SignUp} />
-          <Stack.Screen name="Stadium" component={Stadium} />
-          <Stack.Screen name="Team" component={Team} />
-          <Stack.Screen name="Player" component={Player} />
-          <Stack.Screen name="Search" component={Search} />
-          <Stack.Screen name="PlayerDetails" component={PlayerDetails} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <ChatsProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="MainPage"
+            screenOptions={{ headerShown: false }}
+          >
+            <Stack.Screen
+              name="Welcome"
+              component={Welcome}
+              options={{ title: "Welcome" }}
+            />
+            <Stack.Screen name="MainPage" component={MyTabsDrower} />
+            <Stack.Screen name="GameDetails" component={GameDetails} />
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="Stadium" component={Stadium} />
+            <Stack.Screen name="Team" component={Team} />
+            <Stack.Screen name="Player" component={Player} />
+            <Stack.Screen name="Search" component={Search} />
+            <Stack.Screen name="PlayerDetails" component={PlayerDetails} />
+            <Stack.Screen name="MessagesScreen" component={MessagesScreen} />
+            <Stack.Screen name="Chat" component={Chat} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ChatsProvider>
     </AuthProvider>
   );
 }
@@ -225,6 +235,15 @@ function MyTabsDrower() {
           drawerIcon: () => <MapIcon color={colors.secondColor} />,
         }}
         component={MapScreen}
+      />
+      <Drawer.Screen
+        name="LogOut"
+        options={{
+          drawerIcon: () => (
+            <ArrowLeftStartOnRectangleIcon color={colors.secondColor} />
+          ),
+        }}
+        component={LogOut}
       />
     </Drawer.Navigator>
   );

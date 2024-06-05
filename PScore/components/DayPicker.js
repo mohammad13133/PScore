@@ -21,12 +21,10 @@ import dayjs from "dayjs";
 const DATA = [
   {
     id: "1",
-    title: "13/3",
     date: "2024-04-26",
   },
   {
     id: "2",
-    title: "14/3",
     date: "2024-04-24",
   },
   {
@@ -46,12 +44,10 @@ const DATA = [
   },
   {
     id: "6",
-    title: "18/3",
     date: "2024-04-26",
   },
   {
     id: "7",
-    title: "19/3",
     date: "2024-04-26",
   },
 ];
@@ -68,6 +64,9 @@ const DayPicker = ({ day, setDay }) => {
     setModalVisible(false);
     console.log(date);
   };
+  useEffect(() => {
+    console.log(day);
+  }, [day]);
   useEffect(() => {
     if (isFlatListReady) {
       // Scroll to index 3 when the FlatList is ready
@@ -89,8 +88,20 @@ const DayPicker = ({ day, setDay }) => {
     const yesterdayDate = currentDate.subtract(1, "day");
     DATA[2].date = yesterdayDate.format("YYYY-MM-DD");
 
+    const yesterday2Date = currentDate.subtract(2, "day");
+    DATA[1].date = yesterday2Date.format("YYYY-MM-DD");
+
+    const yesterday3Date = currentDate.subtract(3, "day");
+    DATA[0].date = yesterday3Date.format("YYYY-MM-DD");
+
     const tomorrowDate = currentDate.add(1, "day");
     DATA[4].date = tomorrowDate.format("YYYY-MM-DD");
+
+    const tomorrow2Date = currentDate.add(2, "day");
+    DATA[5].date = tomorrow2Date.format("YYYY-MM-DD");
+
+    const tomorrow3Date = currentDate.add(3, "day");
+    DATA[6].date = tomorrow3Date.format("YYYY-MM-DD");
   }, []);
   return (
     <View className="flex-row items-center justify-center ">
@@ -194,7 +205,7 @@ const Item = ({ item, index, chooseDay, setChooseDay, setDay }) => {
       }}
     >
       <Text style={{ color: colors.myWhite, opacity: opacity }}>
-        {item.title}
+        {item.title ? item.title : item.date}
       </Text>
     </Pressable>
   );

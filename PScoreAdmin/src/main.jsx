@@ -41,11 +41,7 @@ const router = createBrowserRouter([
     element: <AdminRoot />,
     children: SidebarData.map((item) => ({
       path: item.path,
-      element: (
-        <>
-          {item.path == "addStadium" ? <Reservations /> : <p>{item.label}</p>}
-        </>
-      ),
+      element: <>{item.component}</>,
     })),
   },
 ]);

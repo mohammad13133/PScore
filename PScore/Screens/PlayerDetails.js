@@ -2,7 +2,11 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import React, { useLayoutEffect } from "react";
 import colors from "../assets/colors/colors";
 import SlidesPicker from "../components/MyComp/SlidesPicker";
-import { HeartIcon, PlusIcon } from "react-native-heroicons/outline";
+import {
+  ChatBubbleBottomCenterIcon,
+  HeartIcon,
+  PlusIcon,
+} from "react-native-heroicons/outline";
 
 const PlayerDetails = ({ navigation }) => {
   useLayoutEffect(() => {
@@ -13,6 +17,14 @@ const PlayerDetails = ({ navigation }) => {
       },
       headerRight: () => (
         <View style={{ flexDirection: "row", marginRight: 10 }}>
+          <TouchableOpacity
+            className="pr-2"
+            onPress={() =>
+              navigation.navigate("Chat", { roomid: 300, playerid: 400 })
+            }
+          >
+            <ChatBubbleBottomCenterIcon size={24} color={"black"} />
+          </TouchableOpacity>
           <TouchableOpacity>
             <PlusIcon size={24} color={"black"} />
           </TouchableOpacity>

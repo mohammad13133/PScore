@@ -91,7 +91,10 @@ const GameCard = ({ header, discreption, score, team1, team2 }) => {
         <Text style={{ color: colors.lightGreen }}>{header}</Text>
       </View>
       <View className="flex-row items-center justify-center space-x-3">
-        <TouchableOpacity onPress={() => navigation.navigate("Team")}>
+        <TouchableOpacity
+          disabled={team1 ? false : true}
+          onPress={() => navigation.navigate("Team")}
+        >
           <Image
             source={team1 ? team1 : ""}
             className=" rounded-full "
@@ -114,7 +117,10 @@ const GameCard = ({ header, discreption, score, team1, team2 }) => {
             {score}
           </Text>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate("Team")}>
+        <TouchableOpacity
+          disabled={team2 ? false : true}
+          onPress={() => navigation.navigate("Team")}
+        >
           <Image
             source={team2 ? team2 : ""}
             className="bg-slate-400 rounded-full"

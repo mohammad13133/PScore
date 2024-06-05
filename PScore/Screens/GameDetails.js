@@ -63,11 +63,11 @@ const GameDetails = ({ navigation, route }) => {
 
   const [page, setPage] = useState("stats");
   const typeText =
-    type === "empty"
+    type === "EMPTY"
       ? "12:30 - 14"
-      : type === "pending"
+      : type === "PENDING"
       ? "pending"
-      : type === "waited"
+      : type === "TIMED"
       ? "16:00 - 18"
       : "";
 
@@ -82,16 +82,14 @@ const GameDetails = ({ navigation, route }) => {
           discreption={typeText}
           score={".."}
           team1={
-            type == "pending" || type == "waited"
+            type == "PENDING" || type == "TIMED"
               ? require("../assets/images/arsenal.png")
               : ""
           }
-          team2={
-            type == "waited" ? require("../assets/images/manuntd.png") : ""
-          }
+          team2={type == "TIMED" ? require("../assets/images/manuntd.png") : ""}
         />
         <Marker>GameDetails</Marker>
-        {type == "empty" ? (
+        {type == "EMPTY" ? (
           <SlidesPicker>
             <ChoosableLineUp
               dispalyName={"team1"}
@@ -102,7 +100,7 @@ const GameDetails = ({ navigation, route }) => {
             />
             {/* <LineUP dispalyName={"team1"} /> */}
           </SlidesPicker>
-        ) : type == "pending" ? (
+        ) : type == "PENDING" ? (
           <SlidesPicker>
             <ChoosableLineUp
               dispalyName={"team1"}
@@ -113,7 +111,7 @@ const GameDetails = ({ navigation, route }) => {
             />
             <LineUP dispalyName={"team2"} />
           </SlidesPicker>
-        ) : type == "waited" ? (
+        ) : type == "TIMED" ? (
           <SlidesPicker>
             <LineUP dispalyName={"team1"} />
             <LineUP dispalyName={"team2"} />
@@ -121,7 +119,7 @@ const GameDetails = ({ navigation, route }) => {
         ) : (
           <SlidesPicker>
             <LineUP dispalyName={"team"} />
-            <LineUP dispalyName={"team2"} />{" "}
+            <LineUP dispalyName={"team2"} />
           </SlidesPicker>
         )}
 

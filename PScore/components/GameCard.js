@@ -109,7 +109,7 @@ const SingleGame = ({ MatchDetails }) => {
       }}
       onPress={() =>
         navigation.navigate("GameDetails", {
-          type: "waited",
+          type: "TIMED",
         })
       }
     >

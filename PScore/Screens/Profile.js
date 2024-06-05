@@ -6,7 +6,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import AuthContext from "../contexts/AuthContext";
 
 const Profile = () => {
-  const { token, decodeToken, getUser } = useContext(AuthContext);
+  const { token, getUser } = useContext(AuthContext);
   const [page, setPage] = useState("stats");
   const [decoded, setDecoded] = useState();
   const [user, setUser] = useState();
