@@ -23,6 +23,10 @@ import MyTextInput from "../../components/MyTextInput";
 import SelectDropdown from "react-native-select-dropdown";
 import colors from "../../assets/colors/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useContext } from "react";
+import AuthContext from "../../contexts/AuthContext";
+import { useEffect } from "react";
+import axios from "axios";
 const positions = [
   { title: "striker", icon: "emoticon-happy-outline" },
   { title: "goalkeeper", icon: "emoticon-cool-outline" },
@@ -34,7 +38,6 @@ const countries = [
   { countryName: "Jordan", icon: "https://flagsapi.com/JO/flat/64.png" },
 ];
 const width = Dimensions.get("window").width;
-
 export default Settings = () => {
   const [image, setImage] = useState(null);
   const pickImage = async () => {
@@ -101,17 +104,22 @@ export default Settings = () => {
           Icon={UserIcon}
           placeholder={"userName"}
           label={"UserName"}
-          value={"mohammad khaled"}
+          value={""}
           editable={false}
         />
         <MyTextInput
           Icon={EnvelopeIcon}
           placeholder={"email"}
           label={"email"}
-          value={"mohammad@gmail.com"}
+          value={""}
           editable={false}
         />
-        <MyTextInput Icon={PhoneIcon} placeholder={"number"} label={"number"} />
+        <MyTextInput
+          Icon={PhoneIcon}
+          placeholder={"number"}
+          label={"number"}
+          value={""}
+        />
         <View className="mt-6 w-[300px]">
           <Text>position</Text>
           <SelectDropdown

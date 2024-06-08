@@ -8,7 +8,8 @@ import {
   PlusIcon,
 } from "react-native-heroicons/outline";
 
-const PlayerDetails = ({ navigation }) => {
+const PlayerDetails = ({ navigation, route }) => {
+  const name = route.params;
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -20,7 +21,7 @@ const PlayerDetails = ({ navigation }) => {
           <TouchableOpacity
             className="pr-2"
             onPress={() =>
-              navigation.navigate("Chat", { roomid: 300, playerid: 400 })
+              navigation.navigate("Chat", { roomid: name, playerid: 400 })
             }
           >
             <ChatBubbleBottomCenterIcon size={24} color={"black"} />

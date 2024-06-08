@@ -15,12 +15,14 @@ import { EnvelopeIcon, LockClosedIcon } from "react-native-heroicons/outline";
 import { ChevronLeftIcon } from "react-native-heroicons/solid";
 import Line from "../components/Line";
 import axios from "axios";
-import AuthContext from "../contexts/AuthContext";
+import AuthContext, { useAuth } from "../contexts/AuthContext";
+import { useChats } from "../contexts/ChatsContext";
 const Login = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [loginText, setLoginText] = useState("");
   const [loginTextColor, setLoginTextColor] = useState();
-  const { setToken } = useContext(AuthContext);
+  const { setToken } = useAuth();
+  const { setUser } = useChats();
   const handleLogin = async (values) => {
     setLoading(true); // Start loading
     try {
@@ -35,6 +37,7 @@ const Login = ({ navigation }) => {
         setLoginText("login Sccess");
         setLoginTextColor("green");
         setToken(response?.data?.token);
+        setUser(values.email);
         navigation.navigate("MainPage");
       } else {
         console.log("no login:", response.data);
@@ -120,15 +123,6 @@ const Login = ({ navigation }) => {
         )}
       </Formik>
       <Line />
-      <TouchableOpacity
-        onPress={() => {}}
-        className="px-14 py-5 rounded-xl mt-2 flex items-center"
-        style={{ backgroundColor: colors.mainColor, width: 300 }}
-      >
-        <Text className="" style={{ color: colors.secondColor }}>
-          Login using Google
-        </Text>
-      </TouchableOpacity>
       <View className="flex-row mt-2">
         <Text style={{ color: colors.mainColor }}>dont have account?</Text>
         <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>

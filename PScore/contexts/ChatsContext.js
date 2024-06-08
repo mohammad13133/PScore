@@ -6,7 +6,8 @@ const ChatsContext = createContext();
 // Define the provider component
 export const ChatsProvider = ({ children }) => {
   const [user, setUser] = useState();
-  const [allChatRooms, setAllChatRooms] = useState([1, 2, 3, 4]);
+  const [socket, setSocket] = useState();
+  const [allChatRooms, setAllChatRooms] = useState([]);
   //   const addChat = (chat) => {
   //     setChats([...chats, chat]);
   //   };
@@ -16,7 +17,16 @@ export const ChatsProvider = ({ children }) => {
   //   };
 
   return (
-    <ChatsContext.Provider value={{ user, setUser, allChatRooms }}>
+    <ChatsContext.Provider
+      value={{
+        user,
+        setUser,
+        allChatRooms,
+        setAllChatRooms,
+        socket,
+        setSocket,
+      }}
+    >
       {children}
     </ChatsContext.Provider>
   );

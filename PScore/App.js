@@ -52,18 +52,23 @@ import Team from "./Screens/Team.js";
 import Search from "./Screens/Search.js";
 import MapScreen from "./Screens/drawerSrceens/MapScreen.js";
 import Player from "./Screens/Player.js";
-import { AuthProvider } from "./contexts/AuthContext.js";
-import { ChatsProvider } from "./contexts/ChatsContext.js";
+import AuthContext, { AuthProvider, useAuth } from "./contexts/AuthContext.js";
+import { ChatsProvider, useChats } from "./contexts/ChatsContext.js";
 import PlayerDetails from "./Screens/PlayerDetails.js";
 import LogOut from "./Screens/drawerSrceens/LogOut.js";
 import MassegesScreen from "./Screens/MessagesScreen.js";
 import Chat from "./Screens/Chat.js";
 import MessagesScreen from "./Screens/MessagesScreen.js";
+import { useEffect } from "react";
+import axios from "axios";
+import { io } from "socket.io-client";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const Drawer = createDrawerNavigator();
+
+const mySocket = io.connect("http://localhost:4000");
 export default function App() {
   return (
     <AuthProvider>
@@ -168,6 +173,47 @@ function MyTabs() {
   );
 }
 function MyTabsDrower() {
+  const { profile, setProfile, token } = useAuth();
+  const { socket, setSocket, setAllChatRooms, set } = useChats();
+  useEffect(() => {
+    setSocket(mySocket);
+    mySocket.emit("getAllGroups");
+  }, []);
+  useEffect(() => {
+    // mySocket.emit("getAllGroups");
+    mySocket.on("group_list", (groups) => {
+      console.log(groups);
+      setAllChatRooms(groups);
+    });
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log("hello token");
+      try {
+        const response = await axios.get(
+          "https://pscore-backend.vercel.app/profile",
+          {
+            headers: {
+              authorization: `Ahmad__${token}`,
+            },
+          }
+        );
+        console.log(response.data);
+        setProfile(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    if (token) {
+      fetchData();
+    }
+  }, [token]);
+  useEffect(() => {
+    if (profile) {
+      console.log(profile);
+    }
+  }, [profile]);
+
   return (
     <Drawer.Navigator
       initialRouteName="HomeScreen"
@@ -181,8 +227,9 @@ function MyTabsDrower() {
                   className="w-[150px] h-[150px] rounded-full"
                 />
               </View>
-              <Text className="text-lg font-semibold">Mohammad Khaled</Text>
-              <Text className="font-semibold">ST</Text>
+              <Text className="text-lg font-semibold">
+                {profile ? profile?.userName : "no login"}
+              </Text>
             </View>
             <DrawerItemList {...props} />
           </View>

@@ -1,32 +1,24 @@
-import { View, Text, Image, Pressable } from "react-native";
+import { View, Text, Image, Pressable, ActivityIndicator } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import colors from "../assets/colors/colors";
 import { CameraIcon, HeartIcon } from "react-native-heroicons/outline";
 import { ScrollView } from "react-native-gesture-handler";
-import AuthContext from "../contexts/AuthContext";
+import AuthContext, { useAuth } from "../contexts/AuthContext";
+import axios from "axios";
+import SlidesPicker from "../components/MyComp/SlidesPicker";
 
 const Profile = () => {
-  const { token, getUser } = useContext(AuthContext);
-  const [page, setPage] = useState("stats");
-  const [decoded, setDecoded] = useState();
+  const { token, getUser } = useAuth();
   const [user, setUser] = useState();
-  const renderComponent = () => {
-    switch (page) {
-      case "Posts":
-        return <Text>posts</Text>;
-      case "games":
-        return <Text>games</Text>;
-      case "stats":
-        return <Stats />;
-      default:
-        return null;
-    }
-  };
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (token) {
       console.log(token);
       // const decoded = decodeToken(token);
       const user = getUser(token);
+      console.log("ll");
+
       console.log(user);
       setUser(user);
       // Store the decoded token in state
@@ -53,10 +45,8 @@ const Profile = () => {
             <CameraIcon size={30} color={"black"} />
           </View>
         </View>
-        <Text>{user ? user.username : "no login"}</Text>
-        <Text>Nablus</Text>
-        <Text>Token :{decoded?.id}</Text>
-
+        <Text>{user ? user?.username : "no login"}</Text>
+        <Text>{user ? user?.type : "no login"}</Text>
         <View
           className="flex-row justify-between rounded-md p-1"
           style={{
@@ -92,36 +82,18 @@ const Profile = () => {
           </View>
         </View>
       </View>
-      <View className="w-full flex items-center justify-center mt-2">
-        <View
-          style={{ backgroundColor: colors.secondColor }}
-          className=" flex-row  rounded-lg"
-        >
-          <Slide name={"Posts"} page={page} setPage={setPage} />
-          <Slide name={"games"} page={page} setPage={setPage} />
-          <Slide name={"stats"} page={page} setPage={setPage} />
-        </View>
-      </View>
-      {renderComponent()}
+      <SlidesPicker>
+        <Stats dispalyName="Stats" loading={loading} />
+        <Text dispalyName="bb">lello</Text>
+      </SlidesPicker>
     </ScrollView>
   );
 };
-const Slide = ({ name, page, setPage }) => {
-  const activeStyle =
-    page == name ? "bg-slate-100 border border-emerald-950" : "";
-  return (
-    <Pressable
-      onPress={() => {
-        setPage(name);
-      }}
-      className={"flex items-center w-[100px] py-2 rounded-lg " + activeStyle}
-    >
-      <Text>{name}</Text>
-    </Pressable>
-  );
-};
-const Stats = () => {
-  return (
+
+const Stats = ({ loading }) => {
+  return loading ? (
+    <ActivityIndicator />
+  ) : (
     <View
       style={{ backgroundColor: colors.secondColor }}
       className="h-[200px] flex justify-center space-y-6 mt-14 mx-5 rounded-md"
