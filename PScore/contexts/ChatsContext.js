@@ -7,7 +7,10 @@ const ChatsContext = createContext();
 export const ChatsProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [socket, setSocket] = useState();
+  const [roomMasseges, setroomMasseges] = useState([]);
   const [allChatRooms, setAllChatRooms] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(true);
   //   const addChat = (chat) => {
   //     setChats([...chats, chat]);
   //   };
@@ -25,6 +28,10 @@ export const ChatsProvider = ({ children }) => {
         setAllChatRooms,
         socket,
         setSocket,
+        roomMasseges,
+        setroomMasseges,
+        isLoading,
+        setIsLoading,
       }}
     >
       {children}

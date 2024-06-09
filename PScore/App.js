@@ -174,7 +174,8 @@ function MyTabs() {
 }
 function MyTabsDrower() {
   const { profile, setProfile, token } = useAuth();
-  const { socket, setSocket, setAllChatRooms, set } = useChats();
+  const { socket, setSocket, setAllChatRooms, setroomMasseges, setIsLoading } =
+    useChats();
   useEffect(() => {
     setSocket(mySocket);
     mySocket.emit("getAllGroups");
@@ -186,6 +187,14 @@ function MyTabsDrower() {
       setAllChatRooms(groups);
     });
   }, []);
+  // useEffect(() => {
+  //   mySocket.on("getRoomMasseges", (RoomMasseges) => {
+  //     setIsLoading(false);
+  //     console.log(RoomMasseges);
+  //     const initialMessages = RoomMasseges || [];
+  //     setroomMasseges(initialMessages);
+  //   });
+  // }, []);
   useEffect(() => {
     const fetchData = async () => {
       console.log("hello token");
@@ -239,6 +248,8 @@ function MyTabsDrower() {
         headerStyle: {
           backgroundColor: colors.secondColor, // Change header background color
           elevation: 0,
+          borderBottomWidth: 0, // Remove bottom border
+          shadowColor: "transparent", // Remove shadow
         },
         headerTintColor: "black", // Change text color of header titles
         drawerActiveTintColor: colors.secondColor,

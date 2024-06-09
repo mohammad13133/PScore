@@ -24,7 +24,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import colors from "../../assets/colors/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useContext } from "react";
-import AuthContext from "../../contexts/AuthContext";
+import AuthContext, { useAuth } from "../../contexts/AuthContext";
 import { useEffect } from "react";
 import axios from "axios";
 const positions = [
@@ -40,6 +40,7 @@ const countries = [
 const width = Dimensions.get("window").width;
 export default Settings = () => {
   const [image, setImage] = useState(null);
+
   const pickImage = async () => {
     // Ask for permission to access media library
     if (Platform.OS !== "web") {
@@ -65,7 +66,33 @@ export default Settings = () => {
       setImage(result.assets[0].uri);
     }
   };
-
+  const { profile, setProfile, token } = useAuth();
+  const uploadImage = async (imageUri) => {
+    console.log("hello token");
+    if (token) {
+      try {
+        const formData = new FormData();
+        const file = {
+          uri: imageUri,
+          name: "prfile-image",
+          type: "image/jpg",
+        };
+        formData.append("image", file);
+        const response = await axios.post(
+          "https://pscore-backend.vercel.app/profile",
+          formData,
+          {
+            headers: {
+              authorization: `Ahmad__${token}`,
+            },
+          }
+        );
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+  };
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View className="flex items-center justify-center mt-6">
@@ -203,7 +230,10 @@ export default Settings = () => {
             dropdownStyle={styles.dropdownMenuStyle}
           />
         </View>
-        <TouchableOpacity className="bg-green-400 px-8 py-2 rounded-md mt-6">
+        <TouchableOpacity
+          onPress={() => uploadImage(image)}
+          className="bg-green-400 px-8 py-2 rounded-md mt-6"
+        >
           <Text>save</Text>
         </TouchableOpacity>
       </View>

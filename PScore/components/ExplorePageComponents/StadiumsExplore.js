@@ -1,4 +1,11 @@
-import { View, Text, FlatList, Dimensions, Image } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Dimensions,
+  Image,
+  Platform,
+} from "react-native";
 import React from "react";
 import stadiumsData from "../../assets/Data/Stadiums";
 import { LinearGradient } from "expo-linear-gradient";
@@ -31,11 +38,17 @@ const StadiumsExplore = () => {
 };
 const Item = ({ item, index }) => {
   const navigation = useNavigation();
+  const isWeb = Platform.OS === "web";
+
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate("Stadium", { ...item })}
       className="bg-slate-50 rounded-lg h-[180px] mt-4 relative "
-      style={{ elevation: 6, width: width * 0.8 - 20, marginHorizontal: 10 }}
+      style={{
+        elevation: 6,
+        width: isWeb ? 300 : width * 0.8 - 20,
+        marginHorizontal: 10,
+      }}
     >
       <Image
         className="w-full h-full rounded-lg"

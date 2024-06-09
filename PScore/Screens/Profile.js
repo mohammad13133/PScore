@@ -8,7 +8,7 @@ import axios from "axios";
 import SlidesPicker from "../components/MyComp/SlidesPicker";
 
 const Profile = () => {
-  const { token, getUser } = useAuth();
+  const { token, getUser, profile } = useAuth();
   const [user, setUser] = useState();
   const [loading, setLoading] = useState(false);
 
@@ -45,8 +45,8 @@ const Profile = () => {
             <CameraIcon size={30} color={"black"} />
           </View>
         </View>
-        <Text>{user ? user?.username : "no login"}</Text>
-        <Text>{user ? user?.type : "no login"}</Text>
+        <Text>{profile ? profile?.userName : "no login"}</Text>
+        {/* <Text>{user ? user?.type : "no login"}</Text> */}
         <View
           className="flex-row justify-between rounded-md p-1"
           style={{
