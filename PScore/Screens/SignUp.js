@@ -62,6 +62,7 @@ const SignUp = ({ navigation }) => {
   const [loginTextColor, setLoginTextColor] = useState();
   const handleSignUP = async (values) => {
     setLoading(true); // Start loading
+    console.log(values.birthDate);
     try {
       const response = await axios.post(
         "https://pscore-backend.vercel.app/auth/signup",
@@ -76,8 +77,9 @@ const SignUp = ({ navigation }) => {
       if (response?.data?.message === "success") {
         // setLoginText("sign up done");
         // setLoginTextColor("green");
+
         console.log("sign up done", response.data);
-        // navigation.navigate("login", response.data);
+        navigation.navigate("Login");
       } else {
         console.log("no sign up:", response.data);
 
@@ -186,7 +188,7 @@ const SignUp = ({ navigation }) => {
                 label="date"
                 isDate={true}
                 showDatePicker={showDatePicker}
-                dateText={dayjs(date).format("DD-MM-YYYY")}
+                dateText={dayjs(date).format("YYYY-MM-DD")}
                 onChangeText={handleChange("birthDate")}
                 onBlur={handleBlur("birthDate")}
                 value={values.birthDate}

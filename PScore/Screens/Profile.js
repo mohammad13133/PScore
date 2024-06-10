@@ -12,18 +12,18 @@ const Profile = () => {
   const [user, setUser] = useState();
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (token) {
-      console.log(token);
-      // const decoded = decodeToken(token);
-      const user = getUser(token);
-      console.log("ll");
+  // useEffect(() => {
+  //   if (token) {
+  //     console.log(token);
+  //     // const decoded = decodeToken(token);
+  //     const user = getUser(token);
+  //     console.log("ll");
 
-      console.log(user);
-      setUser(user);
-      // Store the decoded token in state
-    }
-  }, [token]);
+  //     console.log(user);
+  //     setUser(user);
+  //     // Store the decoded token in state
+  //   }
+  // }, [token]);
 
   return (
     <ScrollView>
@@ -32,15 +32,17 @@ const Profile = () => {
           className="relative rounded-full border "
           style={{ backgroundColor: colors.mainColor }}
         >
-          <Image
-            className="rounded-full "
-            style={{
-              width: 120,
-              height: 120,
-              resizeMode: "cover",
-            }}
-            source={require("../assets/images/players/Mohammad.jpg")}
-          />
+          {profile && profile.image != "" ? (
+            <Image
+              source={{ uri: profile.image }}
+              className="w-[150px] h-[150px] rounded-full"
+            />
+          ) : (
+            <Image
+              source={require("../assets/images/defaultUserImage.jpg")}
+              className="w-[150px] h-[150px] rounded-full"
+            />
+          )}
           <View className="absolute top-0 right-0 bg-white rounded-full p-1">
             <CameraIcon size={30} color={"black"} />
           </View>
@@ -67,7 +69,7 @@ const Profile = () => {
               }}
               source={{ uri: "https://flagsapi.com/PS/flat/64.png" }}
             />
-            <Text>Palestine</Text>
+            <Text>{profile?.country}</Text>
           </View>
           <View className="flex items-center w-[100px]">
             <Image
@@ -83,14 +85,14 @@ const Profile = () => {
         </View>
       </View>
       <SlidesPicker>
-        <Stats dispalyName="Stats" loading={loading} />
+        <Stats dispalyName="Stats" loading={loading} profile={profile} />
         <Text dispalyName="bb">lello</Text>
       </SlidesPicker>
     </ScrollView>
   );
 };
 
-const Stats = ({ loading }) => {
+const Stats = ({ loading, profile }) => {
   return loading ? (
     <ActivityIndicator />
   ) : (
@@ -105,7 +107,7 @@ const Stats = ({ loading }) => {
         </View>
         <View className="flex items-center w-[100px] space-y-4 ">
           <Text>Position</Text>
-          <Text>Striker</Text>
+          <Text>{profile?.position}</Text>
         </View>
         <View className="flex items-center w-[100px] space-y-4 ">
           <Text>Matches</Text>

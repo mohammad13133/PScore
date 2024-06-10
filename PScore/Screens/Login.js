@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import colors from "../assets/colors/colors";
 import { Formik } from "formik";
 import MyTextInput from "../components/MyTextInput";
@@ -23,7 +23,8 @@ const Login = ({ navigation }) => {
   const [loginTextColor, setLoginTextColor] = useState();
   const { setToken } = useAuth();
   const { setUser } = useChats();
-  const handleLogin = async (values) => {
+
+  const handleLogin = async (values, resetForm) => {
     setLoading(true); // Start loading
     try {
       const response = await axios.post(
@@ -34,6 +35,7 @@ const Login = ({ navigation }) => {
         }
       );
       if (response?.data?.message === "success") {
+        resetForm();
         setLoginText("login Sccess");
         setLoginTextColor("green");
         setToken(response?.data?.token);
@@ -75,7 +77,9 @@ const Login = ({ navigation }) => {
       {/*user Name*/}
       <Formik
         initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => handleLogin(values)}
+        onSubmit={(values, { resetForm }) => {
+          handleLogin(values, resetForm);
+        }}
       >
         {({ handleChange, handleBlur, handleSubmit, values }) => (
           <View>

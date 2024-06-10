@@ -198,6 +198,7 @@ function MyTabsDrower() {
   useEffect(() => {
     const fetchData = async () => {
       console.log("hello token");
+      console.log(token);
       try {
         const response = await axios.get(
           "https://pscore-backend.vercel.app/profile",
@@ -217,11 +218,6 @@ function MyTabsDrower() {
       fetchData();
     }
   }, [token]);
-  useEffect(() => {
-    if (profile) {
-      console.log(profile);
-    }
-  }, [profile]);
 
   return (
     <Drawer.Navigator
@@ -231,10 +227,17 @@ function MyTabsDrower() {
           <View>
             <View className="h-[300px] flex items-center justify-center">
               <View className="bg-zinc-800 w-[150px] h-[150px] rounded-full mb-2">
-                <Image
-                  source={require("./assets/images/players/Mohammad.jpg")}
-                  className="w-[150px] h-[150px] rounded-full"
-                />
+                {profile && profile.image != "" ? (
+                  <Image
+                    source={{ uri: profile.image }}
+                    className="w-[150px] h-[150px] rounded-full"
+                  />
+                ) : (
+                  <Image
+                    source={require("./assets/images/defaultUserImage.jpg")}
+                    className="w-[150px] h-[150px] rounded-full"
+                  />
+                )}
               </View>
               <Text className="text-lg font-semibold">
                 {profile ? profile?.userName : "no login"}

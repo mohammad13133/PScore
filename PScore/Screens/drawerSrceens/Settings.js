@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Platform,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -27,6 +28,7 @@ import { useContext } from "react";
 import AuthContext, { useAuth } from "../../contexts/AuthContext";
 import { useEffect } from "react";
 import axios from "axios";
+import { Formik } from "formik";
 const positions = [
   { title: "striker", icon: "emoticon-happy-outline" },
   { title: "goalkeeper", icon: "emoticon-cool-outline" },
@@ -40,7 +42,7 @@ const countries = [
 const width = Dimensions.get("window").width;
 export default Settings = () => {
   const [image, setImage] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   const pickImage = async () => {
     // Ask for permission to access media library
     if (Platform.OS !== "web") {
@@ -67,30 +69,95 @@ export default Settings = () => {
     }
   };
   const { profile, setProfile, token } = useAuth();
-  const uploadImage = async (imageUri) => {
+  const updateProfile = async (values) => {
     console.log("hello token");
+    console.log(profile.number);
     if (token) {
       try {
-        const formData = new FormData();
-        const file = {
-          uri: imageUri,
-          name: "prfile-image",
-          type: "image/jpg",
-        };
-        formData.append("image", file);
-        const response = await axios.post(
-          "https://pscore-backend.vercel.app/profile",
-          formData,
-          {
-            headers: {
-              authorization: `Ahmad__${token}`,
-            },
+        if (
+          image ||
+          profile.number != values.number ||
+          profile.position != values.position ||
+          profile.country != values.country
+        ) {
+          setIsLoading(true);
+          const formData = new FormData();
+          const file = {
+            uri: image,
+            type: "image/jpeg", // Assuming jpeg, update accordingly if different
+            name: "photo.jpg", // Update the name as per your requirements
+          };
+          if (image) {
+            formData.append("image", file);
+            setProfile((prevProfile) => ({
+              ...prevProfile,
+              image: image,
+            }));
           }
-        );
-        console.log(response.data);
+
+          const additionalData = {};
+
+          // Conditionally add key-value pairs
+          if (values.number !== "" || profile.number != values.number) {
+            additionalData.number = values.number;
+            setProfile((prevProfile) => ({
+              ...prevProfile,
+              number: values.number,
+            }));
+          }
+          if (values.country != "" || profile.country != values.country) {
+            additionalData.country = values.country;
+            setProfile((prevProfile) => ({
+              ...prevProfile,
+              country: values.country,
+            }));
+          }
+          if (profile.userType == "player") {
+            if (values.position != "" || profile.position != values.position) {
+              additionalData.position = values.position;
+              setProfile((prevProfile) => ({
+                ...prevProfile,
+                position: values.position,
+              }));
+            }
+          }
+
+          // Loop through additionalData object and append each key-value pair to formData
+          for (const key in additionalData) {
+            formData.append(key, additionalData[key]);
+          }
+          console.log(formData);
+          const response = await axios.post(
+            "https://pscore-backend.vercel.app/profile/create",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                authorization: `Ahmad__${token}`,
+              },
+            }
+          );
+
+          console.log(response.data);
+        }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.error("Error response:", error.response.data);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.error("Error request:", error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error("Error message:", error.message);
+        }
+        console.error("Error config:", error);
+      } finally {
+        setIsLoading(false);
       }
+    } else {
+      console.error("Token is not defined");
     }
   };
   return (
@@ -101,25 +168,15 @@ export default Settings = () => {
           className="relative rounded-full border "
           style={{ backgroundColor: colors.mainColor }}
         >
-          {image ? (
+          {profile && profile.image != "" ? (
             <Image
-              source={{ uri: image }}
-              className="rounded-full "
-              style={{
-                width: 120,
-                height: 120,
-                resizeMode: "cover",
-              }}
+              source={{ uri: profile.image }}
+              className="w-[150px] h-[150px] rounded-full"
             />
           ) : (
             <Image
-              className="rounded-full "
-              style={{
-                width: 120,
-                height: 120,
-                resizeMode: "cover",
-              }}
-              source={require("../../assets/images/players/Mohammad.jpg")}
+              source={require("../../assets/images/defaultUserImage.jpg")}
+              className="w-[120px] h-[120px] rounded-full"
             />
           )}
 
@@ -127,115 +184,151 @@ export default Settings = () => {
             <CameraIcon size={30} color={"black"} />
           </View>
         </TouchableOpacity>
+
         <MyTextInput
           Icon={UserIcon}
           placeholder={"userName"}
           label={"UserName"}
-          value={""}
+          value={profile ? profile.userName : ""}
           editable={false}
         />
         <MyTextInput
           Icon={EnvelopeIcon}
           placeholder={"email"}
           label={"email"}
-          value={""}
+          value={profile ? profile.email : ""}
           editable={false}
         />
-        <MyTextInput
-          Icon={PhoneIcon}
-          placeholder={"number"}
-          label={"number"}
-          value={""}
-        />
-        <View className="mt-6 w-[300px]">
-          <Text>position</Text>
-          <SelectDropdown
-            data={positions}
-            onSelect={(selectedItem, index) => {
-              console.log(selectedItem, index);
-            }}
-            renderButton={(selectedItem, isOpened) => {
-              return (
-                <View style={styles.dropdownButtonStyle}>
-                  <Text className="font-medium text-lg">
-                    {(selectedItem && selectedItem.title) || "Select your mood"}
-                  </Text>
-                </View>
-              );
-            }}
-            renderItem={(item, index, isSelected) => {
-              return (
-                <View
-                  style={{
-                    ...styles.dropdownItemStyle,
-                    ...(isSelected && { backgroundColor: "#D2D9DF" }),
-                  }}
-                >
-                  <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-                </View>
-              );
-            }}
-            showsVerticalScrollIndicator={false}
-            dropdownStyle={styles.dropdownMenuStyle}
-          />
-        </View>
-        <View className="mt-6 w-[300px]">
-          <Text>select country</Text>
-          <SelectDropdown
-            data={countries}
-            onSelect={(selectedItem, index) => {
-              console.log(selectedItem, index);
-            }}
-            renderButton={(selectedItem, isOpened) => {
-              return (
-                <View style={styles.dropdownButtonStyle}>
-                  <Text className="font-medium text-lg">
-                    {(selectedItem && selectedItem.countryName) ||
-                      "Select your mood"}
-                  </Text>
-                  <Image
-                    style={{
-                      width: 25,
-                      height: 25,
-                      resizeMode: "cover",
-                    }}
-                    source={{ uri: selectedItem?.icon }}
-                  />
-                </View>
-              );
-            }}
-            renderItem={(item, index, isSelected) => {
-              return (
-                <View
-                  style={{
-                    ...styles.dropdownItemStyle,
-                    ...(isSelected && { backgroundColor: "#D2D9DF" }),
-                  }}
-                >
-                  <Text style={styles.dropdownItemTxtStyle}>
-                    {item.countryName}
-                  </Text>
-                  <Image
-                    style={{
-                      width: 25,
-                      height: 25,
-                      resizeMode: "cover",
-                    }}
-                    source={{ uri: item.icon }}
-                  />
-                </View>
-              );
-            }}
-            showsVerticalScrollIndicator={false}
-            dropdownStyle={styles.dropdownMenuStyle}
-          />
-        </View>
-        <TouchableOpacity
-          onPress={() => uploadImage(image)}
-          className="bg-green-400 px-8 py-2 rounded-md mt-6"
+        <Formik
+          initialValues={{
+            country: profile ? profile.country : "",
+            number: profile ? profile.number : "",
+            position: profile ? profile.position : "",
+          }}
+          onSubmit={(values) => updateProfile(values, image)}
         >
-          <Text>save</Text>
-        </TouchableOpacity>
+          {({
+            setFieldValue,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+          }) => (
+            <View>
+              <MyTextInput
+                Icon={PhoneIcon}
+                placeholder={"number"}
+                label={"number"}
+                onChangeText={handleChange("number")}
+                onBlur={handleBlur("number")}
+                value={values.number ? values.number : ""}
+              />
+              {profile.userType == "player" && (
+                <View className="mt-6 w-[300px]">
+                  <Text>position</Text>
+                  <SelectDropdown
+                    data={positions}
+                    onSelect={(selectedItem, index) => {
+                      setFieldValue("position", selectedItem.title);
+                    }}
+                    renderButton={(selectedItem, isOpened) => {
+                      return (
+                        <View style={styles.dropdownButtonStyle}>
+                          <Text className="font-medium text-lg">
+                            {(selectedItem && selectedItem.title) ||
+                              (profile.position && profile.position)}
+                          </Text>
+                        </View>
+                      );
+                    }}
+                    renderItem={(item, index, isSelected) => {
+                      return (
+                        <View
+                          style={{
+                            ...styles.dropdownItemStyle,
+                            ...(isSelected && { backgroundColor: "#D2D9DF" }),
+                          }}
+                        >
+                          <Text style={styles.dropdownItemTxtStyle}>
+                            {item.title}
+                          </Text>
+                        </View>
+                      );
+                    }}
+                    showsVerticalScrollIndicator={false}
+                    dropdownStyle={styles.dropdownMenuStyle}
+                  />
+                </View>
+              )}
+
+              <View className="mt-6 w-[300px]">
+                <Text>select country</Text>
+                <SelectDropdown
+                  data={countries}
+                  onSelect={(selectedItem, index) => {
+                    setFieldValue("country", selectedItem.countryName);
+                  }}
+                  renderButton={(selectedItem, isOpened) => {
+                    return (
+                      <View style={styles.dropdownButtonStyle}>
+                        <Text className="font-medium text-lg">
+                          {(selectedItem && selectedItem.countryName) ||
+                            (profile.country && profile.country)}
+                        </Text>
+                        <Image
+                          style={{
+                            width: 25,
+                            height: 25,
+                            resizeMode: "cover",
+                          }}
+                          source={{ uri: selectedItem?.icon }}
+                        />
+                      </View>
+                    );
+                  }}
+                  renderItem={(item, index, isSelected) => {
+                    return (
+                      <View
+                        style={{
+                          ...styles.dropdownItemStyle,
+                          ...(isSelected && { backgroundColor: "#D2D9DF" }),
+                        }}
+                      >
+                        <Text style={styles.dropdownItemTxtStyle}>
+                          {item.countryName}
+                        </Text>
+                        <Image
+                          style={{
+                            width: 25,
+                            height: 25,
+                            resizeMode: "cover",
+                          }}
+                          source={{ uri: item.icon }}
+                        />
+                      </View>
+                    );
+                  }}
+                  showsVerticalScrollIndicator={false}
+                  dropdownStyle={styles.dropdownMenuStyle}
+                />
+              </View>
+              <View className="flex items-center">
+                <TouchableOpacity
+                  onPress={handleSubmit}
+                  className="bg-green-400 px-8 py-2 rounded-md mt-6"
+                >
+                  {isLoading ? (
+                    <ActivityIndicator color={colors.mainColor} />
+                  ) : (
+                    <Text>save</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+
+              {/* <Button onPress={handleSubmit} title="Submit" /> */}
+            </View>
+          )}
+        </Formik>
       </View>
     </ScrollView>
   );

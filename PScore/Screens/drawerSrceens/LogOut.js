@@ -1,10 +1,11 @@
 import { View, Text } from "react-native";
 import React, { useContext, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import AuthContext from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
+// import AuthContext from "../../contexts/AuthContext";
 
 const LogOut = ({ navigation }) => {
-  const { setToken } = useContext(AuthContext);
+  const { setToken } = useAuth();
   React.useEffect(() => {
     setToken();
     navigation.replace("Welcome");
