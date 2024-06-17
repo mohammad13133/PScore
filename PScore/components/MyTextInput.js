@@ -5,7 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "react-native-heroicons/outline";
 import colors from "../assets/colors/colors";
 const MyTextInput = ({
@@ -19,8 +19,14 @@ const MyTextInput = ({
   showDatePicker,
   isDate,
   dateText,
+  setFieldValue,
   ...props
 }) => {
+  // useEffect(() => {
+  //   console.log("sd");
+  //   setFieldValue = { setFieldValue };
+  // }, [dateText]);
+
   const [showPassword, setShowPassword] = useState(false);
   return (
     <View className="mt-6">

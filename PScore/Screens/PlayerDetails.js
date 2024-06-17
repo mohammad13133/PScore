@@ -1,4 +1,10 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import React, { useLayoutEffect } from "react";
 import colors from "../assets/colors/colors";
 import SlidesPicker from "../components/MyComp/SlidesPicker";
@@ -7,9 +13,32 @@ import {
   HeartIcon,
   PlusIcon,
 } from "react-native-heroicons/outline";
-
+import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import axios from "axios";
 const PlayerDetails = ({ navigation, route }) => {
-  const name = route.params;
+  const { token } = useAuth();
+  const { name, _id } = route.params;
+  console.log(name + " " + _id);
+  const [isLoading, setIsLoading] = useState(false);
+  const addPlayer = async () => {
+    setIsLoading(true); // Start loading
+    try {
+      const response = await axios.post(
+        `https://pscore-backend.vercel.app/team/addPlayer/${_id}`,
+        {
+          headers: {
+            authorization: `Ahmad__${token}`,
+          },
+        }
+      );
+      console.log(response?.data);
+    } catch (error) {
+      console.error("Login error:", error);
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
+  };
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -26,9 +55,13 @@ const PlayerDetails = ({ navigation, route }) => {
           >
             <ChatBubbleBottomCenterIcon size={24} color={"black"} />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <PlusIcon size={24} color={"black"} />
-          </TouchableOpacity>
+          {isLoading ? (
+            <ActivityIndicator size={24} color={"black"} />
+          ) : (
+            <TouchableOpacity onPress={addPlayer}>
+              <PlusIcon size={24} color={"black"} />
+            </TouchableOpacity>
+          )}
         </View>
       ),
     });

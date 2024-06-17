@@ -1,11 +1,11 @@
 import React from "react";
 import { Link, useNavigate, Outlet } from "react-router-dom";
-
+import "../App.css";
 export default function MainRoot() {
   const navigate = useNavigate();
 
   return (
-    <div className="relative">
+    <div className="relative h-screen">
       {/* Header */}
 
       <div className="flex flex-row shadow-md justify-between items-center p-3 w-full bg-white fixed">

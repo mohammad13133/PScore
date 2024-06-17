@@ -4,13 +4,13 @@ import colors from "../../assets/colors/colors";
 
 const SlidesPicker = ({ Slides, children }) => {
   const firstChildDisplayName =
-    React.Children.toArray(children)[0].props.dispalyName;
+    React.Children.toArray(children)[0]?.props?.dispalyName;
   const [page, setPage] = useState(firstChildDisplayName);
 
   const renderComponent = () => {
     {
       return React.Children.map(children, (child) =>
-        page == child.props.dispalyName ? child : null
+        page == child?.props?.dispalyName ? child : null
       );
     }
   };
@@ -22,15 +22,19 @@ const SlidesPicker = ({ Slides, children }) => {
           style={{ backgroundColor: colors.secondColor }}
           className=" flex-row  rounded-lg"
         >
-          {React.Children.map(children, (child, index) => (
-            <Slide
-              key={index}
-              name={child.props.dispalyName}
-              dispalyName={child.props.dispalyName}
-              page={page}
-              setPage={setPage}
-            />
-          ))}
+          {React.Children.map(
+            children,
+            (child, index) =>
+              child != null && (
+                <Slide
+                  key={index}
+                  name={child.props.dispalyName}
+                  dispalyName={child.props.dispalyName}
+                  page={page}
+                  setPage={setPage}
+                />
+              )
+          )}
         </View>
       </View>
       {renderComponent()}

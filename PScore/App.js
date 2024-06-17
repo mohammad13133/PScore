@@ -1,7 +1,7 @@
 import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
-import { Image, StyleSheet, Text, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
@@ -41,6 +41,9 @@ import {
   Cog6ToothIcon,
   MapIcon,
   ArrowLeftStartOnRectangleIcon,
+  UserGroupIcon,
+  MagnifyingGlassCircleIcon,
+  MagnifyingGlassIcon,
 } from "react-native-heroicons/outline";
 import Profile from "./Screens/Profile.js";
 import GameDetails from "./Screens/GameDetails.js";
@@ -48,10 +51,8 @@ import Explore from "./Screens/Explore.js";
 import MyGames from "./Screens/drawerSrceens/MyGames.js";
 import Settings from "./Screens/drawerSrceens/Settings.js";
 import Stadium from "./Screens/Stadium.js";
-import Team from "./Screens/Team.js";
 import Search from "./Screens/Search.js";
 import MapScreen from "./Screens/drawerSrceens/MapScreen.js";
-import Player from "./Screens/Player.js";
 import AuthContext, { AuthProvider, useAuth } from "./contexts/AuthContext.js";
 import { ChatsProvider, useChats } from "./contexts/ChatsContext.js";
 import PlayerDetails from "./Screens/PlayerDetails.js";
@@ -62,6 +63,7 @@ import MessagesScreen from "./Screens/MessagesScreen.js";
 import { useEffect } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
+import MyTeam from "./Screens/drawerSrceens/MyTeam.js";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -88,8 +90,6 @@ export default function App() {
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="SignUp" component={SignUp} />
             <Stack.Screen name="Stadium" component={Stadium} />
-            <Stack.Screen name="Team" component={Team} />
-            <Stack.Screen name="Player" component={Player} />
             <Stack.Screen name="Search" component={Search} />
             <Stack.Screen name="PlayerDetails" component={PlayerDetails} />
             <Stack.Screen name="MessagesScreen" component={MessagesScreen} />
@@ -173,7 +173,9 @@ function MyTabs() {
   );
 }
 function MyTabsDrower() {
-  const { profile, setProfile, token } = useAuth();
+  const navigation = useNavigation();
+  const { profile, setProfile, token, setTeamData, teamData, trigger } =
+    useAuth();
   const { socket, setSocket, setAllChatRooms, setroomMasseges, setIsLoading } =
     useChats();
   useEffect(() => {
@@ -218,6 +220,29 @@ function MyTabsDrower() {
       fetchData();
     }
   }, [token]);
+  useEffect(() => {
+    if (profile.userType == "manager") {
+      console.log("manager account");
+      setTeamData({});
+      const getTeam = async () => {
+        try {
+          const response = await axios.get(
+            "https://pscore-backend.vercel.app/team",
+            {
+              headers: {
+                authorization: `Ahmad__${token}`,
+              },
+            }
+          );
+          console.log(response.data);
+          setTeamData(response.data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+      getTeam();
+    }
+  }, [profile, token, trigger]);
 
   return (
     <Drawer.Navigator
@@ -254,8 +279,17 @@ function MyTabsDrower() {
           borderBottomWidth: 0, // Remove bottom border
           shadowColor: "transparent", // Remove shadow
         },
+
         headerTintColor: "black", // Change text color of header titles
         drawerActiveTintColor: colors.secondColor,
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Search")}
+            style={{ paddingRight: 16 }}
+          >
+            <MagnifyingGlassIcon size={24} color={"black"} />
+          </TouchableOpacity>
+        ),
       }}
     >
       <Drawer.Screen
@@ -283,6 +317,15 @@ function MyTabsDrower() {
         }}
         component={MyGames}
       />
+      {profile.userType == "manager" && (
+        <Drawer.Screen
+          name="MyTeam"
+          options={{
+            drawerIcon: () => <UserGroupIcon color={colors.secondColor} />,
+          }}
+          component={MyTeam}
+        />
+      )}
       <Drawer.Screen
         name="Settings"
         options={{

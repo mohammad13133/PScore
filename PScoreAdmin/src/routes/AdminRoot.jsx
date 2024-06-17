@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-
+import "../App.css";
 export default function Root() {
   return (
     <div className="flex flex-row h-screen w-screen bg-neutral-100">
@@ -9,7 +9,7 @@ export default function Root() {
       <div className="flex-1">
         <Header />
         <div id="detail">
-          <Outlet /> 
+          <Outlet />
         </div>
       </div>
     </div>

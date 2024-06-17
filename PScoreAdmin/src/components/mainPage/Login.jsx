@@ -15,27 +15,53 @@ import { HiOutlineEye, HiOutlineEyeOff, HiOutlineMail } from "react-icons/hi";
 import { HiOutlineLockClosed } from "react-icons/hi";
 import MyTextInput from "../MyTextInput";
 import { useFormik } from "formik";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { ClipLoader } from "react-spinners"; // Import the spinner component
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleLogin = async (values) => {
+    // setLoading(true); // Start loading
+    try {
+      setIsLoading(true);
+      const response = await axios.post(
+        "https://pscore-backend.vercel.app/auth/signin",
+        {
+          email: values.email,
+          password: values.password,
+        }
+      );
+      if (response?.data?.message === "success") {
+        console.log("login:", response.data);
+        navigate("/admin");
+      } else {
+        alert("no login:", response.data);
+      }
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
+      // Handle successful login here (e.g., navigate to another screen)
+    } catch (error) {
+      console.error("Login error:", error);
+      // Handle login error here (e.g., show error message)
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
   };
   const formik = useFormik({
     initialValues: {
-      name: "",
+      email: "",
       password: "",
     },
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      handleLogin(values);
     },
   });
 
   return (
-    <div className="h-screen flex items-center justify-center bg-slate-400">
+    <div className="h-screen flex items-center justify-center background-div">
       <div className="w-[400px] h-[500px] bg-white shadow-lg flex flex-col items-center justify-center">
         <h1 className="text-color-thirdColor mb-10">
           <span className="text-color-mainColor">PS</span>core
@@ -59,11 +85,11 @@ export default function Login() {
         >
           <MyTextInput
             id="name"
-            name="name"
-            placeholder="name"
+            name="email"
+            placeholder="email"
             Icon={HiOutlineMail}
             onChange={formik.handleChange}
-            value={formik.values.name}
+            value={formik.values.email}
           />
           <MyTextInput
             id="password"
@@ -84,7 +110,11 @@ export default function Login() {
             type="submit"
             className="text-white bg-color-secondColor hover:bg-white hover:text-color-mainColor border border-transparent hover:border-color-mainColor transition-all mt-6"
           >
-            login
+            {isLoading ? (
+              <ClipLoader size={30} color={"green"} loading={isLoading} />
+            ) : (
+              <p>login</p>
+            )}
           </button>
         </form>
         <p>

@@ -21,6 +21,7 @@ import MainRoot from "./routes/MainRoot.jsx";
 import Login from "./components/mainPage/Login.jsx";
 import AddStadium from "./components/Admin/AddStadium.jsx";
 import Reservations from "./components/Admin/Reservations.jsx";
+import Main from "./components/mainPage/Main.jsx";
 
 const SidebarData = [...SidebarTopData, ...SidebarBottomData];
 
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <MainRoot />,
     children: [
+      {
+        path: "/",
+        element: <Main />,
+      },
       {
         path: "/login",
         element: <Login />,

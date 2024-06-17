@@ -7,7 +7,8 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [profile, setProfile] = useState({});
-
+  const [teamData, setTeamData] = useState({});
+  const [trigger, setTrigger] = useState(0);
   const decodeToken = (token) => {
     try {
       const decoded = jwtDecode(token);
@@ -20,6 +21,9 @@ export const AuthProvider = ({ children }) => {
       console.error("Invalid token", error);
       return null;
     }
+  };
+  const triggerEvent = () => {
+    setTrigger((prevTrigger) => prevTrigger + 1);
   };
   const getUser = () => {
     try {
@@ -41,6 +45,10 @@ export const AuthProvider = ({ children }) => {
         getUser,
         profile,
         setProfile,
+        teamData,
+        setTeamData,
+        trigger,
+        triggerEvent,
       }}
     >
       {children}

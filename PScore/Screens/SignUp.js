@@ -22,6 +22,7 @@ import {
   LockClosedIcon,
   UserIcon,
   CalendarDaysIcon,
+  UserGroupIcon,
 } from "react-native-heroicons/outline";
 import { BackwardIcon, ChevronLeftIcon } from "react-native-heroicons/solid";
 import Line from "../components/Line";
@@ -60,6 +61,7 @@ const SignUp = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [loginText, setLoginText] = useState("");
   const [loginTextColor, setLoginTextColor] = useState();
+  const [userType, setUserType] = useState();
   const handleSignUP = async (values) => {
     setLoading(true); // Start loading
     console.log(values.birthDate);
@@ -153,7 +155,8 @@ const SignUp = ({ navigation }) => {
                 <SelectDropdown
                   data={userTypes}
                   onSelect={(selectedItem, index) => {
-                    setFieldValue("userType", selectedItem); // Update Formik state
+                    setFieldValue("userType", selectedItem);
+                    setUserType(selectedItem); // Update Formik state
                   }}
                   renderButton={(selectedItem, isOpened) => {
                     return (
@@ -181,6 +184,7 @@ const SignUp = ({ navigation }) => {
                   dropdownStyle={styles.dropdownMenuStyle}
                 />
               </View>
+
               {/*date*/}
               <MyTextInput
                 Icon={CalendarDaysIcon}
@@ -189,7 +193,7 @@ const SignUp = ({ navigation }) => {
                 isDate={true}
                 showDatePicker={showDatePicker}
                 dateText={dayjs(date).format("YYYY-MM-DD")}
-                onChangeText={handleChange("birthDate")}
+                onChangeText={() => console.log(date)}
                 onBlur={handleBlur("birthDate")}
                 value={values.birthDate}
               />
@@ -231,7 +235,7 @@ const SignUp = ({ navigation }) => {
                     handleDateChange(event, selectedDate);
                     setFieldValue(
                       "birthDate",
-                      dayjs(selectedDate).format("DD-MM-YYYY")
+                      dayjs(selectedDate).format("YYYY-MM-DD")
                     );
                   }}
                 />

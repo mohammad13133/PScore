@@ -94,7 +94,6 @@ export default Settings = () => {
               image: image,
             }));
           }
-
           const additionalData = {};
 
           // Conditionally add key-value pairs
@@ -126,7 +125,6 @@ export default Settings = () => {
           for (const key in additionalData) {
             formData.append(key, additionalData[key]);
           }
-          console.log(formData);
           const response = await axios.post(
             "https://pscore-backend.vercel.app/profile/create",
             formData,
@@ -168,17 +166,16 @@ export default Settings = () => {
           className="relative rounded-full border "
           style={{ backgroundColor: colors.mainColor }}
         >
-          {profile && profile.image != "" ? (
-            <Image
-              source={{ uri: profile.image }}
-              className="w-[150px] h-[150px] rounded-full"
-            />
-          ) : (
-            <Image
-              source={require("../../assets/images/defaultUserImage.jpg")}
-              className="w-[120px] h-[120px] rounded-full"
-            />
-          )}
+          <Image
+            source={
+              image
+                ? { uri: image }
+                : profile?.image
+                ? { uri: profile?.image }
+                : require("../../assets/images/defaultUserImage.jpg")
+            }
+            className="w-[150px] h-[150px] rounded-full"
+          />
 
           <View className="absolute top-0 right-0 bg-white rounded-full p-1">
             <CameraIcon size={30} color={"black"} />

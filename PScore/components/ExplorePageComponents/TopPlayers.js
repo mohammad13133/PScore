@@ -56,7 +56,9 @@ const ItemPlayer = ({ item, index }) => {
       }}
     >
       <TouchableOpacity
-        onPress={() => navigation.navigate("PlayerDetails", item.name)}
+        onPress={() =>
+          navigation.navigate("PlayerDetails", { name: item.name })
+        }
         className="flex items-center justify-center"
       >
         <View className="border-2 border-green-500 w-[100px] h-[100px] rounded-full">

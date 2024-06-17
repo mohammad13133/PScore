@@ -5,19 +5,31 @@ import {
   Pressable,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import colors from "../assets/colors/colors";
 import { MagnifyingGlassIcon, XMarkIcon } from "react-native-heroicons/outline";
 import DetailsTable from "../components/DetailsTable";
 import axios from "axios";
+import debounce from "lodash/debounce";
+import { useAuth } from "../contexts/AuthContext";
+import Player from "../components/Player";
 
 const Search = ({ navigation }) => {
+  const { token } = useAuth();
   const [search, setSearch] = useState("");
   const [teams, setTeams] = useState(null);
   const searchInputRef = useRef(null);
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true); // Initial loading state
+  const [loading, setLoading] = useState(false); // Initial loading state
+  const [results, setResults] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -57,6 +69,42 @@ const Search = ({ navigation }) => {
       },
     });
   }, [navigation]);
+  const fetchSearch = async (name) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `https://pscore-backend.vercel.app/team/searchPlayers?name=${name}`,
+        {
+          headers: {
+            authorization: `Ahmad__${token}`,
+          },
+        }
+      );
+      console.log(response.data);
+      setResults(response?.data?.players);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const debouncedFetchData = useCallback(
+    debounce((query) => fetchSearch(query), 600),
+    []
+  );
+  const handleSearch = (value) => {
+    setSearch(value);
+    if (value.length > 2) {
+      debouncedFetchData(value);
+    } else {
+      setResults([]);
+    }
+  };
+  const clearSearch = () => {
+    setSearch("");
+    setResults([]);
+  };
+
   return (
     <ScrollView>
       <View className="bg-white rounded-lg mx-4 py-3 mt-5 flex-row items-center justify-between">
@@ -67,11 +115,12 @@ const Search = ({ navigation }) => {
         <TextInput
           className="flex-1 px-3"
           value={search}
-          onChangeText={(value) => setSearch(value)}
+          onChangeText={handleSearch}
           placeholder="search for Players or Stadiums..."
         ></TextInput>
         {search && (
           <Pressable
+            onPress={clearSearch}
             className="mx-1 rounded-md"
             style={{ backgroundColor: colors.myWhite }}
           >
@@ -82,9 +131,10 @@ const Search = ({ navigation }) => {
 
       <View className="mt-4 flex">
         <DetailsTable header={"Players"}>
-          <Player />
-          <Player />
+          {results &&
+            results.map((item, index) => <Player item={item} key={index} />)}
         </DetailsTable>
+        {loading && <ActivityIndicator color={colors.mainColor} />}
       </View>
       <View className="mt-4">
         <DetailsTable header={"Teams"}>
@@ -109,25 +159,7 @@ const Search = ({ navigation }) => {
     </ScrollView>
   );
 };
-const Player = () => {
-  return (
-    <View className="flex-row mt-2">
-      <Image
-        className="rounded-full"
-        style={{ width: 50, height: 50, resizeMode: "stretch" }}
-        source={require("../assets/images/players/haaland.png")}
-      />
-      <View>
-        <Text>Haaland</Text>
-        <View className="w-[250px] flex-row justify-between">
-          <Text>Manchester City</Text>
-          <Text>Manchester</Text>
-          <Text>ST</Text>
-        </View>
-      </View>
-    </View>
-  );
-};
+
 const Team = ({ index, team, image, tla }) => {
   return (
     <View className="flex-row mt-2" key={index}>

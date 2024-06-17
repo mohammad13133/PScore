@@ -6,12 +6,17 @@ import { ScrollView } from "react-native-gesture-handler";
 import AuthContext, { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 import SlidesPicker from "../components/MyComp/SlidesPicker";
+import DetailsTable from "../components/DetailsTable";
+import Player from "../components/Player";
 
 const Profile = () => {
-  const { token, getUser, profile } = useAuth();
+  const { token, getUser, profile, teamData } = useAuth();
   const [user, setUser] = useState();
   const [loading, setLoading] = useState(false);
-
+  // useEffect(() => {
+  //   console.log(team);
+  //   console.log("hello team");
+  // }, [team]);
   // useEffect(() => {
   //   if (token) {
   //     console.log(token);
@@ -86,7 +91,6 @@ const Profile = () => {
       </View>
       <SlidesPicker>
         <Stats dispalyName="Stats" loading={loading} profile={profile} />
-        <Text dispalyName="bb">lello</Text>
       </SlidesPicker>
     </ScrollView>
   );
