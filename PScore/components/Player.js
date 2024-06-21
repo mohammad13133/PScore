@@ -7,7 +7,10 @@ const Player = ({ item }) => {
   return (
     <TouchableOpacity
       onPress={() =>
-        navigation.navigate("PlayerDetails", { _id: item._id || item.user })
+        navigation.navigate("PlayerDetails", {
+          _id: item._id || item.user,
+          item,
+        })
       }
       className="flex-row mt-2"
     >

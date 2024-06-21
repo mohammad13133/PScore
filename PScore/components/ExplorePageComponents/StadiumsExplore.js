@@ -5,14 +5,43 @@ import {
   Dimensions,
   Image,
   Platform,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import stadiumsData from "../../assets/Data/Stadiums";
 import { LinearGradient } from "expo-linear-gradient";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../../contexts/AuthContext";
+import { useEffect } from "react";
+import axios from "axios";
+import { useState } from "react";
 const { width } = Dimensions.get("window");
 const StadiumsExplore = () => {
+  const { token } = useAuth();
+  const [data, setData] = useState();
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log("hello token");
+      console.log(token);
+      try {
+        const response = await axios.get(
+          "https://pscore-backend.vercel.app/playground",
+          {
+            headers: {
+              authorization: `Ahmad__${token}`,
+            },
+          }
+        );
+        console.log(response.data[0]);
+        setData(response.data);
+        // setProfile(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [token]);
   return (
     <>
       <Text>Nearest</Text>
@@ -29,14 +58,14 @@ const StadiumsExplore = () => {
         //   setScrollX(event.nativeEvent.contentOffset.x);
         // }}
         contentContainerStyle={{ paddingBottom: 10 }}
-        data={stadiumsData}
-        renderItem={({ item, index }) => <Item item={item} index={index} />}
-        keyExtractor={(item) => item.id}
+        data={data}
+        renderItem={({ item, index }) => <Item item={item} key={index} />}
+        keyExtractor={(item) => item._id}
       />
     </>
   );
 };
-const Item = ({ item, index }) => {
+const Item = ({ item }) => {
   const navigation = useNavigation();
   const isWeb = Platform.OS === "web";
 
@@ -52,7 +81,11 @@ const Item = ({ item, index }) => {
     >
       <Image
         className="w-full h-full rounded-lg"
-        source={item.imageUrl}
+        source={
+          item.photos[0]
+            ? { uri: item.photos[0] }
+            : require("../../assets/images/stadiums/etihad.jpg")
+        }
         style={{ resizeMode: "stretch" }}
       />
       <LinearGradient
@@ -63,7 +96,7 @@ const Item = ({ item, index }) => {
       />
       <View className="absolute bottom-0 translate-x-5 mb-5">
         <Text className="text-white ">{item.name}</Text>
-        <Text className="text-white text-xs font-light">{item.city}</Text>
+        <Text className="text-white text-xs font-light">Nablus</Text>
       </View>
     </TouchableOpacity>
   );

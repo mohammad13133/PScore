@@ -22,6 +22,7 @@ import Login from "./components/mainPage/Login.jsx";
 import AddStadium from "./components/Admin/AddStadium.jsx";
 import Reservations from "./components/Admin/Reservations.jsx";
 import Main from "./components/mainPage/Main.jsx";
+import { AuthProvider } from "./contexts/AuthContext";
 
 const SidebarData = [...SidebarTopData, ...SidebarBottomData];
 
@@ -53,6 +54,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );

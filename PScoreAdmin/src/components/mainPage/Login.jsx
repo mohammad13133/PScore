@@ -18,12 +18,13 @@ import { useFormik } from "formik";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners"; // Import the spinner component
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+  const { setToken } = useAuth();
   const handleLogin = async (values) => {
     // setLoading(true); // Start loading
     try {
@@ -37,12 +38,11 @@ export default function Login() {
       );
       if (response?.data?.message === "success") {
         console.log("login:", response.data);
+        setToken(response.data.token);
         navigate("/admin");
       } else {
         alert("no login:", response.data);
       }
-
-      // Handle successful login here (e.g., navigate to another screen)
     } catch (error) {
       console.error("Login error:", error);
       // Handle login error here (e.g., show error message)

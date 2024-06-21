@@ -1,12 +1,16 @@
 import { HiOutlineViewGrid } from "react-icons/hi";
-import { PiCourtBasketballLight } from "react-icons/pi";
+import {
+  PiClockCounterClockwiseDuotone,
+  PiCourtBasketballLight,
+} from "react-icons/pi";
 import { IoCalendarOutline } from "react-icons/io5";
-import { BsEnvelopePaper } from "react-icons/bs";
+import { BsClock, BsEnvelopePaper } from "react-icons/bs";
 
 import { CiSettings } from "react-icons/ci";
 import { IoLogOutOutline } from "react-icons/io5";
 import Reservations from "../../components/Admin/Reservations";
 import AddStadium from "../../components/Admin/AddStadium";
+import PlayGroundData from "../../components/Admin/PlayGroundData";
 
 export const SidebarTopData = [
   {
@@ -18,14 +22,6 @@ export const SidebarTopData = [
     component: <Reservations />,
   },
   {
-    key: "masegges",
-    label: "messages",
-    path: "messages",
-    curruntPath: "/Admin/messages",
-    icon: <BsEnvelopePaper />,
-    component: <Reservations />,
-  },
-  {
     key: "reservations",
     label: "reservations",
     path: "reservations",
@@ -34,12 +30,20 @@ export const SidebarTopData = [
     component: <Reservations />,
   },
   {
+    key: "addMatches",
+    label: "addMatches",
+    path: "addMatches",
+    curruntPath: "/Admin/addMatches",
+    icon: <BsClock />,
+    component: <Reservations />,
+  },
+  {
     key: "playgroundData",
     label: "playgroundData",
     path: "playgroundData",
     curruntPath: "/Admin/playgroundData",
     icon: <PiCourtBasketballLight />,
-    component: <AddStadium />,
+    component: <PlayGroundData />,
   },
   {
     key: "addStadium",
@@ -47,7 +51,7 @@ export const SidebarTopData = [
     path: "addStadium",
     curruntPath: "/Admin/addStadium",
     icon: <PiCourtBasketballLight />,
-    component: <Reservations />,
+    component: <AddStadium />,
   },
 ];
 

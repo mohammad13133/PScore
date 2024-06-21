@@ -16,16 +16,21 @@ import {
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
+import { useEffect } from "react";
 const PlayerDetails = ({ navigation, route }) => {
-  const { token } = useAuth();
-  const { name, _id } = route.params;
-  console.log(name + " " + _id);
+  const { token, setTeamData } = useAuth();
+  const { name, _id, item } = route.params;
   const [isLoading, setIsLoading] = useState(false);
+  const [localProfile, setLocalProfile] = useState({});
+
   const addPlayer = async () => {
     setIsLoading(true); // Start loading
+    console.log(_id);
     try {
+      console.log("hello");
       const response = await axios.post(
-        `https://pscore-backend.vercel.app/team/addPlayer/${_id}`,
+        `https://pscore-backend.vercel.app/team/addplayer/${_id}`,
+        {},
         {
           headers: {
             authorization: `Ahmad__${token}`,
@@ -39,6 +44,31 @@ const PlayerDetails = ({ navigation, route }) => {
       setIsLoading(false); // Stop loading
     }
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log(token);
+      try {
+        const response = await axios.get(
+          `https://pscore-backend.vercel.app/profile/${_id}`,
+          {
+            headers: {
+              authorization: `Ahmad__${token}`,
+            },
+          }
+        );
+        // Handle the response here
+        setLocalProfile(response.data);
+        console.log(response.data);
+      } catch (error) {
+        // Handle the error here
+        console.error(error);
+      }
+    };
+    if (token) {
+      fetchData();
+    }
+  }, []);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -78,7 +108,7 @@ const PlayerDetails = ({ navigation, route }) => {
         className="flex items-center justify-center relative "
       >
         <View className="absolute top-10">
-          <Text>Mohammad Khaled</Text>
+          <Text>{item?.userName}</Text>
         </View>
 
         <View
@@ -87,7 +117,7 @@ const PlayerDetails = ({ navigation, route }) => {
         >
           <Image
             className="rounded-full"
-            source={require("../assets/images/players/haaland.png")}
+            source={{ uri: item?.image }}
             style={{
               width: 150,
               height: 150,
@@ -95,25 +125,21 @@ const PlayerDetails = ({ navigation, route }) => {
             }}
           />
         </View>
-        <View className="absolute bottom-10 w-full flex-row justify-between px-20">
-          <Text>Manchester</Text>
-          <Text>Al-Etihad</Text>
-        </View>
       </View>
       <SlidesPicker>
         <View dispalyName={"games"}>
           <Text>hello</Text>
           <Text>hello</Text>
         </View>
-        <View dispalyName={"stats"}>
-          <UpperStats />
-          <Stats />
+        <View dispalyName={"profile"}>
+          <UpperStats profile={localProfile} />
+          <Stats profile={localProfile} />
         </View>
       </SlidesPicker>
     </View>
   );
 };
-const UpperStats = () => {
+const UpperStats = ({ profile }) => {
   return (
     <View className="w-full items-center mt-4">
       <View
@@ -136,7 +162,7 @@ const UpperStats = () => {
             }}
             source={{ uri: "https://flagsapi.com/PS/flat/64.png" }}
           />
-          <Text>Palestine</Text>
+          <Text>{profile.country}</Text>
         </View>
         <View className="flex items-center w-[100px]">
           <Image
@@ -147,13 +173,13 @@ const UpperStats = () => {
             }}
             source={{ uri: "https://flagsapi.com/PS/flat/64.png" }}
           />
-          <Text>No Team</Text>
+          <Text>{profile.team}</Text>
         </View>
       </View>
     </View>
   );
 };
-const Stats = () => {
+const Stats = ({ profile }) => {
   return (
     <View
       style={{ backgroundColor: colors.secondColor }}
@@ -162,32 +188,36 @@ const Stats = () => {
       <View className="flex-row justify-around">
         <View className="flex items-center w-[100px] space-y-4 ">
           <Text>Age</Text>
-          <Text>19</Text>
+          <Text>{profile.age}</Text>
         </View>
         <View className="flex items-center w-[100px] space-y-4 ">
           <Text>Position</Text>
-          <Text>Striker</Text>
+          <Text>{profile.position}</Text>
         </View>
         <View className="flex items-center w-[100px] space-y-4 ">
-          <Text>Matches</Text>
-          <Text>4</Text>
+          <Text>phone</Text>
+          <Text>{profile.number}</Text>
         </View>
       </View>
       <View className="flex-row justify-around">
+        <View className="flex items-center w-[100px] space-y-4 ">
+          <Text>Matches</Text>
+          <Text>0</Text>
+        </View>
         <View className="flex items-center w-[100px] space-y-4 ">
           <Image
             className="rounded-full"
             style={{ width: 25, height: 25 }}
             source={require("../assets/images/footballcartoon.jpg")}
           />
-          <Text>20(3)</Text>
+          <Text>0</Text>
         </View>
         <View className="flex items-center w-[100px] space-y-4 ">
           <Image
             style={{ width: 25, height: 25 }}
             source={require("../assets/images/assists.png")}
           />
-          <Text>12</Text>
+          <Text>0</Text>
         </View>
       </View>
     </View>

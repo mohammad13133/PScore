@@ -88,9 +88,6 @@ const Home = ({ navigation, route }) => {
             {matches[0]?.competition?.name}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Search")}>
-          <Text style={{ color: colors.mainColor }}>Search</Text>
-        </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("MessagesScreen")}>
           <Text style={{ color: colors.mainColor }}>MessagesScreen</Text>
         </TouchableOpacity>

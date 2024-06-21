@@ -31,9 +31,7 @@ import { Calendar, CalendarList } from "react-native-calendars";
 import { useNavigation } from "@react-navigation/native";
 
 const Stadium = ({ route, navigation }) => {
-  const { name, city } = route.params;
-  const foundStadium = null;
-  const [stadium, setStadium] = useState(null);
+  const playgroud = route.params;
   const [activeImage, setActiveImage] = useState();
   const [activeHeart, setActiveHeart] = useState(false);
   const [images, setImages] = useState([]);
@@ -41,20 +39,11 @@ const Stadium = ({ route, navigation }) => {
   const [mapLong, setMapLong] = useState(null);
 
   useEffect(() => {
-    const stadium = stadiumDetails.find((stadium) => stadium.name === name);
-    if (stadium) {
-      setStadium(stadium);
-      console.log("Stadium found:", stadium.name);
-      setActiveImage(stadium.imageUrls[0]); // Set activeImage to the first image in stadium.imageUrls
-      setImages(stadium.imageUrls);
-      setMapLat(stadium.mapLat);
-      setMapLong(stadium.mapLong);
-      console.log("mapLat:", stadium.mapLat);
-      console.log("mapLong:", stadium.mapLong);
-    } else {
-      console.log("Stadium not found");
-    }
-  }, [name, stadiumDetails]);
+    setActiveImage(playgroud.photos[0]);
+    setMapLat(playgroud.location.coordinates[0]);
+    setMapLong(playgroud.location.coordinates[1]);
+    console.log(playgroud);
+  }, []);
   //   useEffect(() => {
   //     if (stadium && stadium.imageUrls && stadium.imageUrls.length > 0) {
   //       setActiveImage(stadium.imageUrls[0]); // Set activeImage to the first image in stadium.imageUrls
@@ -78,7 +67,7 @@ const Stadium = ({ route, navigation }) => {
             {/*Header/*/}
             <Image
               className="w-full h-[300px]"
-              source={activeImage}
+              source={{ uri: activeImage }}
               style={{
                 borderBottomRightRadius: 50,
                 borderBottomLeftRadius: 50,
@@ -87,7 +76,7 @@ const Stadium = ({ route, navigation }) => {
             {/*Images/*/}
             <View className="absolute  w-full h-full flex items-center justify-center">
               <View className="flex-row absolute space-x-5 bottom-10">
-                {images.map((image, index) => {
+                {playgroud.photos.map((image, index) => {
                   return (
                     <TouchableOpacity
                       key={index}
@@ -102,7 +91,7 @@ const Stadium = ({ route, navigation }) => {
                     >
                       {image ? (
                         <Image
-                          source={image}
+                          source={{ uri: image }}
                           className="w-full h-full rounded-lg"
                           style={{ resizeMode: "stretch" }}
                         />
@@ -120,8 +109,8 @@ const Stadium = ({ route, navigation }) => {
           </View>
           <View className="flex-row justify-between items-start mt-4">
             <View className="pl-4">
-              <Text className="font-bold text-lg">{name}</Text>
-              <Text className="font-light">{city}</Text>
+              <Text className="font-bold text-lg">{playgroud.name}</Text>
+              <Text className="font-light">Nablus</Text>
             </View>
             <View className="flex-row pr-4 space-x-2">
               <ShareIcon color={colors.lightGreen} size={25} />
@@ -161,7 +150,7 @@ const Stadium = ({ route, navigation }) => {
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                   }}
-                  scrollEnabled={false}
+                  // scrollEnabled={false}
                   showsMyLocationButton
                 >
                   <Marker
