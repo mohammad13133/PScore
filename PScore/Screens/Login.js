@@ -85,8 +85,8 @@ const Login = ({ navigation }) => {
           <View>
             <MyTextInput
               Icon={EnvelopeIcon}
-              placeholder={"userName"}
-              label={"UserName"}
+              placeholder={"example@gmail.com"}
+              label={"email"}
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
               value={values.email}

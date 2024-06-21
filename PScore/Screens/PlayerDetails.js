@@ -11,6 +11,7 @@ import SlidesPicker from "../components/MyComp/SlidesPicker";
 import {
   ChatBubbleBottomCenterIcon,
   HeartIcon,
+  MinusIcon,
   PlusIcon,
 } from "react-native-heroicons/outline";
 import { useState } from "react";
@@ -18,11 +19,42 @@ import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 import { useEffect } from "react";
 const PlayerDetails = ({ navigation, route }) => {
-  const { token, setTeamData } = useAuth();
+  const { token, teamData, triggerEvent, setTeamData } = useAuth();
   const { name, _id, item } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [localProfile, setLocalProfile] = useState({});
+  const [isMember, setIsMember] = useState(false);
+  useEffect(() => {
+    console.log(_id);
+    if (teamData && teamData.playerProfile) {
+      const exists = teamData.playerProfile.some(
+        (profile) => profile._id === _id
+      );
 
+      setIsMember(exists);
+    }
+  }, [teamData]);
+  const removePlayer = async () => {
+    setIsLoading(true); // Start loading
+    console.log(_id);
+    try {
+      console.log("hello");
+      const response = await axios.delete(
+        `https://pscore-backend.vercel.app/team/removeplayer/${_id}`,
+        {
+          headers: {
+            authorization: `Ahmad__${token}`,
+          },
+        }
+      );
+      console.log(response?.data);
+      triggerEvent();
+    } catch (error) {
+      console.error("Login error:", error);
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
+  };
   const addPlayer = async () => {
     setIsLoading(true); // Start loading
     console.log(_id);
@@ -38,6 +70,7 @@ const PlayerDetails = ({ navigation, route }) => {
         }
       );
       console.log(response?.data);
+      triggerEvent();
     } catch (error) {
       console.error("Login error:", error);
     } finally {
@@ -50,6 +83,7 @@ const PlayerDetails = ({ navigation, route }) => {
       try {
         const response = await axios.get(
           `https://pscore-backend.vercel.app/profile/${_id}`,
+          {},
           {
             headers: {
               authorization: `Ahmad__${token}`,
@@ -87,6 +121,10 @@ const PlayerDetails = ({ navigation, route }) => {
           </TouchableOpacity>
           {isLoading ? (
             <ActivityIndicator size={24} color={"black"} />
+          ) : isMember ? (
+            <TouchableOpacity onPress={removePlayer}>
+              <MinusIcon size={24} color={"black"} />
+            </TouchableOpacity>
           ) : (
             <TouchableOpacity onPress={addPlayer}>
               <PlusIcon size={24} color={"black"} />
@@ -95,7 +133,7 @@ const PlayerDetails = ({ navigation, route }) => {
         </View>
       ),
     });
-  }, [navigation]);
+  }, [navigation, isMember, isLoading, teamData]);
   return (
     <View>
       <View
