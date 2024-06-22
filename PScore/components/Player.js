@@ -23,12 +23,9 @@ const Player = ({ item }) => {
             : require("../assets/images/defaultUserImage.jpg")
         }
       />
-      <View>
+      <View style={{ width: 250 }}>
         <Text>{item?.userName}</Text>
-        <View className="w-[250px] flex-row justify-between">
-          <Text>Team Name</Text>
-          <Text>{item?.position}</Text>
-        </View>
+        <Text>{item?.position}</Text>
       </View>
     </TouchableOpacity>
   );

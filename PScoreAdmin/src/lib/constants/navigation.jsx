@@ -11,6 +11,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 import Reservations from "../../components/Admin/Reservations";
 import AddStadium from "../../components/Admin/AddStadium";
 import PlayGroundData from "../../components/Admin/PlayGroundData";
+import AddMatches from "../../components/Admin/AddMatches";
 
 export const SidebarTopData = [
   {
@@ -35,16 +36,16 @@ export const SidebarTopData = [
     path: "addMatches",
     curruntPath: "/Admin/addMatches",
     icon: <BsClock />,
-    component: <Reservations />,
+    component: <AddMatches />,
   },
-  {
-    key: "playgroundData",
-    label: "playgroundData",
-    path: "playgroundData",
-    curruntPath: "/Admin/playgroundData",
-    icon: <PiCourtBasketballLight />,
-    component: <PlayGroundData />,
-  },
+  // {
+  //   key: "playgroundData",
+  //   label: "playgroundData",
+  //   path: "playgroundData",
+  //   curruntPath: "/Admin/playgroundData",
+  //   icon: <PiCourtBasketballLight />,
+  //   component: <PlayGroundData />,
+  // },
   {
     key: "addStadium",
     label: "addStadium",

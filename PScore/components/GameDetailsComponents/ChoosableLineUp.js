@@ -17,6 +17,7 @@ import {
 import OtherPlayers from "./OtherPlayers";
 import SelectDropdown from "react-native-select-dropdown";
 import colors from "../../assets/colors/colors";
+import { useAuth } from "../../contexts/AuthContext";
 const PLAYEERS = [
   {
     id: 1,
@@ -51,10 +52,12 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
   const [isOther, setIsOther] = useState(false);
   const [playerCount, setPlayerCount] = useState(5);
   const [DATA, setDATA] = useState();
+  const { teamData } = useAuth();
 
   useEffect(() => {
     //here get the players avilable
-    setDATA(PLAYEERS);
+    console.log(teamData.playerProfile);
+    setDATA(teamData.playerProfile);
   }, []);
 
   const handlePlayerPress = (position) => {
@@ -68,8 +71,8 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
   };
   const handleAddOther = (newOther) => {
     if (
-      Object.values(others).some((player) => player.id === newOther.id) ||
-      Object.values(players).some((player) => player.id === newOther.id)
+      Object.values(others).some((player) => player._id === newOther._id) ||
+      Object.values(players).some((player) => player._id === newOther._id)
     ) {
       console.log("Duplicate ID", "This player ID already exists.");
 
@@ -81,8 +84,8 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
   };
   const handleChoiceSelection = (choice) => {
     if (
-      Object.values(others).some((player) => player.id === choice.id) ||
-      Object.values(players).some((player) => player.id === choice.id)
+      Object.values(others).some((player) => player._id === choice._id) ||
+      Object.values(players).some((player) => player._id === choice._id)
     ) {
       console.log("Duplicate ID", "This player ID already exists.");
 
@@ -111,21 +114,21 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
               source={require("../../assets/images/footballground.png")}
               style={{ resizeMode: "stretch", width: "100%", height: "100%" }}
             />
-            {/*Gk */}
+            {/*striker */}
             <Player
-              top={"90%"}
+              top={"20%"}
               left={"50%"}
               player={players.player1}
               onPress={() => handlePlayerPress("player1")}
             />
-            {/*defence*/}
-
+            {/*mid*/}
             <Player
               top={"50%"}
               left={"50%"}
               player={players.player2}
               onPress={() => handlePlayerPress("player2")}
             />
+            {/* defence */}
             <Player
               top={"70%"}
               left={"35%"}
@@ -139,9 +142,8 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
               onPress={() => handlePlayerPress("player4")}
             />
             <Player
-              top={"20%"}
+              top={"90%"}
               left={"50%"}
-              ImageProp={require("../../assets/images/players/haaland.png")}
               player={players.player5}
               onPress={() => handlePlayerPress("player5")}
             />
@@ -160,8 +162,9 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
               <FlatList
                 data={DATA}
                 keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
+                renderItem={({ item, index }) => (
                   <TouchableOpacity
+                    key={index}
                     className="border-b mb-2"
                     onPress={() => {
                       isOther == true
@@ -174,11 +177,13 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
                         <Image
                           className="rounded-full"
                           style={{ height: 50, width: 50 }}
-                          source={item.image}
+                          source={{ uri: item.image }}
                         />
                       </View>
-
-                      <Text style={styles.choiceText}>{item.playername}</Text>
+                      <View>
+                        <Text style={styles.choiceText}>{item.userName}</Text>
+                        <Text style={styles.choiceText}>{item.position}</Text>
+                      </View>
                     </View>
                   </TouchableOpacity>
                 )}
@@ -260,7 +265,7 @@ const Player = ({ top, left, ImageProp, goals, assists, player, onPress }) => {
           className="rounded-full "
           source={
             player
-              ? player.image
+              ? { uri: player.image }
               : require("../../assets/images/defaultUserImage.jpg")
           }
           style={{ resizeMode: "stretch", width: 50, height: 50 }}
@@ -268,7 +273,7 @@ const Player = ({ top, left, ImageProp, goals, assists, player, onPress }) => {
       </View>
 
       <Text className="text-white">
-        {player ? player.playername : "SelectPlayer"}
+        {player ? player.userName : "SelectPlayer"}
       </Text>
     </TouchableOpacity>
   );

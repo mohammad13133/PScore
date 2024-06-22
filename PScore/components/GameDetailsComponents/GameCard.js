@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, Modal } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import colors from "../../assets/colors/colors";
 import { ChevronLeftIcon, BellAlertIcon } from "react-native-heroicons/solid";
@@ -8,6 +8,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
+import SearchTeam from "../SearchTeam";
 {
   /*const GameCard = () => {
   navigation = useNavigation();
@@ -70,6 +71,16 @@ import { useNavigation } from "@react-navigation/native";
 }
 const GameCard = ({ header, discreption, score, team1, team2 }) => {
   const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [teamImage, setTeamImage] = useState();
+  const handleTeamPress = (teamId, teamName, teamImage) => {
+    console.log("Team ID:", teamId);
+    console.log("Team Image:", teamImage);
+    console.log("Team name:", teamName);
+    setTeamImage(teamImage);
+    setModalVisible(false);
+    // You can perform further actions with teamId and teamImage here
+  };
   return (
     <View
       style={{
@@ -118,12 +129,18 @@ const GameCard = ({ header, discreption, score, team1, team2 }) => {
           </Text>
         </View>
         <TouchableOpacity
-          disabled={team2 ? false : true}
-          onPress={() => navigation.navigate("Team")}
+          disabled={team2 ? true : false}
+          onPress={() => setModalVisible(true)}
         >
           <Image
-            source={team2 ? team2 : ""}
-            className="bg-slate-400 rounded-full"
+            source={
+              team2
+                ? team2
+                : teamImage
+                ? { uri: teamImage }
+                : require("../../assets/images/addteam.png")
+            }
+            className=" rounded-full"
             style={{
               width: 100,
               height: 100,
@@ -131,7 +148,38 @@ const GameCard = ({ header, discreption, score, team1, team2 }) => {
             }}
           />
         </TouchableOpacity>
-
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: "#fff",
+                padding: 20,
+                borderRadius: 10,
+                width: 300,
+              }}
+            >
+              <SearchTeam onPress={handleTeamPress} />
+              {/* Add your modal content here */}
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <Text>Close Modal</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
         <View
           style={{
             position: "absolute",

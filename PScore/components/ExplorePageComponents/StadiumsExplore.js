@@ -18,7 +18,7 @@ import { useState } from "react";
 const { width } = Dimensions.get("window");
 const StadiumsExplore = () => {
   const { token } = useAuth();
-  const [data, setData] = useState();
+  const [data, setData] = useState({});
   useEffect(() => {
     const fetchData = async () => {
       console.log("hello token");
@@ -51,7 +51,7 @@ const StadiumsExplore = () => {
         snapToAlignment={"start"}
         scrollEventThrottle={16}
         decelerationRate="fast"
-        snapToOffsets={[...Array(stadiumsData.length)].map(
+        snapToOffsets={[...Array(data.length)].map(
           (x, i) => i * (width * 0.8 - 40) + (i - 1) * 40
         )}
         // onScroll={(event) => {

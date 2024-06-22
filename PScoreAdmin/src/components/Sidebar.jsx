@@ -2,7 +2,9 @@ import React from "react";
 import { IoIosFootball } from "react-icons/io";
 import { SidebarBottomData, SidebarTopData } from "../lib/constants/navigation";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 export default function Sidebar() {
+  const { type } = useAuth();
   return (
     <div className="p-3 bg-slate-900 w-60 flex flex-col text-white">
       <div className="flex-1">
@@ -11,11 +13,14 @@ export default function Sidebar() {
           <span className="text-lg">PScore</span>
         </div>
         <div className="flex flex-col pt-6 space-y-1">
-          {SidebarTopData.map((item) => (
-            <SidebarLink item={item} />
-          ))}
+          {SidebarTopData.map((item) => {
+            if (item.key === "addMatches" && type !== "owner") {
+              return null; // Skip rendering the addMatches link if user is not admin
+            } else {
+              return <SidebarLink item={item} />;
+            }
+          })}
         </div>
-        top
       </div>
       <div className="flex flex-col space-y-1">
         {SidebarBottomData.map((item) => (

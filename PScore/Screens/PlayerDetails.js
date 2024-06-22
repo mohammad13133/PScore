@@ -125,15 +125,15 @@ const PlayerDetails = ({ navigation, route }) => {
             <TouchableOpacity onPress={removePlayer}>
               <MinusIcon size={24} color={"black"} />
             </TouchableOpacity>
-          ) : (
+          ) : localProfile.team === "No Team" ? (
             <TouchableOpacity onPress={addPlayer}>
               <PlusIcon size={24} color={"black"} />
             </TouchableOpacity>
-          )}
+          ) : null}
         </View>
       ),
     });
-  }, [navigation, isMember, isLoading, teamData]);
+  }, [navigation, isMember, isLoading, teamData, localProfile]);
   return (
     <View>
       <View
@@ -188,10 +188,6 @@ const UpperStats = ({ profile }) => {
         }}
       >
         <View className="flex items-center w-[100px]">
-          <HeartIcon size={25} color={colors.mainColor} />
-          <Text>2.3k</Text>
-        </View>
-        <View className="flex items-center w-[100px]">
           <Image
             style={{
               width: 25,
@@ -211,6 +207,9 @@ const UpperStats = ({ profile }) => {
             }}
             source={{ uri: "https://flagsapi.com/PS/flat/64.png" }}
           />
+          <Text>Nablus</Text>
+        </View>
+        <View className="flex items-center justify-center w-[100px]">
           <Text>{profile.team}</Text>
         </View>
       </View>
