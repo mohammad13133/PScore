@@ -25,31 +25,47 @@ import {
   ShareIcon,
   ChatBubbleOvalLeftIcon,
 } from "react-native-heroicons/outline";
+import axios from "axios";
+
 import stadiumDetails from "../assets/Data/StadiumsDetails";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { Calendar, CalendarList } from "react-native-calendars";
 import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../contexts/AuthContext";
 
 const Stadium = ({ route, navigation }) => {
   const playgroud = route.params;
+  const { token } = useAuth();
   const [activeImage, setActiveImage] = useState();
   const [activeHeart, setActiveHeart] = useState(false);
   const [images, setImages] = useState([]);
   const [mapLat, setMapLat] = useState(null);
   const [mapLong, setMapLong] = useState(null);
-
+  const [selectedDate, setSelectedDate] = useState("");
+  const [emptyMatches, setEmptyMatches] = useState([]);
   useEffect(() => {
     setActiveImage(playgroud.photos[0]);
     setMapLat(playgroud.location.coordinates[0]);
     setMapLong(playgroud.location.coordinates[1]);
     console.log(playgroud);
   }, []);
-  //   useEffect(() => {
-  //     if (stadium && stadium.imageUrls && stadium.imageUrls.length > 0) {
-  //       setActiveImage(stadium.imageUrls[0]); // Set activeImage to the first image in stadium.imageUrls
-  //       setImages(stadium.imageUrls);
-  //     }
-  //   }, [stadium]);
+  const handleGetMatches = async (date) => {
+    console.log(playgroud._id + " " + date);
+    try {
+      const response = await axios.get(
+        `https://pscore-backend.vercel.app/match/getemptymatch/${playgroud._id}/${date}`,
+        {
+          headers: {
+            authorization: `Ahmad__${token}`,
+          },
+        }
+      );
+      setEmptyMatches(response?.data?.match);
+      console.log(response?.data);
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+  };
 
   const [statusBarHeight, setStatusBarHeight] = useState();
   return (
@@ -167,7 +183,11 @@ const Stadium = ({ route, navigation }) => {
         </View>
         <View className="flex items-center">
           <View style={{ width: "95%" }}>
-            <MyCalender />
+            <MyCalender
+              handleGetMatches={handleGetMatches}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+            />
           </View>
         </View>
         <View>
@@ -180,9 +200,12 @@ const Stadium = ({ route, navigation }) => {
               width: wp(90),
             }}
           >
-            <SingleGameBook time={"12:30-14"} />
-            <SingleGameBook time={"16-18"} />
-            <SingleGameBook time={"18-20"} />
+            {emptyMatches.map((item, index) => (
+              <SingleGameBook
+                key={index}
+                time={item.startTime + "-" + item.endTime}
+              />
+            ))}
           </View>
         </View>
       </ScrollView>
@@ -261,12 +284,14 @@ const SingleGameBook = ({ time }) => {
     </Pressable>
   );
 };
-const MyCalender = () => {
-  const [selectedDate, setSelectedDate] = useState("");
+
+const MyCalender = ({ handleGetMatches, setSelectedDate, selectedDate }) => {
   const handleDayPress = (date) => {
     setSelectedDate(date.dateString);
-    console.log(date);
+    handleGetMatches(date.dateString);
+    console.log(date.dateString);
   };
+
   return (
     <Calendar
       style={{
