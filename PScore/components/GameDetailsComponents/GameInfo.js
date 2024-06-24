@@ -12,7 +12,7 @@ import {
 import Marker from "./Marker";
 import DetailsTable from "../DetailsTable";
 import { useNavigation } from "@react-navigation/native";
-const GameInfo = () => {
+const GameInfo = ({ matchDetails }) => {
   const navigation = useNavigation();
   return (
     <DetailsTable header={"GameInfo"}>
@@ -20,7 +20,11 @@ const GameInfo = () => {
         <Info first={"betWazan Stadium"} second={"Nablus"} Pin={MapPinIcon} />
       </Pressable>
 
-      <Info first={"26/11/2024"} second={"16:00"} Pin={CalendarDaysIcon} />
+      <Info
+        first={matchDetails?.date}
+        second={matchDetails?.startTime + "-" + matchDetails?.endTime}
+        Pin={CalendarDaysIcon}
+      />
     </DetailsTable>
   );
 };

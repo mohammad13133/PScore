@@ -45,8 +45,8 @@ const Stadium = ({ route, navigation }) => {
   const [emptyMatches, setEmptyMatches] = useState([]);
   useEffect(() => {
     setActiveImage(playgroud.photos[0]);
-    setMapLat(playgroud.location.coordinates[0]);
-    setMapLong(playgroud.location.coordinates[1]);
+    setMapLat(playgroud.location.coordinates[1]);
+    setMapLong(playgroud.location.coordinates[0]);
     console.log(playgroud);
   }, []);
   const handleGetMatches = async (date) => {
@@ -130,7 +130,6 @@ const Stadium = ({ route, navigation }) => {
             </View>
             <View className="flex-row pr-4 space-x-2">
               <ShareIcon color={colors.lightGreen} size={25} />
-              <ChatBubbleOvalLeftIcon color={colors.lightGreen} size={25} />
               <TouchableOpacity onPress={() => setActiveHeart(!activeHeart)}>
                 {activeHeart ? (
                   <HeartIconTrue color={colors.lightGreen} size={25} />
@@ -167,7 +166,6 @@ const Stadium = ({ route, navigation }) => {
                     longitudeDelta: 0.0421,
                   }}
                   // scrollEnabled={false}
-                  showsMyLocationButton
                 >
                   <Marker
                     coordinate={{ latitude: mapLat, longitude: mapLong }}
@@ -204,6 +202,7 @@ const Stadium = ({ route, navigation }) => {
               <SingleGameBook
                 key={index}
                 time={item.startTime + "-" + item.endTime}
+                gameid={item._id}
               />
             ))}
           </View>
@@ -212,7 +211,7 @@ const Stadium = ({ route, navigation }) => {
     </View>
   );
 };
-const SingleGameBook = ({ time }) => {
+const SingleGameBook = ({ time, gameid }) => {
   const navigation = useNavigation();
   return (
     <Pressable
@@ -233,6 +232,7 @@ const SingleGameBook = ({ time }) => {
       onPress={() =>
         navigation.navigate("GameDetails", {
           type: "EMPTY",
+          gameid,
         })
       }
     >

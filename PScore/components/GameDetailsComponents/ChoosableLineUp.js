@@ -71,32 +71,45 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
   };
   const handleAddOther = (newOther) => {
     if (
-      Object.values(others).some((player) => player._id === newOther._id) ||
-      Object.values(players).some((player) => player._id === newOther._id)
+      Object.values(others).some((player) => player.id === newOther._id) ||
+      Object.values(players).some((player) => player.id === newOther._id)
     ) {
       console.log("Duplicate ID", "This player ID already exists.");
 
       setModalVisible(false);
       return;
     }
-    setOthers([...others, newOther]);
+    setOthers([
+      ...others,
+      {
+        id: newOther._id,
+        playername: newOther.userName,
+        ...(newOther.image && { image: newOther.image }),
+      },
+    ]);
     setModalVisible(false);
   };
   const handleChoiceSelection = (choice) => {
     if (
-      Object.values(others).some((player) => player._id === choice._id) ||
-      Object.values(players).some((player) => player._id === choice._id)
+      Object.values(others).some((player) => player.id === choice._id) ||
+      Object.values(players).some((player) => player.id === choice._id)
     ) {
       console.log("Duplicate ID", "This player ID already exists.");
 
       setModalVisible(false);
       return;
     }
+
     setPlayers((prevPlayers) => ({
       ...prevPlayers,
-      [selectedPlayer]: choice,
+      [selectedPlayer]: {
+        id: choice._id,
+        playername: choice.userName,
+        image:
+          choice.image ||
+          "https://i.pinimg.com/736x/0d/64/98/0d64989794b1a4c9d89bff571d3d5842.jpg",
+      },
     }));
-
     setModalVisible(false);
   };
 
@@ -161,7 +174,7 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
             <View style={styles.modalContent}>
               <FlatList
                 data={DATA}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item._id}
                 renderItem={({ item, index }) => (
                   <TouchableOpacity
                     key={index}
@@ -177,7 +190,11 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
                         <Image
                           className="rounded-full"
                           style={{ height: 50, width: 50 }}
-                          source={{ uri: item.image }}
+                          source={
+                            item.image
+                              ? { uri: item.image }
+                              : require("../../assets/images/defaultUserImage.jpg")
+                          }
                         />
                       </View>
                       <View>
@@ -264,7 +281,7 @@ const Player = ({ top, left, ImageProp, goals, assists, player, onPress }) => {
         <Image
           className="rounded-full "
           source={
-            player
+            player?.image
               ? { uri: player.image }
               : require("../../assets/images/defaultUserImage.jpg")
           }
@@ -273,7 +290,7 @@ const Player = ({ top, left, ImageProp, goals, assists, player, onPress }) => {
       </View>
 
       <Text className="text-white">
-        {player ? player.userName : "SelectPlayer"}
+        {player ? player.playername : "SelectPlayer"}
       </Text>
     </TouchableOpacity>
   );

@@ -69,7 +69,14 @@ import SearchTeam from "../SearchTeam";
   );
 };*/
 }
-const GameCard = ({ header, discreption, score, team1, team2 }) => {
+const GameCard = ({
+  header,
+  discreption,
+  score,
+  team1,
+  team2,
+  setInvitedTeamId,
+}) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [teamImage, setTeamImage] = useState();
@@ -78,6 +85,7 @@ const GameCard = ({ header, discreption, score, team1, team2 }) => {
     console.log("Team Image:", teamImage);
     console.log("Team name:", teamName);
     setTeamImage(teamImage);
+    setInvitedTeamId(teamId);
     setModalVisible(false);
     // You can perform further actions with teamId and teamImage here
   };
@@ -107,7 +115,7 @@ const GameCard = ({ header, discreption, score, team1, team2 }) => {
           onPress={() => navigation.navigate("Team")}
         >
           <Image
-            source={team1 ? team1 : ""}
+            source={team1 ? { uri: team1 } : ""}
             className=" rounded-full "
             style={{
               width: 100,
@@ -193,25 +201,25 @@ const GameCard = ({ header, discreption, score, team1, team2 }) => {
                 className="rounded-full p-4 relative flex items-center justify-center"
                 style={{ backgroundColor: colors.mainColor }}
               >
-                <Text style={{ color: "white", position: "absolute" }}>W</Text>
+                <Text style={{ color: "white", position: "absolute" }}>-</Text>
               </View>
               <View
                 className="rounded-full p-4 relative flex items-center justify-center"
                 style={{ backgroundColor: colors.mainColor }}
               >
-                <Text style={{ color: "white", position: "absolute" }}>W</Text>
+                <Text style={{ color: "white", position: "absolute" }}>-</Text>
               </View>
               <View
                 className="rounded-full p-4 relative flex items-center justify-center"
                 style={{ backgroundColor: colors.mainColor }}
               >
-                <Text style={{ color: "white", position: "absolute" }}>W</Text>
+                <Text style={{ color: "white", position: "absolute" }}>-</Text>
               </View>
               <View
                 className="rounded-full p-4 relative flex items-center justify-center"
                 style={{ backgroundColor: colors.mainColor }}
               >
-                <Text style={{ color: "white", position: "absolute" }}>W</Text>
+                <Text style={{ color: "white", position: "absolute" }}>-</Text>
               </View>
             </View>
             <View className="flex-row space-x-1">
@@ -219,25 +227,25 @@ const GameCard = ({ header, discreption, score, team1, team2 }) => {
                 className="rounded-full p-4 relative flex items-center justify-center"
                 style={{ backgroundColor: colors.mainColor }}
               >
-                <Text style={{ color: "white", position: "absolute" }}>W</Text>
+                <Text style={{ color: "white", position: "absolute" }}>-</Text>
               </View>
               <View
                 className="rounded-full p-4 relative flex items-center justify-center"
                 style={{ backgroundColor: colors.mainColor }}
               >
-                <Text style={{ color: "white", position: "absolute" }}>W</Text>
+                <Text style={{ color: "white", position: "absolute" }}>-</Text>
               </View>
               <View
                 className="rounded-full p-4 relative flex items-center justify-center"
                 style={{ backgroundColor: colors.mainColor }}
               >
-                <Text style={{ color: "white", position: "absolute" }}>W</Text>
+                <Text style={{ color: "white", position: "absolute" }}>-</Text>
               </View>
               <View
                 className="rounded-full p-4 relative flex items-center justify-center"
-                style={{ backgroundColor: "white" }}
+                style={{ backgroundColor: colors.mainColor }}
               >
-                <Text style={{ color: "black", position: "absolute" }}>L</Text>
+                <Text style={{ color: "white", position: "absolute" }}>-</Text>
               </View>
             </View>
           </View>

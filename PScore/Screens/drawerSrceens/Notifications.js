@@ -43,45 +43,64 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useEffect } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import axios from "axios";
+import { useState } from "react";
 const Notifications = ({ navigation }) => {
+  const { token } = useAuth();
+  const [invites, setInvites] = useState([]);
+  useEffect(() => {
+    const getNotifications = async () => {
+      try {
+        const response = await axios.get(
+          `https://pscore-backend.vercel.app/team/invitation`,
+          {
+            headers: {
+              authorization: `Ahmad__${token}`,
+            },
+          }
+        );
+        setInvites(response?.data?.invites);
+        console.log(response?.data?.invites);
+      } catch (error) {
+        console.error("Login error:", error);
+      }
+    };
+    getNotifications();
+  }, []);
   return (
     <View className="flex-1">
       <View className="w-full h-full flex items-center">
-        {/* stadium Accepted */}
-        <View
-          className="bg-white my-2 flex-row items-center space-x-3"
-          style={{ width: wp(90), height: 100 }}
-        >
-          <Image
-            className="rounded-full"
-            style={{ width: 70, height: 70, resizeMode: "stretch" }}
-            source={require("../../assets/images/stadiums/etihad.jpg")}
-          />
-          <View className="flex items-start  justify-center">
-            <Text>stadium approve</Text>
-            <TouchableOpacity className="bg-green-400 py-2 px-4 rounded-md">
-              <Text>View</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        {/* Accepted */}
-        <View
-          className="bg-white my-2 flex-row items-center space-x-3"
-          style={{ width: wp(90), height: 100 }}
-        >
-          <Image
-            className="rounded-full"
-            style={{ width: 70, height: 70, resizeMode: "cover" }}
-            source={require("../../assets/images/arsenal.png")}
-          />
-          <View className="flex items-start  justify-center">
-            <Text>you Accepted A play wait the mal3ab approve</Text>
-            <TouchableOpacity className="bg-green-400 py-2 px-4 rounded-md">
-              <Text>View</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
         {/* Request */}
+        {invites.map((item, index) => (
+          <View
+            key={index}
+            className="bg-white my-2 flex-row items-center space-x-3"
+            style={{ width: wp(90), height: 100 }}
+          >
+            <Image
+              className="rounded-full"
+              style={{ width: 70, height: 70, resizeMode: "stretch" }}
+              source={{ uri: item.image }}
+            />
+            <View className="flex items-start  justify-center">
+              <Text>{item.message}</Text>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("GameDetails", {
+                    type: "pending",
+                    gameid: item.match,
+                    inviteId: item._id,
+                  })
+                }
+                className="bg-green-400 py-2 px-4 rounded-md"
+              >
+                <Text>View</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ))}
         <View
           className="bg-white my-2 flex-row items-center space-x-3"
           style={{ width: wp(90), height: 100 }}
@@ -105,18 +124,6 @@ const Notifications = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
-        <View
-          className="bg-white my-2"
-          style={{ width: wp(90), height: 100 }}
-        ></View>
-        <View
-          className="bg-white my-2"
-          style={{ width: wp(90), height: 100 }}
-        ></View>
-        <View
-          className="bg-white my-2"
-          style={{ width: wp(90), height: 100 }}
-        ></View>
       </View>
     </View>
   );

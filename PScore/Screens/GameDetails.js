@@ -7,8 +7,11 @@ import {
   ScrollView,
   NativeEventEmitter,
   Animated,
+  Alert,
+  Button,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
+import axios from "axios";
 
 import { StatusBar } from "expo-status-bar";
 
@@ -25,17 +28,22 @@ import { BellIcon, PlusCircleIcon } from "react-native-heroicons/outline";
 import Pending from "../components/GameDetailsComponents/Pending";
 import ChoosableLineUp from "../components/GameDetailsComponents/ChoosableLineUp";
 import SlidesPicker from "../components/MyComp/SlidesPicker";
+import { useAuth } from "../contexts/AuthContext";
+import { useEffect } from "react";
+import MyAlert from "../components/MyAlert";
 
 const GameDetails = ({ navigation, route }) => {
   navigation = useNavigation();
-  const { type } = route?.params || {};
-
+  const { type, gameid, inviteId } = route?.params || {};
+  const { token, teamData } = useAuth();
   console.log(type);
   const [activeBell, setActiveBell] = useState(false);
   const [allPlayers, setAllPlayers] = useState({});
-
+  const [matchDetails, setMatchDetails] = useState({});
   const [players, setPlayers] = useState({});
   const [others, setOthers] = useState([]);
+
+  const [invitedTeamId, setInvitedTeamId] = useState();
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -54,29 +62,129 @@ const GameDetails = ({ navigation, route }) => {
       },
     });
   }, [navigation, activeBell]);
-  const handleSubmit = () => {
-    let playersExist = true;
-
-    for (let i = 1; i <= 5; i++) {
-      if (!players[`player${i}`]) {
-        playersExist = false;
-        break;
+  useEffect(() => {
+    const getMatch = async () => {
+      console.log(gameid);
+      try {
+        const response = await axios.get(
+          `https://pscore-backend.vercel.app/match/getmatch/${gameid}`,
+          {
+            headers: {
+              authorization: `Ahmad__${token}`,
+            },
+          }
+        );
+        setMatchDetails(response?.data?.match);
+        console.log(response?.data);
+      } catch (error) {
+        console.error("Login error:", error);
       }
-    }
-
-    if (playersExist) {
-      console.log("All players from 1 to 5 exist.");
-    } else {
-      console.log("Some players from 1 to 5 are missing.");
-    }
+    };
+    getMatch();
+  }, []);
+  const handleInvite = async () => {
+    console.log(gameid);
+    console.log(invitedTeamId);
     const allPlayersCopy = { ...players };
     if (others) {
       allPlayersCopy.others = others;
     }
-    console.log(allPlayersCopy);
-    setAllPlayers(allPlayersCopy);
-  };
+    const playersChech = [
+      "player1",
+      "player2",
+      "player3",
+      "player4",
+      "player5",
+    ];
 
+    let allPresent = true;
+    console.log(allPlayersCopy);
+    for (const player of playersChech) {
+      if (!(player in allPlayersCopy)) {
+        allPresent = false;
+        break;
+      }
+    }
+    if (allPresent) {
+      console.log(
+        "The object contains all players from player1 to player5 as keys."
+      );
+    } else {
+      console.log(
+        "The object does not contain all players from player1 to player5 as keys."
+      );
+    }
+    try {
+      const response = await axios.post(
+        `https://pscore-backend.vercel.app/team/inviteteam/${gameid}/${invitedTeamId}`,
+        allPlayersCopy,
+        {
+          headers: {
+            authorization: `Ahmad__${token}`,
+          },
+        }
+      );
+      console.log(response?.data);
+      showAlert("invite sended", "you send the invintation successfully");
+      navigation.navigate("MainPage");
+    } catch (error) {
+      console.error(" error:", error);
+    }
+  };
+  const handleAccept = async () => {
+    const allPlayersCopy = { ...players };
+    if (others) {
+      allPlayersCopy.others = others;
+    }
+    const payload = {
+      response: "accepted",
+      inviteId,
+      others,
+      ...players,
+    };
+
+    console.log(payload);
+    try {
+      const response = await axios.post(
+        `https://pscore-backend.vercel.app/team/inviteteamresponse/${gameid}`,
+        payload,
+        {
+          headers: {
+            authorization: `Ahmad__${token}`,
+          },
+        }
+      );
+
+      console.log(response?.data);
+      navigation.navigate("MainPage");
+    } catch (error) {
+      console.error(" error:", error);
+    }
+  };
+  const handleDeny = async () => {
+    console.log(gameid);
+    console.log(inviteId);
+
+    const payload = {
+      response: "rejected",
+      inviteId,
+    };
+    try {
+      const response = await axios.post(
+        `https://pscore-backend.vercel.app/team/inviteteamresponse/${gameid}`,
+        payload,
+        {
+          headers: {
+            authorization: `Ahmad__${token}`,
+          },
+        }
+      );
+      navigation.navigate("MainPage");
+      console.log(response?.data);
+    } catch (error) {
+      console.error(" error:", error);
+    }
+  };
   const [page, setPage] = useState("stats");
   const typeText =
     type === "EMPTY"
@@ -86,14 +194,33 @@ const GameDetails = ({ navigation, route }) => {
       : type === "TIMED"
       ? "16:00 - 18"
       : "";
-
+  const showAlert = (title, message) => {
+    Alert.alert(
+      title,
+      message,
+      [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+      { cancelable: false }
+    );
+  };
   return (
     <View className="flex-1">
       <StatusBar style="dark" />
       {/*Header */}
       {/*<GameCard />*/}
       <ScrollView showsVerticalScrollIndicator={false}>
-        <GameCard
+        {
+          type == "EMPTY" ? (
+            <GameCard
+              header={"friendly match"}
+              discreption={matchDetails.startTime + "-" + matchDetails.endTime}
+              setInvitedTeamId={setInvitedTeamId}
+              score={".."}
+              team1={teamData.team.image}
+              team2={""}
+            />
+          ) : type == "pending" ? null : null // /> //   team2={""} //   team1={teamData.team.image} //   score={".."} //   setInvitedTeamId={setInvitedTeamId} //   discreption={matchDetails.startTime + "-" + matchDetails.endTime} //   header={"friendly match"} // <GameCard
+        }
+        {/* <GameCard
           header={"friendly match"}
           discreption={typeText}
           score={".."}
@@ -103,7 +230,7 @@ const GameDetails = ({ navigation, route }) => {
               : ""
           }
           team2={type == "TIMED" && require("../assets/images/manuntd.png")}
-        />
+        /> */}
         <Marker>GameDetails</Marker>
         {type == "EMPTY" ? (
           <SlidesPicker>
@@ -115,16 +242,19 @@ const GameDetails = ({ navigation, route }) => {
               setOthers={setOthers}
             />
           </SlidesPicker>
-        ) : type == "PENDING" ? (
+        ) : type == "pending" ? (
           <SlidesPicker>
-            <ChoosableLineUp
+            <LineUP
               dispalyName={"team1"}
+              players={matchDetails?.team1Players}
+            />
+            <ChoosableLineUp
+              dispalyName={"team2"}
               players={players}
               setPlayers={setPlayers}
               others={others}
               setOthers={setOthers}
             />
-            <LineUP dispalyName={"team2"} />
           </SlidesPicker>
         ) : type == "TIMED" ? (
           <SlidesPicker>
@@ -144,20 +274,20 @@ const GameDetails = ({ navigation, route }) => {
           <MatchDetails />
         </View> */}
         <Marker>GameInfo</Marker>
-        <GameInfo />
+        <GameInfo matchDetails={matchDetails} />
 
         <Marker>Pending</Marker>
         {type == "EMPTY" ? (
           <View className="flex justify-center items-center">
             <TouchableOpacity
               className="px-4 py-2 bg-green-400 rounded-md"
-              onPress={() => {}}
+              onPress={handleInvite}
             >
-              <Text>send Request</Text>
+              <Text>send invite</Text>
             </TouchableOpacity>
           </View>
         ) : (
-          <Pending onPress={() => handleSubmit()} />
+          <Pending onPressAccept={handleAccept} onPressDeny={handleDeny} />
         )}
       </ScrollView>
     </View>

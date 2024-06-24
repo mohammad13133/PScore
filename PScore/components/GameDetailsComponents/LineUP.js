@@ -4,7 +4,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-const LineUP = () => {
+const LineUP = ({ players }) => {
+  console.log(players);
   return (
     <View className="w-full flex items-center justify-center mt-4 relative">
       <View
@@ -17,23 +18,90 @@ const LineUP = () => {
           source={require("../../assets/images/footballground.png")}
           style={{ resizeMode: "stretch", width: "100%", height: "100%" }}
         />
-        {/*Gk */}
+        {/*striker */}
+
+        {players && (
+          <>
+            <Player
+              top={"20%"}
+              left={"50%"}
+              ImageProp={
+                players[0].photo
+                  ? { uri: players[0]?.photo }
+                  : require("../../assets/images/defaultUserImage.jpg")
+              }
+              Name={players[0]?.name}
+            />
+            <Player
+              top={"50%"}
+              left={"50%"}
+              ImageProp={
+                players[1]?.photo
+                  ? { uri: players[1]?.photo }
+                  : require("../../assets/images/defaultUserImage.jpg")
+              }
+              Name={players[1]?.name}
+            />
+            <Player
+              top={"70%"}
+              left={"35%"}
+              ImageProp={
+                players[2]?.photo
+                  ? { uri: players[2]?.photo }
+                  : require("../../assets/images/defaultUserImage.jpg")
+              }
+              Name={players[2]?.name}
+            />
+            <Player
+              top={"70%"}
+              left={"65%"}
+              ImageProp={
+                players[3]?.photo
+                  ? { uri: players[3]?.photo }
+                  : require("../../assets/images/defaultUserImage.jpg")
+              }
+              Name={players[3]?.name}
+            />
+
+            <Player
+              top={"90%"}
+              left={"50%"}
+              ImageProp={
+                players[4]?.photo
+                  ? { uri: players[4]?.photo }
+                  : require("../../assets/images/defaultUserImage.jpg")
+              }
+              Name={players[4]?.name}
+            />
+          </>
+        )}
+        {/* <Player
+          top={"50%"}
+          left={"50%"}
+          ImageProp={
+            players[1].photo
+              ? { uri: players[1].photo }
+              : require("../../assets/images/defaultUserImage.jpg")
+          }
+          Name={players[1].name}
+        />
+        <Player
+          top={"70%"}
+          left={"35%"}
+          ImageProp={
+            players[2].photo
+              ? { uri: players[1].photo }
+              : require("../../assets/images/defaultUserImage.jpg")
+          }
+          Name={players[1].name}
+        />
         <Player
           top={"90%"}
           left={"50%"}
-          ImageProp={require("../../assets/images/players/ederson.png")}
+          ImageProp={require("../../assets/images/defaultUserImage.jpg")}
           Name={"GoalK"}
         />
-        {/*defence*/}
-        <Player top={"50%"} left={"50%"} Name={"Def"} />
-        <Player top={"70%"} left={"35%"} Name={"Def"} />
-        <Player top={"70%"} left={"65%"} Name={"Def"} />
-        <Player
-          top={"20%"}
-          left={"50%"}
-          ImageProp={require("../../assets/images/players/haaland.png")}
-          Name={"striker"}
-        />
+        <Player top={"70%"} left={"65%"} Name={"Def"} /> */}
       </View>
     </View>
   );
