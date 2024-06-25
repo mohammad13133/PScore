@@ -21,6 +21,7 @@ import axios from "axios";
 import { Formik } from "formik";
 import Line from "../components/Line.js";
 import DayPicker from "../components/DayPicker.js";
+import { useAuth } from "../contexts/AuthContext.js";
 const DATA = [
   {
     id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
@@ -40,24 +41,56 @@ const Home = ({ navigation, route }) => {
   const [day, setDay] = useState("2024-04-22");
   const [matches, setMatches] = useState([]);
 
+  const { token } = useAuth();
+  const [matchesData, setMatchesData] = useState();
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `https://api.football-data.org/v4/competitions/PD/matches/?season=2023&dateFrom=${day}&dateTo=${day}`,
+  //         {
+  //           headers: {
+  //             "X-Auth-Token": "561656b64db54bc8b5d5534f66275f4f", // Replace 'YOUR_TOKEN' with your actual token
+  //           },
+  //         }
+  //       );
+  //       if (response.data) {
+  //         const Objects = response.data.matches.map((element, index) => {
+  //           // Transform each element as needed
+  //           return element;
+  //         });
+  //         setMatches([]);
+  //         setMatches(Objects);
+  //       } else {
+  //         console.log("Table data not available");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //       // Handle errors
+  //     }
+  //   };
+  //   fetchData();
+  // }, [day]);
   useEffect(() => {
-    const fetchData = async () => {
+    const getMatches = async () => {
       try {
         const response = await axios.get(
-          `https://api.football-data.org/v4/competitions/PD/matches/?season=2023&dateFrom=${day}&dateTo=${day}`,
+          `https://pscore-backend.vercel.app/match/gettimedmatch/${day}`,
           {
             headers: {
-              "X-Auth-Token": "561656b64db54bc8b5d5534f66275f4f", // Replace 'YOUR_TOKEN' with your actual token
+              authorization: `Ahmad__${token}`,
             },
           }
         );
         if (response.data) {
-          const Objects = response.data.matches.map((element, index) => {
-            // Transform each element as needed
-            return element;
-          });
-          setMatches([]);
-          setMatches(Objects);
+          // const Objects = response.data.matches.map((element, index) => {
+          //   // Transform each element as needed
+          //   return element;
+          // });
+          // setMatches([]);
+          // setMatches(Objects);
+          console.log(response.data);
+          setMatchesData(response?.data?.data);
         } else {
           console.log("Table data not available");
         }
@@ -67,7 +100,7 @@ const Home = ({ navigation, route }) => {
       }
     };
 
-    fetchData();
+    getMatches();
   }, [day]);
   return (
     <View className="flex-1" style={{ backgroundColor: colors.secondColor }}>
@@ -78,21 +111,33 @@ const Home = ({ navigation, route }) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ display: "flex", alignItems: "center" }}
       >
-        <GameCard matches={matches} />
+        {matchesData &&
+          matchesData.length > 0 &&
+          matchesData.map((item) => (
+            <GameCard
+              key={item.id}
+              matches={
+                matchesData && matchesData.length > 0 ? item?.matches : []
+              }
+              name={
+                matchesData && matchesData.length > 0
+                  ? item?.playgroundName
+                  : ""
+              }
+            />
+          ))}
 
         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
           <Text style={{ color: colors.mainColor }}>Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Team", matches)}>
-          <Text style={{ color: colors.mainColor }}>
-            {matches[0]?.competition?.name}
-          </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("MessagesScreen")}>
           <Text style={{ color: colors.mainColor }}>MessagesScreen</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("Chat")}>
           <Text style={{ color: colors.mainColor }}>chat</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Testt")}>
+          <Text style={{ color: colors.mainColor }}>Testt</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

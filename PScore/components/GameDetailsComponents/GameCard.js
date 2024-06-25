@@ -115,7 +115,11 @@ const GameCard = ({
           onPress={() => navigation.navigate("Team")}
         >
           <Image
-            source={team1 ? { uri: team1 } : ""}
+            source={
+              team1
+                ? { uri: team1 }
+                : "https://images.inc.com/uploaded_files/image/1920x1080/goal-soccer_36915.jpg"
+            }
             className=" rounded-full "
             style={{
               width: 100,
@@ -143,7 +147,7 @@ const GameCard = ({
           <Image
             source={
               team2
-                ? team2
+                ? { uri: team2 }
                 : teamImage
                 ? { uri: teamImage }
                 : require("../../assets/images/addteam.png")

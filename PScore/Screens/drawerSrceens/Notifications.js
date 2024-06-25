@@ -73,57 +73,37 @@ const Notifications = ({ navigation }) => {
     <View className="flex-1">
       <View className="w-full h-full flex items-center">
         {/* Request */}
-        {invites.map((item, index) => (
-          <View
-            key={index}
-            className="bg-white my-2 flex-row items-center space-x-3"
-            style={{ width: wp(90), height: 100 }}
-          >
-            <Image
-              className="rounded-full"
-              style={{ width: 70, height: 70, resizeMode: "stretch" }}
-              source={{ uri: item.image }}
-            />
-            <View className="flex items-start  justify-center">
-              <Text>{item.message}</Text>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("GameDetails", {
-                    type: "pending",
-                    gameid: item.match,
-                    inviteId: item._id,
-                  })
-                }
-                className="bg-green-400 py-2 px-4 rounded-md"
-              >
-                <Text>View</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
-        <View
-          className="bg-white my-2 flex-row items-center space-x-3"
-          style={{ width: wp(90), height: 100 }}
-        >
-          <Image
-            className="rounded-full"
-            style={{ width: 70, height: 70, resizeMode: "stretch" }}
-            source={require("../../assets/images/MancityTeam.jpg")}
-          />
-          <View className="flex items-start  justify-center">
-            <Text>MancityTeam Request A play</Text>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("GameDetails", {
-                  type: "PENDING",
-                })
-              }
-              className="bg-green-400 py-2 px-4 rounded-md"
+        {invites
+          .slice()
+          .reverse()
+          .map((item, index) => (
+            <View
+              key={index}
+              className="bg-white my-2 flex-row items-center space-x-3"
+              style={{ width: wp(90), height: 100 }}
             >
-              <Text>View</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+              <Image
+                className="rounded-full"
+                style={{ width: 70, height: 70, resizeMode: "stretch" }}
+                source={{ uri: item.image }}
+              />
+              <View className="flex items-start  justify-center">
+                <Text>{item.message}</Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("GameDetails", {
+                      type: "pending",
+                      gameid: item.match,
+                      inviteId: item._id,
+                    })
+                  }
+                  className="bg-green-400 py-2 px-4 rounded-md"
+                >
+                  <Text>View</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
       </View>
     </View>
   );

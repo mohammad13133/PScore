@@ -8,8 +8,8 @@ const Info = ({ item, first, position }) => {
         <Image
           className="rounded-full"
           source={
-            item?.image
-              ? { uri: item.image }
+            item?.image || item?.photo
+              ? { uri: item.image || item.photo }
               : require("../assets/images/defaultUserImage.jpg")
           }
           style={{ width: 40, height: 40 }}

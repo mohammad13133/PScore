@@ -17,7 +17,11 @@ const GameInfo = ({ matchDetails }) => {
   return (
     <DetailsTable header={"GameInfo"}>
       <Pressable onPress={() => navigation.navigate("MainPage")}>
-        <Info first={"betWazan Stadium"} second={"Nablus"} Pin={MapPinIcon} />
+        <Info
+          first={matchDetails?.playgroundName}
+          second={"Nablus"}
+          Pin={MapPinIcon}
+        />
       </Pressable>
 
       <Info

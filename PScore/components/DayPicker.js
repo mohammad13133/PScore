@@ -165,7 +165,7 @@ const DayPicker = ({ day, setDay }) => {
         />
       </View>
       <TouchableOpacity
-        className="p-2 flex items-center"
+        className="p-1 flex items-center"
         onPress={() => {
           if (listViewRef) {
             listViewRef.scrollToIndex({

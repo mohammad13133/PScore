@@ -9,6 +9,7 @@ import {
   Animated,
   Alert,
   Button,
+  ActivityIndicator,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import axios from "axios";
@@ -31,18 +32,22 @@ import SlidesPicker from "../components/MyComp/SlidesPicker";
 import { useAuth } from "../contexts/AuthContext";
 import { useEffect } from "react";
 import MyAlert from "../components/MyAlert";
+import baseUrl from "../utils/url";
 
+import dayjs from "dayjs";
+import { io } from "socket.io-client";
+import MatchCounter from "../components/MatchCounter";
+const mySocket = io.connect(baseUrl);
 const GameDetails = ({ navigation, route }) => {
   navigation = useNavigation();
-  const { type, gameid, inviteId } = route?.params || {};
+  const { gameid, inviteId } = route?.params || {};
   const { token, teamData } = useAuth();
-  console.log(type);
   const [activeBell, setActiveBell] = useState(false);
   const [allPlayers, setAllPlayers] = useState({});
   const [matchDetails, setMatchDetails] = useState({});
   const [players, setPlayers] = useState({});
   const [others, setOthers] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [invitedTeamId, setInvitedTeamId] = useState();
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -65,6 +70,7 @@ const GameDetails = ({ navigation, route }) => {
   useEffect(() => {
     const getMatch = async () => {
       console.log(gameid);
+      setIsLoading(true);
       try {
         const response = await axios.get(
           `https://pscore-backend.vercel.app/match/getmatch/${gameid}`,
@@ -78,10 +84,13 @@ const GameDetails = ({ navigation, route }) => {
         console.log(response?.data);
       } catch (error) {
         console.error("Login error:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     getMatch();
   }, []);
+
   const handleInvite = async () => {
     console.log(gameid);
     console.log(invitedTeamId);
@@ -156,11 +165,16 @@ const GameDetails = ({ navigation, route }) => {
       );
 
       console.log(response?.data);
+      showAlert("invite responded", "you accept the invintation");
       navigation.navigate("MainPage");
     } catch (error) {
       console.error(" error:", error);
     }
   };
+  const events = [
+    { team2Goal: "Mohammad", team2Asist: "aaaa", time: "33" },
+    { team1Goal: "add", team1Asist: "aaaa", time: "45" },
+  ];
   const handleDeny = async () => {
     console.log(gameid);
     console.log(inviteId);
@@ -179,21 +193,14 @@ const GameDetails = ({ navigation, route }) => {
           },
         }
       );
-      navigation.navigate("MainPage");
       console.log(response?.data);
+      showAlert("invite responded", "you denyed the invintation");
+      navigation.navigate("MainPage");
     } catch (error) {
       console.error(" error:", error);
     }
   };
   const [page, setPage] = useState("stats");
-  const typeText =
-    type === "EMPTY"
-      ? "12:30 - 14"
-      : type === "PENDING"
-      ? "pending"
-      : type === "TIMED"
-      ? "16:00 - 18"
-      : "";
   const showAlert = (title, message) => {
     Alert.alert(
       title,
@@ -202,25 +209,91 @@ const GameDetails = ({ navigation, route }) => {
       { cancelable: false }
     );
   };
+  // useEffect(() => {
+  //   mySocket.emit("getMatch", gameid);
+
+  // }, []);
+  // useEffect(() => {
+  //   mySocket.on("foundmatch", (data) => {
+  //     console.log("Match Changed");
+  //     if (data?.match) {
+  //       setMatchDetails(data?.match);
+  //       console.log(data);
+  //     }
+  //   });
+  // }, []);
+
+  useEffect(() => {
+    mySocket.emit("getMatch", gameid);
+    return () => {
+      mySocket.off("getMatch");
+    };
+  }, []);
+  useEffect(() => {
+    const handleFoundMatch = (data) => {
+      console.log("Match Changed");
+      setMatchDetails(data?.match);
+      // console.log(data);
+    };
+
+    mySocket.on("foundmatch", handleFoundMatch);
+    return () => {
+      mySocket.off("foundmatch", handleFoundMatch);
+    };
+  }, []);
+
   return (
     <View className="flex-1">
       <StatusBar style="dark" />
       {/*Header */}
       {/*<GameCard />*/}
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {
-          type == "EMPTY" ? (
+      {!isLoading ? (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {matchDetails?.status === "empty" ? (
             <GameCard
               header={"friendly match"}
               discreption={matchDetails.startTime + "-" + matchDetails.endTime}
               setInvitedTeamId={setInvitedTeamId}
               score={".."}
-              team1={teamData.team.image}
+              team1={teamData?.team.image}
               team2={""}
             />
-          ) : type == "pending" ? null : null // /> //   team2={""} //   team1={teamData.team.image} //   score={".."} //   setInvitedTeamId={setInvitedTeamId} //   discreption={matchDetails.startTime + "-" + matchDetails.endTime} //   header={"friendly match"} // <GameCard
-        }
-        {/* <GameCard
+          ) : matchDetails?.status === "timed" ? (
+            <GameCard
+              header={"friendly match"}
+              discreption={matchDetails.startTime + "-" + matchDetails.endTime}
+              setInvitedTeamId={setInvitedTeamId}
+              score={matchDetails.status == "pending" ? "pending" : "..."}
+              team1={matchDetails?.team1?.image}
+              team2={matchDetails?.team2?.image || teamData?.team?.image}
+            />
+          ) : matchDetails?.status === "live" ? (
+            <GameCard
+              header={"friendly match"}
+              discreption={
+                <MatchCounter
+                  start={matchDetails?.startTime}
+                  end={matchDetails?.endTime}
+                  counterDate={matchDetails?.date}
+                />
+              }
+              setInvitedTeamId={setInvitedTeamId}
+              score={matchDetails?.team1Score + "-" + matchDetails?.team2Score}
+              team1={matchDetails?.team1?.image}
+              team2={matchDetails?.team2?.image}
+            />
+          ) : (
+            <GameCard
+              header={"friendly match"}
+              discreption={"ended"}
+              setInvitedTeamId={setInvitedTeamId}
+              score={matchDetails?.team1Score + "-" + matchDetails?.team2Score}
+              team1={matchDetails?.team1?.image}
+              team2={matchDetails?.team2?.image}
+            />
+          )}
+
+          {/* <GameCard
           header={"friendly match"}
           discreption={typeText}
           score={".."}
@@ -231,65 +304,95 @@ const GameDetails = ({ navigation, route }) => {
           }
           team2={type == "TIMED" && require("../assets/images/manuntd.png")}
         /> */}
-        <Marker>GameDetails</Marker>
-        {type == "EMPTY" ? (
-          <SlidesPicker>
-            <ChoosableLineUp
-              dispalyName={"team1"}
-              players={players}
-              setPlayers={setPlayers}
-              others={others}
-              setOthers={setOthers}
-            />
-          </SlidesPicker>
-        ) : type == "pending" ? (
-          <SlidesPicker>
-            <LineUP
-              dispalyName={"team1"}
-              players={matchDetails?.team1Players}
-            />
-            <ChoosableLineUp
-              dispalyName={"team2"}
-              players={players}
-              setPlayers={setPlayers}
-              others={others}
-              setOthers={setOthers}
-            />
-          </SlidesPicker>
-        ) : type == "TIMED" ? (
-          <SlidesPicker>
-            <LineUP dispalyName={"team1"} />
-            <LineUP dispalyName={"team2"} />
-          </SlidesPicker>
-        ) : (
-          <SlidesPicker>
-            <LineUP dispalyName={"team"} />
-            <LineUP dispalyName={"team2"} />
-          </SlidesPicker>
-        )}
+          <Marker>GameDetails</Marker>
+          {matchDetails.status == "empty" ? (
+            <SlidesPicker>
+              <ChoosableLineUp
+                dispalyName={"team1"}
+                players={players}
+                setPlayers={setPlayers}
+                others={others}
+                setOthers={setOthers}
+              />
+            </SlidesPicker>
+          ) : matchDetails.status == "pending" ? (
+            <SlidesPicker>
+              <LineUP
+                dispalyName={"team1"}
+                players={
+                  matchDetails?.team1Players ? matchDetails?.team1Players : {}
+                }
+                others={
+                  matchDetails?.team1others ? matchDetails?.team1others : []
+                }
+              />
+              <ChoosableLineUp
+                dispalyName={"team2"}
+                players={players}
+                setPlayers={setPlayers}
+                others={others}
+                setOthers={setOthers}
+              />
+            </SlidesPicker>
+          ) : (
+            <SlidesPicker>
+              <LineUP
+                dispalyName={"team1"}
+                players={
+                  matchDetails?.team1Players ? matchDetails?.team1Players : {}
+                }
+                others={
+                  matchDetails?.team1others ? matchDetails?.team1others : []
+                }
+              />
+              <LineUP
+                dispalyName={"team2"}
+                players={
+                  matchDetails?.team2Players ? matchDetails?.team2Players : {}
+                }
+                others={
+                  matchDetails?.team2others ? matchDetails?.team2others : []
+                }
+              />
+            </SlidesPicker>
+          )}
 
-        {/*map*/}
+          {/*map*/}
 
-        {/* <View className="mt-10">
-          <MatchDetails />
-        </View> */}
-        <Marker>GameInfo</Marker>
-        <GameInfo matchDetails={matchDetails} />
-
-        <Marker>Pending</Marker>
-        {type == "EMPTY" ? (
-          <View className="flex justify-center items-center">
+          <View className="mt-10 flex items-center justify-center">
             <TouchableOpacity
-              className="px-4 py-2 bg-green-400 rounded-md"
-              onPress={handleInvite}
+              className="py-2 px-3 mb-2 rounded-sm"
+              style={{ backgroundColor: colors.mainColor }}
+              onPress={() =>
+                navigation.navigate("AddEvent", {
+                  players1: matchDetails?.team1Players,
+                  players2: matchDetails?.team2Players,
+                })
+              }
             >
-              <Text>send invite</Text>
+              <Text className="text-white">add event</Text>
             </TouchableOpacity>
+            <MatchDetails events={events} />
           </View>
-        ) : (
-          <Pending onPressAccept={handleAccept} onPressDeny={handleDeny} />
-        )}
-      </ScrollView>
+          <Marker>GameInfo</Marker>
+          <GameInfo matchDetails={matchDetails} />
+
+          {matchDetails.status == "empty" ? (
+            <View className="flex justify-center items-center">
+              <TouchableOpacity
+                className="px-4 py-2 bg-green-400 rounded-md"
+                onPress={handleInvite}
+              >
+                <Text>send invite</Text>
+              </TouchableOpacity>
+            </View>
+          ) : matchDetails.status == "pendind" ? (
+            <Pending onPressAccept={handleAccept} onPressDeny={handleDeny} />
+          ) : null}
+        </ScrollView>
+      ) : (
+        <ActivityIndicator color={colors.lightGreen} />
+      )}
     </View>
   );
 };

@@ -1,6 +1,13 @@
 import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Button,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -64,13 +71,15 @@ import { useEffect } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
 import MyTeam from "./Screens/drawerSrceens/MyTeam.js";
+import AddEvent from "./Screens/AddEvent.js";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const Drawer = createDrawerNavigator();
 
-const mySocket = io.connect("http://localhost:4000");
+// const mySocket = io.connect("http://localhost:4000");
+
 export default function App() {
   return (
     <AuthProvider>
@@ -94,6 +103,7 @@ export default function App() {
             <Stack.Screen name="PlayerDetails" component={PlayerDetails} />
             <Stack.Screen name="MessagesScreen" component={MessagesScreen} />
             <Stack.Screen name="Chat" component={Chat} />
+            <Stack.Screen name="AddEvent" component={AddEvent} />
           </Stack.Navigator>
         </NavigationContainer>
       </ChatsProvider>
@@ -174,29 +184,39 @@ function MyTabs() {
 }
 function MyTabsDrower() {
   const navigation = useNavigation();
-  const { profile, setProfile, token, setTeamData, teamData, trigger } =
-    useAuth();
+  const {
+    profile,
+    setProfile,
+    token,
+    setTeamData,
+    teamData,
+    trigger,
+    setMySocket,
+  } = useAuth();
   const { socket, setSocket, setAllChatRooms, setroomMasseges, setIsLoading } =
     useChats();
-  useEffect(() => {
-    setSocket(mySocket);
-    mySocket.emit("getAllGroups");
-  }, []);
-  useEffect(() => {
-    // mySocket.emit("getAllGroups");
-    mySocket.on("group_list", (groups) => {
-      console.log(groups);
-      setAllChatRooms(groups);
-    });
-  }, []);
   // useEffect(() => {
-  //   mySocket.on("getRoomMasseges", (RoomMasseges) => {
-  //     setIsLoading(false);
-  //     console.log(RoomMasseges);
-  //     const initialMessages = RoomMasseges || [];
-  //     setroomMasseges(initialMessages);
+  //   setSocket(mySocket);
+  //   mySocket.emit("getAllGroups");
+  // }, []);
+
+  // useEffect(() => {
+  //   setMySocket(mySocket2);
+  //   mySocket2.emit("hello");
+
+  //   return () => {
+  //     mySocket2.disconnect();
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   // mySocket.emit("getAllGroups");
+  //   mySocket.on("group_list", (groups) => {
+  //     console.log(groups);
+  //     setAllChatRooms(groups);
   //   });
   // }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       console.log("hello token");

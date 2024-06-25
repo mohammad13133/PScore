@@ -4,8 +4,15 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-const LineUP = ({ players }) => {
-  console.log(players);
+import Info from "../Info";
+import DetailsTable from "../DetailsTable";
+import { useEffect } from "react";
+const LineUP = ({ players, others }) => {
+  useEffect(() => {
+    console.log(players);
+    console.log(others);
+  }, []);
+
   return (
     <View className="w-full flex items-center justify-center mt-4 relative">
       <View
@@ -26,11 +33,12 @@ const LineUP = ({ players }) => {
               top={"20%"}
               left={"50%"}
               ImageProp={
-                players[0].photo
+                players[0]?.photo
                   ? { uri: players[0]?.photo }
                   : require("../../assets/images/defaultUserImage.jpg")
               }
               Name={players[0]?.name}
+              goals={2}
             />
             <Player
               top={"50%"}
@@ -75,6 +83,7 @@ const LineUP = ({ players }) => {
             />
           </>
         )}
+
         {/* <Player
           top={"50%"}
           left={"50%"}
@@ -103,6 +112,18 @@ const LineUP = ({ players }) => {
         />
         <Player top={"70%"} left={"65%"} Name={"Def"} /> */}
       </View>
+      {others?.length > 0 && <OtherPlayers others={others} />}
+    </View>
+  );
+};
+const OtherPlayers = ({ others }) => {
+  return (
+    <View className="mt-2 w-[300px]">
+      <DetailsTable header={"OtherPlayers"}>
+        {others.map((item) => (
+          <Info key={item._id} item={item} first={item.name} />
+        ))}
+      </DetailsTable>
     </View>
   );
 };

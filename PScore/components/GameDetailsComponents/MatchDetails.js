@@ -6,19 +6,37 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import DetailsTable from "../DetailsTable";
-const MatchDetails = () => {
+const MatchDetails = ({ events, ended }) => {
   return (
     <DetailsTable classes="mt-10" header="match events">
       <View className="flex-col-reverse items-center justify-start pt-4">
         <ClockIcon color={"black"} />
-        <VerticalLine />
-        <Event team2Goal={"Mohammad"} team2Asist={"Ahmad"} time={"33`"} />
-        <VerticalLine />
-        <Event team1Goal={"fuckAhmad"} team1Asist={"Mohammad"} time={"44`"} />
-        <VerticalLine />
-        <Event team1Goal={"fuckAhmad"} time={"99`"} />
-        <VerticalLine />
-        <Event time={"end"} />
+        {events.map((item, index) => {
+          if ("team1Goal" in item) {
+            return (
+              <View key={index} className="flex items-center">
+                <Event
+                  team1Goal={item.team1Goal}
+                  team1Asist={item.team1Asist}
+                  time={item.time}
+                />
+                <VerticalLine />
+              </View>
+            );
+          } else if ("team2Goal" in item) {
+            return (
+              <View key={index} className="flex items-center">
+                <Event
+                  team2Goal={item.team2Goal}
+                  team2Asist={item.team2Asist}
+                  time={item.time}
+                />
+                <VerticalLine />
+              </View>
+            );
+          }
+        })}
+        {ended && <Event time={"end"} />}
       </View>
     </DetailsTable>
   );

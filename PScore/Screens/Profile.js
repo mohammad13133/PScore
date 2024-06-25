@@ -62,8 +62,15 @@ const Profile = () => {
           }}
         >
           <View className="flex items-center w-[100px]">
-            <HeartIcon size={25} color={colors.mainColor} />
-            <Text>0</Text>
+            <Image
+              style={{
+                width: 25,
+                height: 25,
+                resizeMode: "cover",
+              }}
+              source={{ uri: "https://flagsapi.com/PS/flat/64.png" }}
+            />
+            <Text>Nablus</Text>
           </View>
           <View className="flex items-center w-[100px]">
             <Image
