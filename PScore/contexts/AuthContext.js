@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [teamData, setTeamData] = useState({});
   const [trigger, setTrigger] = useState(0);
   const [mySocket, setMySocket] = useState();
+  const [playgrounds, setPlaygrounds] = useState({});
   const decodeToken = (token) => {
     try {
       const decoded = jwtDecode(token);
@@ -46,6 +47,8 @@ export const AuthProvider = ({ children }) => {
         getUser,
         profile,
         setProfile,
+        setPlaygrounds,
+        playgrounds,
         teamData,
         setTeamData,
         trigger,

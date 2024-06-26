@@ -12,7 +12,7 @@ const Explore = () => {
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <StadiumsExplore />
-        <TopPlayers />
+        {/* <TopPlayers /> */}
       </ScrollView>
     </View>
   );

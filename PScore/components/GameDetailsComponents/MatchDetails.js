@@ -6,29 +6,34 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import DetailsTable from "../DetailsTable";
-const MatchDetails = ({ events, ended }) => {
+import { useEffect } from "react";
+const MatchDetails = ({ events, newEvents, ended }) => {
+  useEffect(() => {
+    console.log(newEvents);
+  }, []);
+
   return (
     <DetailsTable classes="mt-10" header="match events">
       <View className="flex-col-reverse items-center justify-start pt-4">
         <ClockIcon color={"black"} />
-        {events.map((item, index) => {
-          if ("team1Goal" in item) {
+        {newEvents.map((item, index) => {
+          if (item.team == "team1") {
             return (
               <View key={index} className="flex items-center">
                 <Event
-                  team1Goal={item.team1Goal}
-                  team1Asist={item.team1Asist}
+                  team1Goal={item.goal}
+                  team1Asist={item.assist}
                   time={item.time}
                 />
                 <VerticalLine />
               </View>
             );
-          } else if ("team2Goal" in item) {
+          } else if (item.team == "team2") {
             return (
               <View key={index} className="flex items-center">
                 <Event
-                  team2Goal={item.team2Goal}
-                  team2Asist={item.team2Asist}
+                  team2Goal={item.goal}
+                  team2Asist={item.assist}
                   time={item.time}
                 />
                 <VerticalLine />

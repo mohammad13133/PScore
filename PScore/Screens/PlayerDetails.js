@@ -114,7 +114,10 @@ const PlayerDetails = ({ navigation, route }) => {
           <TouchableOpacity
             className="pr-2"
             onPress={() =>
-              navigation.navigate("Chat", { roomid: name, playerid: 400 })
+              navigation.navigate("Chat", {
+                roomid: item.userName,
+                playerid: 400,
+              })
             }
           >
             <ChatBubbleBottomCenterIcon size={24} color={"black"} />

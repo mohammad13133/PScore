@@ -128,7 +128,7 @@ const Stats = ({ loading, profile }) => {
       <View className="flex-row justify-around">
         <View className="flex items-center w-[100px] space-y-4 ">
           <Text>Matches</Text>
-          <Text>0</Text>
+          <Text>1</Text>
         </View>
         <View className="flex items-center w-[100px] space-y-4 ">
           <Image
@@ -136,14 +136,14 @@ const Stats = ({ loading, profile }) => {
             style={{ width: 25, height: 25 }}
             source={require("../assets/images/footballcartoon.jpg")}
           />
-          <Text>0</Text>
+          <Text>{profile.goals}</Text>
         </View>
         <View className="flex items-center w-[100px] space-y-4 ">
           <Image
             style={{ width: 25, height: 25 }}
             source={require("../assets/images/assists.png")}
           />
-          <Text>0</Text>
+          <Text>{profile.assists}</Text>
         </View>
       </View>
     </View>

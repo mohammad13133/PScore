@@ -11,7 +11,8 @@ import React, { useState, useEffect, Component } from "react";
 import io from "socket.io-client";
 import { GiftedChat } from "react-native-gifted-chat";
 import { useCallback } from "react";
-import { v4 } from "uuid";
+// import { v4 as uuid } from "uuid";
+
 import { useChats } from "../contexts/ChatsContext";
 import { useLayoutEffect } from "react";
 import colors from "../assets/colors/colors";
@@ -46,7 +47,7 @@ const Chat = ({ navigation, route }) => {
       headerStyle: {
         backgroundColor: colors.secondColor, // Customize background color
       },
-      headerTitle: roomid,
+      headerTitle: "manager",
     });
   }, [navigation]);
   //   useEffect(() => {
@@ -92,7 +93,7 @@ const MyChat = ({ socket, username, room, messageList, setMessageList }) => {
   const sendMassege = () => {
     if (username && currentMessage != "") {
       socket.emit("newChatMassege", {
-        currentMessageID: v4(),
+        currentMessageID: Math.random(),
         currentUser: username,
         currentMessage: currentMessage,
         groupID: room,

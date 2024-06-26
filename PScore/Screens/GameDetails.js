@@ -34,14 +34,13 @@ import { useEffect } from "react";
 import MyAlert from "../components/MyAlert";
 import baseUrl from "../utils/url";
 
-import dayjs from "dayjs";
 import { io } from "socket.io-client";
 import MatchCounter from "../components/MatchCounter";
-const mySocket = io.connect(baseUrl);
+
 const GameDetails = ({ navigation, route }) => {
   navigation = useNavigation();
   const { gameid, inviteId } = route?.params || {};
-  const { token, teamData } = useAuth();
+  const { token, teamData, profile } = useAuth();
   const [activeBell, setActiveBell] = useState(false);
   const [allPlayers, setAllPlayers] = useState({});
   const [matchDetails, setMatchDetails] = useState({});
@@ -49,6 +48,7 @@ const GameDetails = ({ navigation, route }) => {
   const [others, setOthers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [invitedTeamId, setInvitedTeamId] = useState();
+  const [counterTime, setCounterTime] = useState();
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -64,6 +64,10 @@ const GameDetails = ({ navigation, route }) => {
       headerShown: true,
       headerStyle: {
         backgroundColor: colors.secondColor, // Customize background color
+
+        elevation: 12,
+        borderBottomWidth: 0, // Remove bottom border
+        shadowColor: "transparent", // Remove shadow
       },
     });
   }, [navigation, activeBell]);
@@ -222,25 +226,42 @@ const GameDetails = ({ navigation, route }) => {
   //     }
   //   });
   // }, []);
+  const [mySocket, setMySocket] = useState();
+  useEffect(() => {
+    const mySocket1 = io.connect(baseUrl);
+    setMySocket(mySocket1);
+  }, []);
 
   useEffect(() => {
-    mySocket.emit("getMatch", gameid);
-    return () => {
-      mySocket.off("getMatch");
-    };
-  }, []);
+    if (mySocket) {
+      mySocket.emit("getMatch", gameid);
+      return () => {
+        mySocket.off("getMatch");
+      };
+    }
+  }, [gameid, mySocket]);
   useEffect(() => {
-    const handleFoundMatch = (data) => {
-      console.log("Match Changed");
-      setMatchDetails(data?.match);
-      // console.log(data);
-    };
-
-    mySocket.on("foundmatch", handleFoundMatch);
+    if (mySocket) {
+      const handleFoundMatch = (data) => {
+        console.log("Match Changed");
+        if (data?.match?._id == gameid) {
+          setMatchDetails(data?.match);
+          // console.log(data);
+        }
+      };
+      mySocket.on("foundmatch", handleFoundMatch);
+      return () => {
+        mySocket.off("foundmatch", handleFoundMatch);
+      };
+    }
+  }, [mySocket]);
+  useEffect(() => {
     return () => {
-      mySocket.off("foundmatch", handleFoundMatch);
+      if (mySocket) {
+        mySocket.close();
+      }
     };
-  }, []);
+  }, [mySocket]);
 
   return (
     <View className="flex-1">
@@ -267,6 +288,15 @@ const GameDetails = ({ navigation, route }) => {
               team1={matchDetails?.team1?.image}
               team2={matchDetails?.team2?.image || teamData?.team?.image}
             />
+          ) : matchDetails?.status === "pending" ? (
+            <GameCard
+              header={"friendly match"}
+              discreption={matchDetails.startTime + "-" + matchDetails.endTime}
+              setInvitedTeamId={setInvitedTeamId}
+              score={matchDetails.status == "pending" ? "pending" : "..."}
+              team1={matchDetails?.team1?.image}
+              team2={matchDetails?.team2?.image || teamData?.team?.image}
+            />
           ) : matchDetails?.status === "live" ? (
             <GameCard
               header={"friendly match"}
@@ -275,6 +305,8 @@ const GameDetails = ({ navigation, route }) => {
                   start={matchDetails?.startTime}
                   end={matchDetails?.endTime}
                   counterDate={matchDetails?.date}
+                  setCounterTime={setCounterTime}
+                  counterTime={counterTime}
                 />
               }
               setInvitedTeamId={setInvitedTeamId}
@@ -358,22 +390,41 @@ const GameDetails = ({ navigation, route }) => {
           )}
 
           {/*map*/}
-
-          <View className="mt-10 flex items-center justify-center">
-            <TouchableOpacity
-              className="py-2 px-3 mb-2 rounded-sm"
-              style={{ backgroundColor: colors.mainColor }}
-              onPress={() =>
-                navigation.navigate("AddEvent", {
-                  players1: matchDetails?.team1Players,
-                  players2: matchDetails?.team2Players,
-                })
-              }
-            >
-              <Text className="text-white">add event</Text>
-            </TouchableOpacity>
-            <MatchDetails events={events} />
-          </View>
+          {matchDetails?.status === "live" && (
+            <View className="mt-10 flex items-center justify-center">
+              {profile?.userType == "user" && (
+                <TouchableOpacity
+                  className="py-2 px-3 mb-2 rounded-sm"
+                  style={{ backgroundColor: colors.mainColor }}
+                  onPress={() =>
+                    navigation.navigate("AddEvent", {
+                      players1: matchDetails?.team1Players,
+                      players2: matchDetails?.team2Players,
+                      gameid,
+                      counterTime,
+                    })
+                  }
+                >
+                  <Text className="text-white">add event</Text>
+                </TouchableOpacity>
+              )}
+              {matchDetails?.status === "live" && (
+                <MatchDetails
+                  events={events}
+                  newEvents={matchDetails?.events}
+                />
+              )}
+            </View>
+          )}
+          {matchDetails?.status === "ended" && (
+            <View className="mt-10 flex items-center justify-center">
+              <MatchDetails
+                events={events}
+                newEvents={matchDetails?.events}
+                ended
+              />
+            </View>
+          )}
           <Marker>GameInfo</Marker>
           <GameInfo matchDetails={matchDetails} />
 
@@ -386,7 +437,7 @@ const GameDetails = ({ navigation, route }) => {
                 <Text>send invite</Text>
               </TouchableOpacity>
             </View>
-          ) : matchDetails.status == "pendind" ? (
+          ) : matchDetails.status == "pending" ? (
             <Pending onPressAccept={handleAccept} onPressDeny={handleDeny} />
           ) : null}
         </ScrollView>

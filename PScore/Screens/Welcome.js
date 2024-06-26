@@ -29,8 +29,8 @@ const Welcome = ({ navigation }) => {
         colors={["transparent", "rgba(0,0,0,0.8)"]}
       />
       <View className="absolute flex items-center justify-center h-full w-full">
-        <View className="mb-10 flex items-center">
-          <Animated.View entering={FadeInLeft.duration(5000)}>
+        <View className="mb-16 flex items-center">
+          <Animated.View entering={FadeInLeft.duration(5000)} className="mb-10">
             <Text
               className="text-white text-6xl"
               style={{ color: colors.secondColor }}

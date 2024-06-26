@@ -8,6 +8,8 @@ import { useEffect } from "react";
 import SelectDropdown from "react-native-select-dropdown";
 import { useState } from "react";
 import MatchCounter from "../components/MatchCounter";
+import axios from "axios";
+import dayjs from "dayjs";
 const emojisWithIcons = [
   { title: "happy", icon: "emoticon-happy-outline" },
   { title: "cool", icon: "emoticon-cool-outline" },
@@ -24,11 +26,15 @@ const emojisWithIcons = [
   { title: "sick", icon: "emoticon-sick-outline" },
   { title: "frown", icon: "emoticon-frown-outline" },
 ];
+const teams = [
+  { name: "team1", icon: "emoticon-happy-outline" },
+  { name: "team2", icon: "emoticon-cool-outline" },
+];
 
 const AddEvent = ({ route }) => {
   const navigation = useNavigation();
-  const { gameid, players1, players2 } = route?.params || {};
-  const { profile } = useAuth();
+  const { gameid, counterTime, players1, players2 } = route?.params || {};
+  const { profile, token } = useAuth();
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -37,18 +43,40 @@ const AddEvent = ({ route }) => {
       },
     });
   }, [navigation]);
-  useEffect(() => {
-    console.log(players1);
-  }, []);
+  const [isTeamSelected, setIsTeamSelected] = useState(false);
+
   const [isGoalSelected, setIsGoalSelected] = useState(false);
   useEffect(() => {
     console.log(isGoalSelected);
   }, []);
   const [goalPlayer, setGoalPlayer] = useState();
   const [assistPlayer, setAssistPlayer] = useState();
+  const handleAddEvent = async (values) => {
+    // console.log(gameid);
+    // console.log(inviteId);
 
+    // const payload = {
+    //   response: "rejected",
+    //   inviteId,
+    // };
+    try {
+      const response = await axios.post(
+        `https://pscore-backend.vercel.app/match/addmatchevent/${gameid}`,
+        values,
+        {
+          headers: {
+            authorization: `Ahmad__${token}`,
+          },
+        }
+      );
+      console.log(response?.data);
+      navigation.goBack();
+    } catch (error) {
+      console.error(" error:", error);
+    }
+  };
   return (
-    <View className="flex-1 items-start justify-center">
+    <View className="flex-1 items-center justify-center bg-slate-400 space-y-3">
       <View className="flex-row items-center justify-between space-x-4">
         <View className="border border-green-700 rounded-full ">
           <Image
@@ -63,82 +91,13 @@ const AddEvent = ({ route }) => {
         </View>
         <Text>{profile.userName}</Text>
       </View>
-      <SelectDropdown
-        data={players1}
-        onSelect={(selectedItem, index) => {
-          console.log(selectedItem, index);
-          if (selectedItem) {
-            setIsGoalSelected(true);
-            setGoalPlayer({
-              goal: selectedItem.name,
-              goalId: selectedItem.playerId,
-            });
-          }
-        }}
-        renderButton={(selectedItem, isOpened) => {
-          return (
-            <View style={styles.dropdownButtonStyle}>
-              {/* {selectedItem && (
-                <Icon
-                  name={selectedItem.icon}
-                  style={styles.dropdownButtonIconStyle}
-                />
-              )} */}
-              {selectedItem && (
-                <Image
-                  source={
-                    selectedItem.photo
-                      ? { uri: selectedItem.photo }
-                      : require("../assets/images/defaultUserImage.jpg")
-                  }
-                  className="w-[30px] h-[30px] rounded-full"
-                />
-              )}
-              <Text style={styles.dropdownButtonTxtStyle}>
-                {(selectedItem && selectedItem.name) || "Select the player"}
-              </Text>
-              {/* <Icon
-                name={isOpened ? "chevron-up" : "chevron-down"}
-                style={styles.dropdownButtonArrowStyle}
-              /> */}
-            </View>
-          );
-        }}
-        renderItem={(item, index, isSelected) => {
-          return (
-            <View
-              style={{
-                ...styles.dropdownItemStyle,
-                ...(isSelected && { backgroundColor: "#D2D9DF" }),
-              }}
-            >
-              {/* <Icon name={item.icon} style={styles.dropdownItemIconStyle} /> */}
-              <Image
-                source={
-                  item.photo
-                    ? { uri: item.photo }
-                    : require("../assets/images/defaultUserImage.jpg")
-                }
-                className="w-[30px] h-[30px] rounded-full"
-              />
-              <Text style={styles.dropdownItemTxtStyle}>{item.name}</Text>
-            </View>
-          );
-        }}
-        showsVerticalScrollIndicator={false}
-        dropdownStyle={styles.dropdownMenuStyle}
-      />
-      {isGoalSelected && (
+      <View>
         <SelectDropdown
-          data={players1}
+          data={teams}
           onSelect={(selectedItem, index) => {
             console.log(selectedItem, index);
             if (selectedItem) {
-              setIsGoalSelected(true);
-              setAssistPlayer({
-                assist: selectedItem.name,
-                assistId: selectedItem.playerId,
-              });
+              setIsTeamSelected(selectedItem);
             }
           }}
           renderButton={(selectedItem, isOpened) => {
@@ -150,18 +109,18 @@ const AddEvent = ({ route }) => {
                   style={styles.dropdownButtonIconStyle}
                 />
               )} */}
-                {selectedItem && (
-                  <Image
-                    source={
-                      selectedItem.photo
-                        ? { uri: selectedItem.photo }
-                        : require("../assets/images/defaultUserImage.jpg")
-                    }
-                    className="w-[30px] h-[30px] rounded-full"
-                  />
-                )}
+                {/* {selectedItem && (
+                <Image
+                  source={
+                    selectedItem.photo
+                      ? { uri: selectedItem.photo }
+                      : require("../assets/images/defaultUserImage.jpg")
+                  }
+                  className="w-[30px] h-[30px] rounded-full"
+                />
+              )} */}
                 <Text style={styles.dropdownButtonTxtStyle}>
-                  {(selectedItem && selectedItem.name) || "Select the player"}
+                  {(selectedItem && selectedItem.name) || "Select the team"}
                 </Text>
                 {/* <Icon
                 name={isOpened ? "chevron-up" : "chevron-down"}
@@ -179,14 +138,14 @@ const AddEvent = ({ route }) => {
                 }}
               >
                 {/* <Icon name={item.icon} style={styles.dropdownItemIconStyle} /> */}
-                <Image
-                  source={
-                    item.photo
-                      ? { uri: item.photo }
-                      : require("../assets/images/defaultUserImage.jpg")
-                  }
-                  className="w-[30px] h-[30px] rounded-full"
-                />
+                {/* <Image
+                source={
+                  item.photo
+                    ? { uri: item.photo }
+                    : require("../assets/images/defaultUserImage.jpg")
+                }
+                className="w-[30px] h-[30px] rounded-full"
+              /> */}
                 <Text style={styles.dropdownItemTxtStyle}>{item.name}</Text>
               </View>
             );
@@ -194,14 +153,170 @@ const AddEvent = ({ route }) => {
           showsVerticalScrollIndicator={false}
           dropdownStyle={styles.dropdownMenuStyle}
         />
+      </View>
+
+      {isTeamSelected && (
+        <View>
+          <SelectDropdown
+            data={isTeamSelected.name == "team1" ? players1 : players2}
+            onSelect={(selectedItem, index) => {
+              console.log(selectedItem, index);
+              if (selectedItem) {
+                setIsGoalSelected(true);
+                setGoalPlayer({
+                  goal: selectedItem.name,
+                  goalId: selectedItem.playerId,
+                });
+              }
+            }}
+            renderButton={(selectedItem, isOpened) => {
+              return (
+                <View style={styles.dropdownButtonStyle}>
+                  {/* {selectedItem && (
+                <Icon
+                  name={selectedItem.icon}
+                  style={styles.dropdownButtonIconStyle}
+                />
+              )} */}
+                  {selectedItem && (
+                    <Image
+                      source={
+                        selectedItem.photo
+                          ? { uri: selectedItem.photo }
+                          : require("../assets/images/defaultUserImage.jpg")
+                      }
+                      className="w-[30px] h-[30px] rounded-full"
+                    />
+                  )}
+                  <Text style={styles.dropdownButtonTxtStyle}>
+                    {(selectedItem && selectedItem.name) || "Select the player"}
+                  </Text>
+                  {/* <Icon
+                name={isOpened ? "chevron-up" : "chevron-down"}
+                style={styles.dropdownButtonArrowStyle}
+              /> */}
+                </View>
+              );
+            }}
+            renderItem={(item, index, isSelected) => {
+              return (
+                <View
+                  style={{
+                    ...styles.dropdownItemStyle,
+                    ...(isSelected && { backgroundColor: "#D2D9DF" }),
+                  }}
+                >
+                  {/* <Icon name={item.icon} style={styles.dropdownItemIconStyle} /> */}
+                  <Image
+                    source={
+                      item.photo
+                        ? { uri: item.photo }
+                        : require("../assets/images/defaultUserImage.jpg")
+                    }
+                    className="w-[30px] h-[30px] rounded-full"
+                  />
+                  <Text style={styles.dropdownItemTxtStyle}>{item.name}</Text>
+                </View>
+              );
+            }}
+            showsVerticalScrollIndicator={false}
+            dropdownStyle={styles.dropdownMenuStyle}
+          />
+        </View>
+      )}
+
+      {isGoalSelected && (
+        <View>
+          <SelectDropdown
+            data={isTeamSelected.name == "team2" ? players2 : players1}
+            onSelect={(selectedItem, index) => {
+              console.log(selectedItem, index);
+              if (selectedItem) {
+                setIsGoalSelected(true);
+                setAssistPlayer({
+                  assist: selectedItem.name,
+                  assistId: selectedItem.playerId,
+                });
+              }
+            }}
+            renderButton={(selectedItem, isOpened) => {
+              return (
+                <View style={styles.dropdownButtonStyle}>
+                  {/* {selectedItem && (
+              <Icon
+                name={selectedItem.icon}
+                style={styles.dropdownButtonIconStyle}
+              />
+            )} */}
+                  {selectedItem && (
+                    <Image
+                      source={
+                        selectedItem.photo
+                          ? { uri: selectedItem.photo }
+                          : require("../assets/images/defaultUserImage.jpg")
+                      }
+                      className="w-[30px] h-[30px] rounded-full"
+                    />
+                  )}
+                  <Text style={styles.dropdownButtonTxtStyle}>
+                    {(selectedItem && selectedItem.name) || "Select the player"}
+                  </Text>
+                  {/* <Icon
+              name={isOpened ? "chevron-up" : "chevron-down"}
+              style={styles.dropdownButtonArrowStyle}
+            /> */}
+                </View>
+              );
+            }}
+            renderItem={(item, index, isSelected) => {
+              return (
+                <View
+                  style={{
+                    ...styles.dropdownItemStyle,
+                    ...(isSelected && { backgroundColor: "#D2D9DF" }),
+                  }}
+                >
+                  {/* <Icon name={item.icon} style={styles.dropdownItemIconStyle} /> */}
+                  <Image
+                    source={
+                      item.photo
+                        ? { uri: item.photo }
+                        : require("../assets/images/defaultUserImage.jpg")
+                    }
+                    className="w-[30px] h-[30px] rounded-full"
+                  />
+                  <Text style={styles.dropdownItemTxtStyle}>{item.name}</Text>
+                </View>
+              );
+            }}
+            showsVerticalScrollIndicator={false}
+            dropdownStyle={styles.dropdownMenuStyle}
+          />
+        </View>
       )}
       <TouchableOpacity
         onPress={() => {
-          const mergedJson = { ...goalPlayer, ...assistPlayer };
-          console.log(mergedJson);
+          // assuming this is the format you have
+          const minutes = counterTime?.split(":")[0];
+
+          const mergedJson = {
+            ...goalPlayer,
+            ...assistPlayer,
+            team: isTeamSelected.name,
+            time: minutes, //44
+          };
+          const event = {
+            event: mergedJson,
+          };
+
+          console.log(event);
+          handleAddEvent(event);
         }}
       >
-        <View>
+        <View
+          className="py-2 px-3 rounded-md"
+          style={{ backgroundColor: colors.lightGreen }}
+        >
           <Text>add event</Text>
         </View>
       </TouchableOpacity>

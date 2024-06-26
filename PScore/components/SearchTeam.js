@@ -76,7 +76,7 @@ const SearchTeam = ({ onPress }) => {
           className="flex-1 px-3"
           value={search}
           onChangeText={handleSearch}
-          placeholder="search for Players or Stadiums..."
+          placeholder="search for teams..."
         ></TextInput>
         {search && (
           <Pressable

@@ -1,10 +1,27 @@
-import { View, Text, StyleSheet, Button, Image, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  Image,
+  Alert,
+  Modal,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
+import { useAuth } from "../../contexts/AuthContext";
 
 const MapScreen = () => {
   const [region, setRegion] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const { playgrounds } = useAuth();
+  useEffect(() => {
+    console.log(playgrounds[0]);
+  }, []);
+
   const locations = [
     {
       id: 1,
@@ -21,6 +38,10 @@ const MapScreen = () => {
       image: "https://via.placeholder.com/150",
     },
   ];
+  const handleMarkerPress = (location) => {
+    setSelectedLocation(location);
+    setModalVisible(true);
+  };
 
   const mapViewRef = useRef(null);
   useEffect(() => {
@@ -51,14 +72,7 @@ const MapScreen = () => {
       longitudeDelta: 0.01,
     });
   };
-  const goToNewLocation = () => {
-    const newLocation = { latitude: 37.78825, longitude: -122.4324 }; // Example new location coordinates
-    mapViewRef.current.animateToRegion({
-      ...newLocation,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    });
-  };
+
   return (
     <View className="flex-1">
       {region && (
@@ -68,53 +82,85 @@ const MapScreen = () => {
           provider={PROVIDER_GOOGLE}
           initialRegion={region}
         >
-          {locations.map((location) => (
+          {playgrounds.map((location) => (
             <Marker
-              key={location.id}
+              key={location._id}
               coordinate={{
-                latitude: location.latitude,
-                longitude: location.longitude,
+                latitude: location.location.coordinates[1],
+                longitude: location.location.coordinates[0],
               }}
-              title={location.title}
-            >
-              <Callout>
-                <Image
-                  source={require("../../assets/images/stadiums/etihad.jpg")}
-                  style={{ resizeMode: "cover", width: "100%", height: 100 }}
-                  alt="ssss"
-                />
-                <Text>ddd</Text>
-                <Button
-                  title="Details"
-                  onPress={() => Alert(`Details of ${location.title}`)}
-                />
-              </Callout>
-            </Marker>
+              title={location.name}
+              onPress={() => handleMarkerPress(location)}
+            ></Marker>
           ))}
           <Marker
             coordinate={{
               latitude: region.latitude,
               longitude: region.longitude,
             }}
-          />
+          >
+            <Image
+              source={require("../../assets/images/markerBlue.png")}
+              style={{ width: 40, height: 40 }}
+              resizeMode="contain"
+            />
+          </Marker>
         </MapView>
       )}
-
-      <Button title="Go to New Location" onPress={goToNewLocation} />
       <Button title="Go to my Location" onPress={goToMyLocation} />
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {selectedLocation && (
+              <>
+                <Text style={styles.modalTitle}>{selectedLocation.title}</Text>
+                <Text>{selectedLocation.description}</Text>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
 const styles = StyleSheet.create({
-  callout: {
-    display: "flex",
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    width: "80%",
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
     alignItems: "center",
   },
-  image: {
-    width: 100,
-    height: 100,
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
     marginBottom: 10,
-    resizeMode: "cover",
+  },
+  closeButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: "#2196F3",
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: "white",
   },
 });
 

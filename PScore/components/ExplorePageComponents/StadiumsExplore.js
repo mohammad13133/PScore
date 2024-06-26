@@ -17,31 +17,8 @@ import axios from "axios";
 import { useState } from "react";
 const { width } = Dimensions.get("window");
 const StadiumsExplore = () => {
-  const { token } = useAuth();
-  const [data, setData] = useState({});
-  useEffect(() => {
-    const fetchData = async () => {
-      console.log("hello token");
-      console.log(token);
-      try {
-        const response = await axios.get(
-          "https://pscore-backend.vercel.app/playground",
-          {
-            headers: {
-              authorization: `Ahmad__${token}`,
-            },
-          }
-        );
-        console.log(response.data[0]);
-        setData(response.data);
-        // setProfile(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  const { playgrounds } = useAuth();
 
-    fetchData();
-  }, [token]);
   return (
     <>
       <Text>Nearest</Text>
@@ -51,14 +28,14 @@ const StadiumsExplore = () => {
         snapToAlignment={"start"}
         scrollEventThrottle={16}
         decelerationRate="fast"
-        snapToOffsets={[...Array(data.length)].map(
+        snapToOffsets={[...Array(playgrounds.length)].map(
           (x, i) => i * (width * 0.8 - 40) + (i - 1) * 40
         )}
         // onScroll={(event) => {
         //   setScrollX(event.nativeEvent.contentOffset.x);
         // }}
         contentContainerStyle={{ paddingBottom: 10 }}
-        data={data}
+        data={playgrounds}
         renderItem={({ item, index }) => <Item item={item} key={index} />}
         keyExtractor={(item) => item._id}
       />

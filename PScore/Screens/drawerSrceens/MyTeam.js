@@ -28,6 +28,7 @@ const MyTeam = () => {
       try {
         setIsLoading(true);
         const formData = new FormData();
+
         if (image) {
           const file = {
             uri: image,
@@ -36,24 +37,32 @@ const MyTeam = () => {
           };
           formData.append("image", file);
         }
-        if (!teamData.team) {
+
+        // Append teamName to formData if teamData.team is defined
+        if (teamData && teamData.team) {
           formData.append("teamName", values.teamName);
         }
-        console.log(formData);
+
+        // Send POST request to create team
         const response = await axios.post(
           "https://pscore-backend.vercel.app/team/create",
           formData,
           {
             headers: {
-              "Content-Type": "multipart/form-data",
               authorization: `Ahmad__${token}`,
+              "Content-Type": "multipart/form-data",
             },
           }
         );
+
+        // Trigger event on success
         triggerEvent();
         console.log(response.data);
       } catch (error) {
-        console.error("Error config:", error);
+        console.error(
+          "Error:",
+          error.response ? error.response.data : error.message
+        );
       } finally {
         setIsLoading(false);
       }
@@ -61,6 +70,7 @@ const MyTeam = () => {
       console.error("Token is not defined");
     }
   };
+
   const pickImage = async () => {
     // Ask for permission to access media library
     if (Platform.OS !== "web") {
@@ -124,7 +134,6 @@ const MyTeam = () => {
                 onChangeText={handleChange("teamName")}
                 onBlur={handleBlur("teamName")}
                 value={values.teamName}
-                editable={teamData?.team ? false : true}
               />
 
               <TouchableOpacity

@@ -186,9 +186,9 @@ const GameCard = ({
             >
               <SearchTeam onPress={handleTeamPress} />
               {/* Add your modal content here */}
-              <TouchableOpacity onPress={() => setModalVisible(false)}>
+              {/* <TouchableOpacity onPress={() => setModalVisible(false)}>
                 <Text>Close Modal</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         </Modal>

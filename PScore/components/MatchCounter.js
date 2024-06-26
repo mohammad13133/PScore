@@ -3,7 +3,13 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import dayjs from "dayjs";
-const MatchCounter = ({ start, end, counterDate }) => {
+const MatchCounter = ({
+  start,
+  end,
+  counterDate,
+  setCounterTime,
+  counterTime,
+}) => {
   //   const date1 = "2024-06-25";
 
   const matchStartTime = dayjs(`${counterDate}T${start}:00`);
@@ -32,8 +38,11 @@ const MatchCounter = ({ start, end, counterDate }) => {
       seconds < 10 ? "0" : ""
     }${seconds}`;
   };
+  useEffect(() => {
+    setCounterTime(formatCounter(counter));
+  }, [counter]);
 
-  return <Text>{formatCounter(counter)}</Text>;
+  return <Text>{counterTime}</Text>;
   //   Max Counter: {formatCounter(countermax)}
 };
 

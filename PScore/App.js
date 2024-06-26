@@ -78,7 +78,7 @@ const Tab = createBottomTabNavigator();
 
 const Drawer = createDrawerNavigator();
 
-// const mySocket = io.connect("http://localhost:4000");
+const mySocket = io.connect("http://192.168.1.5:4000");
 
 export default function App() {
   return (
@@ -87,7 +87,9 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName="MainPage"
-            screenOptions={{ headerShown: false }}
+            screenOptions={{
+              headerShown: false,
+            }}
           >
             <Stack.Screen
               name="Welcome"
@@ -188,6 +190,7 @@ function MyTabsDrower() {
     profile,
     setProfile,
     token,
+    setPlaygrounds,
     setTeamData,
     teamData,
     trigger,
@@ -195,28 +198,41 @@ function MyTabsDrower() {
   } = useAuth();
   const { socket, setSocket, setAllChatRooms, setroomMasseges, setIsLoading } =
     useChats();
-  // useEffect(() => {
-  //   setSocket(mySocket);
-  //   mySocket.emit("getAllGroups");
-  // }, []);
+  useEffect(() => {
+    setSocket(mySocket);
+    mySocket.emit("getAllGroups");
+  }, []);
 
-  // useEffect(() => {
-  //   setMySocket(mySocket2);
-  //   mySocket2.emit("hello");
+  useEffect(() => {
+    // mySocket.emit("getAllGroups");
+    mySocket.on("group_list", (groups) => {
+      console.log(groups);
+      setAllChatRooms(groups);
+    });
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log("hello token");
+      console.log(token);
+      try {
+        const response = await axios.get(
+          "https://pscore-backend.vercel.app/playground",
+          {
+            headers: {
+              authorization: `Ahmad__${token}`,
+            },
+          }
+        );
+        // console.log(response.data[0]);
+        setPlaygrounds(response.data);
+        // setProfile(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-  //   return () => {
-  //     mySocket2.disconnect();
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   // mySocket.emit("getAllGroups");
-  //   mySocket.on("group_list", (groups) => {
-  //     console.log(groups);
-  //     setAllChatRooms(groups);
-  //   });
-  // }, []);
-
+    fetchData();
+  }, [token]);
   useEffect(() => {
     const fetchData = async () => {
       console.log("hello token");
@@ -299,7 +315,6 @@ function MyTabsDrower() {
           borderBottomWidth: 0, // Remove bottom border
           shadowColor: "transparent", // Remove shadow
         },
-
         headerTintColor: "black", // Change text color of header titles
         drawerActiveTintColor: colors.secondColor,
         headerRight: () => (

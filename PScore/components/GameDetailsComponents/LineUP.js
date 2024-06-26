@@ -19,6 +19,7 @@ const LineUP = ({ players, others }) => {
         style={{
           width: wp(130),
           height: hp(50),
+          maxWidth: 900,
         }}
       >
         <Image
@@ -38,7 +39,8 @@ const LineUP = ({ players, others }) => {
                   : require("../../assets/images/defaultUserImage.jpg")
               }
               Name={players[0]?.name}
-              goals={2}
+              goals={players[0]?.goals}
+              assists={players[0]?.assists}
             />
             <Player
               top={"50%"}
@@ -49,6 +51,8 @@ const LineUP = ({ players, others }) => {
                   : require("../../assets/images/defaultUserImage.jpg")
               }
               Name={players[1]?.name}
+              goals={players[1]?.goals}
+              assists={players[1]?.assists}
             />
             <Player
               top={"70%"}
@@ -59,6 +63,8 @@ const LineUP = ({ players, others }) => {
                   : require("../../assets/images/defaultUserImage.jpg")
               }
               Name={players[2]?.name}
+              goals={players[2]?.goals}
+              assists={players[2]?.assists}
             />
             <Player
               top={"70%"}
@@ -69,6 +75,8 @@ const LineUP = ({ players, others }) => {
                   : require("../../assets/images/defaultUserImage.jpg")
               }
               Name={players[3]?.name}
+              goals={players[3]?.goals}
+              assists={players[3]?.assists}
             />
 
             <Player
@@ -80,6 +88,8 @@ const LineUP = ({ players, others }) => {
                   : require("../../assets/images/defaultUserImage.jpg")
               }
               Name={players[4]?.name}
+              goals={players[4]?.goals}
+              assists={players[4]?.assists}
             />
           </>
         )}
