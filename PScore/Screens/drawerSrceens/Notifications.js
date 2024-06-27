@@ -35,7 +35,7 @@
 //     />
 //   );
 // };
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, ScrollView } from "react-native";
 import React from "react";
 import Header from "../../components/Header";
 import {
@@ -48,7 +48,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import axios from "axios";
 import { useState } from "react";
 const Notifications = ({ navigation }) => {
-  const { token } = useAuth();
+  const { token, triggerInvites } = useAuth();
   const [invites, setInvites] = useState([]);
   useEffect(() => {
     const getNotifications = async () => {
@@ -68,43 +68,45 @@ const Notifications = ({ navigation }) => {
       }
     };
     getNotifications();
-  }, []);
+  }, [token, triggerInvites]);
   return (
     <View className="flex-1">
-      <View className="w-full h-full flex items-center">
-        {/* Request */}
-        {invites
-          .slice()
-          .reverse()
-          .map((item, index) => (
-            <View
-              key={index}
-              className="bg-white my-2 flex-row items-center space-x-3"
-              style={{ width: wp(90), height: 100 }}
-            >
-              <Image
-                className="rounded-full"
-                style={{ width: 70, height: 70, resizeMode: "stretch" }}
-                source={{ uri: item.image }}
-              />
-              <View className="flex items-start  justify-center">
-                <Text>{item.message}</Text>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("GameDetails", {
-                      type: "pending",
-                      gameid: item.match,
-                      inviteId: item._id,
-                    })
-                  }
-                  className="bg-green-400 py-2 px-4 rounded-md"
-                >
-                  <Text>View</Text>
-                </TouchableOpacity>
+      <ScrollView>
+        <View className="w-full h-full flex items-center">
+          {/* Request */}
+          {invites
+            .slice()
+            .reverse()
+            .map((item, index) => (
+              <View
+                key={index}
+                className="bg-white my-2 flex-row items-center space-x-3"
+                style={{ width: wp(90), height: 100 }}
+              >
+                <Image
+                  className="rounded-full"
+                  style={{ width: 70, height: 70, resizeMode: "stretch" }}
+                  source={{ uri: item.image }}
+                />
+                <View className="flex items-start  justify-center">
+                  <Text>{item.message}</Text>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("GameDetails", {
+                        type: "pending",
+                        gameid: item.match,
+                        inviteId: item._id,
+                      })
+                    }
+                    className="bg-green-400 py-2 px-4 rounded-md"
+                  >
+                    <Text>View</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          ))}
-      </View>
+            ))}
+        </View>
+      </ScrollView>
     </View>
   );
 };

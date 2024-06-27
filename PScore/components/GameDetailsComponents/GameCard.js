@@ -76,6 +76,7 @@ const GameCard = ({
   team1,
   team2,
   setInvitedTeamId,
+  live,
 }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
@@ -99,6 +100,13 @@ const GameCard = ({
       }}
       className="flex items-center justify-center relative "
     >
+      {live && (
+        <View className="absolute top-[90px] flex-row space-x-1">
+          <View className="bg-red-700 rounded-full p-[10px]" />
+          <Text>Live</Text>
+        </View>
+      )}
+
       <View
         className="px-1 rounded-md"
         style={{

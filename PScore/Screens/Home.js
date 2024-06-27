@@ -105,7 +105,6 @@ const Home = ({ navigation, route }) => {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.secondColor }}>
       <StatusBar style="dark" />
-
       <DayPicker day={day} setDay={setDay} />
       <ScrollView
         showsVerticalScrollIndicator={false}

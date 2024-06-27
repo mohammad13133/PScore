@@ -12,6 +12,7 @@ import Reservations from "../../components/Admin/Reservations";
 import AddStadium from "../../components/Admin/AddStadium";
 import PlayGroundData from "../../components/Admin/PlayGroundData";
 import AddMatches from "../../components/Admin/AddMatches";
+import Matches from "../../components/Admin/Matches";
 
 export const SidebarTopData = [
   {
@@ -29,6 +30,14 @@ export const SidebarTopData = [
     curruntPath: "/Admin/reservations",
     icon: <IoCalendarOutline />,
     component: <Reservations />,
+  },
+  {
+    key: "Matches",
+    label: "Matches",
+    path: "Matches",
+    curruntPath: "/Admin/Matches",
+    icon: <IoCalendarOutline />,
+    component: <Matches />,
   },
   {
     key: "addMatches",

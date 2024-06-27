@@ -92,7 +92,7 @@ const Profile = () => {
               }}
               source={{ uri: "https://flagsapi.com/PS/flat/64.png" }}
             /> */}
-            <Text>No Team</Text>
+            <Text>{profile.team}</Text>
           </View>
         </View>
       </View>
@@ -116,36 +116,41 @@ const Stats = ({ loading, profile }) => {
           <Text>Age</Text>
           <Text>{profile.age}</Text>
         </View>
-        <View className="flex items-center w-[100px] space-y-4 ">
-          <Text>Position</Text>
-          <Text>{profile.position}</Text>
-        </View>
+        {profile.userType == "player" && (
+          <View className="flex items-center w-[100px] space-y-4 ">
+            <Text>Position</Text>
+            <Text>{profile.position}</Text>
+          </View>
+        )}
+
         <View className="flex items-center w-[100px] space-y-4 ">
           <Text>phone</Text>
           <Text>{profile.number}</Text>
         </View>
       </View>
-      <View className="flex-row justify-around">
-        <View className="flex items-center w-[100px] space-y-4 ">
-          <Text>Matches</Text>
-          <Text>1</Text>
+      {profile.userType == "player" && (
+        <View className="flex-row justify-around">
+          <View className="flex items-center w-[100px] space-y-4 ">
+            <Text>Matches</Text>
+            <Text>1</Text>
+          </View>
+          <View className="flex items-center w-[100px] space-y-4 ">
+            <Image
+              className="rounded-full"
+              style={{ width: 25, height: 25 }}
+              source={require("../assets/images/footballcartoon.jpg")}
+            />
+            <Text>{profile.goals}</Text>
+          </View>
+          <View className="flex items-center w-[100px] space-y-4 ">
+            <Image
+              style={{ width: 25, height: 25 }}
+              source={require("../assets/images/assists.png")}
+            />
+            <Text>{profile.assists}</Text>
+          </View>
         </View>
-        <View className="flex items-center w-[100px] space-y-4 ">
-          <Image
-            className="rounded-full"
-            style={{ width: 25, height: 25 }}
-            source={require("../assets/images/footballcartoon.jpg")}
-          />
-          <Text>{profile.goals}</Text>
-        </View>
-        <View className="flex items-center w-[100px] space-y-4 ">
-          <Image
-            style={{ width: 25, height: 25 }}
-            source={require("../assets/images/assists.png")}
-          />
-          <Text>{profile.assists}</Text>
-        </View>
-      </View>
+      )}
     </View>
   );
 };

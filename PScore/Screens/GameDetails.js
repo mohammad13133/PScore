@@ -40,7 +40,7 @@ import MatchCounter from "../components/MatchCounter";
 const GameDetails = ({ navigation, route }) => {
   navigation = useNavigation();
   const { gameid, inviteId } = route?.params || {};
-  const { token, teamData, profile } = useAuth();
+  const { token, teamData, profile, triggerInvitesEvent } = useAuth();
   const [activeBell, setActiveBell] = useState(false);
   const [allPlayers, setAllPlayers] = useState({});
   const [matchDetails, setMatchDetails] = useState({});
@@ -170,6 +170,7 @@ const GameDetails = ({ navigation, route }) => {
 
       console.log(response?.data);
       showAlert("invite responded", "you accept the invintation");
+      triggerInvitesEvent();
       navigation.navigate("MainPage");
     } catch (error) {
       console.error(" error:", error);
@@ -199,6 +200,7 @@ const GameDetails = ({ navigation, route }) => {
       );
       console.log(response?.data);
       showAlert("invite responded", "you denyed the invintation");
+      triggerInvitesEvent();
       navigation.navigate("MainPage");
     } catch (error) {
       console.error(" error:", error);
@@ -313,6 +315,7 @@ const GameDetails = ({ navigation, route }) => {
               score={matchDetails?.team1Score + "-" + matchDetails?.team2Score}
               team1={matchDetails?.team1?.image}
               team2={matchDetails?.team2?.image}
+              live
             />
           ) : (
             <GameCard
@@ -340,7 +343,7 @@ const GameDetails = ({ navigation, route }) => {
           {matchDetails.status == "empty" ? (
             <SlidesPicker>
               <ChoosableLineUp
-                dispalyName={"team1"}
+                dispalyName={"home"}
                 players={players}
                 setPlayers={setPlayers}
                 others={others}
@@ -350,7 +353,7 @@ const GameDetails = ({ navigation, route }) => {
           ) : matchDetails.status == "pending" ? (
             <SlidesPicker>
               <LineUP
-                dispalyName={"team1"}
+                dispalyName={"home"}
                 players={
                   matchDetails?.team1Players ? matchDetails?.team1Players : {}
                 }
@@ -359,7 +362,7 @@ const GameDetails = ({ navigation, route }) => {
                 }
               />
               <ChoosableLineUp
-                dispalyName={"team2"}
+                dispalyName={"away"}
                 players={players}
                 setPlayers={setPlayers}
                 others={others}
@@ -369,7 +372,7 @@ const GameDetails = ({ navigation, route }) => {
           ) : (
             <SlidesPicker>
               <LineUP
-                dispalyName={"team1"}
+                dispalyName={"home"}
                 players={
                   matchDetails?.team1Players ? matchDetails?.team1Players : {}
                 }
@@ -378,7 +381,7 @@ const GameDetails = ({ navigation, route }) => {
                 }
               />
               <LineUP
-                dispalyName={"team2"}
+                dispalyName={"away"}
                 players={
                   matchDetails?.team2Players ? matchDetails?.team2Players : {}
                 }

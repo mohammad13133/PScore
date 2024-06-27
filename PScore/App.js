@@ -336,22 +336,28 @@ function MyTabsDrower() {
         }}
         component={MyTabs}
       />
-      <Drawer.Screen
-        name="Notifications"
-        options={{
-          drawerIcon: () => <BellAlertIconLine color={colors.secondColor} />,
-        }}
-        component={Notifications}
-      />
-      <Drawer.Screen
-        name="MyGames"
-        options={{
-          drawerIcon: () => (
-            <ArchiveBoxArrowDownIconLine color={colors.secondColor} />
-          ),
-        }}
-        component={MyGames}
-      />
+      {profile.userType == "manager" && (
+        <Drawer.Screen
+          name="Notifications"
+          options={{
+            drawerIcon: () => <BellAlertIconLine color={colors.secondColor} />,
+          }}
+          component={Notifications}
+        />
+      )}
+
+      {profile.userType == "player" ||
+        (profile.userType == "manager" && (
+          <Drawer.Screen
+            name="MyGames"
+            options={{
+              drawerIcon: () => (
+                <ArchiveBoxArrowDownIconLine color={colors.secondColor} />
+              ),
+            }}
+            component={MyGames}
+          />
+        ))}
       {profile.userType == "manager" && (
         <Drawer.Screen
           name="MyTeam"

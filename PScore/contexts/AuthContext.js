@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [profile, setProfile] = useState({});
   const [teamData, setTeamData] = useState({});
   const [trigger, setTrigger] = useState(0);
+  const [triggerInvites, setTriggerInvites] = useState(0);
   const [mySocket, setMySocket] = useState();
   const [playgrounds, setPlaygrounds] = useState({});
   const decodeToken = (token) => {
@@ -26,6 +27,9 @@ export const AuthProvider = ({ children }) => {
   };
   const triggerEvent = () => {
     setTrigger((prevTrigger) => prevTrigger + 1);
+  };
+  const triggerInvitesEvent = () => {
+    setTriggerInvites((prevTrigger) => prevTrigger + 1);
   };
   const getUser = () => {
     try {
@@ -53,6 +57,8 @@ export const AuthProvider = ({ children }) => {
         setTeamData,
         trigger,
         triggerEvent,
+        triggerInvites,
+        triggerInvitesEvent,
         setMySocket,
         mySocket,
       }}

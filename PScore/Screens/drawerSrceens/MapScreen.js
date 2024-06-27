@@ -12,8 +12,10 @@ import React, { useEffect, useRef, useState } from "react";
 import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import { useAuth } from "../../contexts/AuthContext";
+import { useNavigation } from "@react-navigation/native";
 
 const MapScreen = () => {
+  navigation = useNavigation();
   const [region, setRegion] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -118,14 +120,31 @@ const MapScreen = () => {
           <View style={styles.modalContent}>
             {selectedLocation && (
               <>
-                <Text style={styles.modalTitle}>{selectedLocation.title}</Text>
-                <Text>{selectedLocation.description}</Text>
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => setModalVisible(false)}
-                >
-                  <Text style={styles.closeButtonText}>Close</Text>
-                </TouchableOpacity>
+                <Text style={styles.modalTitle}>{selectedLocation.name}</Text>
+                {selectedLocation.photos[0] && (
+                  <Image
+                    source={{ uri: selectedLocation.photos[0] }}
+                    style={{ width: "100%", height: 100 }}
+                  />
+                )}
+
+                <Text>{selectedLocation.name}</Text>
+                <View className="flex-row space-x-2">
+                  <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={() =>
+                      navigation.navigate("Stadium", { ...selectedLocation })
+                    }
+                  >
+                    <Text style={styles.closeButtonText}>go to playground</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={() => setModalVisible(false)}
+                  >
+                    <Text style={styles.closeButtonText}>Close</Text>
+                  </TouchableOpacity>
+                </View>
               </>
             )}
           </View>
