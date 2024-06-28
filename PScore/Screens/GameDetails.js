@@ -127,21 +127,25 @@ const GameDetails = ({ navigation, route }) => {
         "The object does not contain all players from player1 to player5 as keys."
       );
     }
-    try {
-      const response = await axios.post(
-        `https://pscore-backend.vercel.app/team/inviteteam/${gameid}/${invitedTeamId}`,
-        allPlayersCopy,
-        {
-          headers: {
-            authorization: `Ahmad__${token}`,
-          },
-        }
-      );
-      console.log(response?.data);
+    if (allPresent) {
+      try {
+        const response = await axios.post(
+          `https://pscore-backend.vercel.app/team/inviteteam/${gameid}/${invitedTeamId}`,
+          allPlayersCopy,
+          {
+            headers: {
+              authorization: `Ahmad__${token}`,
+            },
+          }
+        );
+        console.log(response?.data);
+        showAlert("invite sended", "you send the invintation successfully");
+        navigation.navigate("MainPage");
+      } catch (error) {
+        console.error(" error:", error);
+      }
+    } else {
       showAlert("invite sended", "you send the invintation successfully");
-      navigation.navigate("MainPage");
-    } catch (error) {
-      console.error(" error:", error);
     }
   };
   const handleAccept = async () => {
@@ -289,6 +293,10 @@ const GameDetails = ({ navigation, route }) => {
               score={matchDetails.status == "pending" ? "pending" : "..."}
               team1={matchDetails?.team1?.image}
               team2={matchDetails?.team2?.image || teamData?.team?.image}
+              team1Id={matchDetails?.team1?._id}
+              team2Id={matchDetails?.team2?._id}
+              recentResults1={matchDetails?.team1?.recentResults}
+              recentResults2={matchDetails?.team2?.recentResults}
             />
           ) : matchDetails?.status === "pending" ? (
             <GameCard
@@ -298,6 +306,9 @@ const GameDetails = ({ navigation, route }) => {
               score={matchDetails.status == "pending" ? "pending" : "..."}
               team1={matchDetails?.team1?.image}
               team2={matchDetails?.team2?.image || teamData?.team?.image}
+              team1Id={matchDetails?.team1?._id}
+              team2Id={matchDetails?.team2?._id}
+              recentResults1={matchDetails?.team1?.recentResults}
             />
           ) : matchDetails?.status === "live" ? (
             <GameCard
@@ -315,6 +326,10 @@ const GameDetails = ({ navigation, route }) => {
               score={matchDetails?.team1Score + "-" + matchDetails?.team2Score}
               team1={matchDetails?.team1?.image}
               team2={matchDetails?.team2?.image}
+              team1Id={matchDetails?.team1?._id}
+              team2Id={matchDetails?.team2?._id}
+              recentResults1={matchDetails?.team1?.recentResults}
+              recentResults2={matchDetails?.team2?.recentResults}
               live
             />
           ) : (
@@ -325,6 +340,10 @@ const GameDetails = ({ navigation, route }) => {
               score={matchDetails?.team1Score + "-" + matchDetails?.team2Score}
               team1={matchDetails?.team1?.image}
               team2={matchDetails?.team2?.image}
+              team1Id={matchDetails?.team1?._id}
+              team2Id={matchDetails?.team2?._id}
+              recentResults1={matchDetails?.team2?.recentResults}
+              recentResults2={matchDetails?.team2?.recentResults}
             />
           )}
 

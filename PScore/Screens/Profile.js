@@ -55,7 +55,7 @@ const Profile = () => {
         <Text>{profile ? profile?.userName : "no login"}</Text>
         {/* <Text>{user ? user?.type : "no login"}</Text> */}
         <View
-          className="flex-row justify-between rounded-md p-1"
+          className="flex-row justify-around rounded-md p-1"
           style={{
             width: 300,
             backgroundColor: colors.secondColor,
@@ -83,8 +83,9 @@ const Profile = () => {
             />
             <Text>{profile?.country}</Text>
           </View>
-          <View className="flex items-center justify-center w-[100px]">
-            {/* <Image
+          {profile.userType == "player" && (
+            <View className="flex items-center justify-center w-[100px]">
+              {/* <Image
               style={{
                 width: 25,
                 height: 25,
@@ -92,12 +93,14 @@ const Profile = () => {
               }}
               source={{ uri: "https://flagsapi.com/PS/flat/64.png" }}
             /> */}
-            <Text>{profile.team}</Text>
-          </View>
+              <Text>{profile.team}</Text>
+            </View>
+          )}
         </View>
       </View>
+
       <SlidesPicker>
-        <Stats dispalyName="Stats" loading={loading} profile={profile} />
+        <Stats dispalyName="Profile" loading={loading} profile={profile} />
       </SlidesPicker>
     </ScrollView>
   );
@@ -132,7 +135,7 @@ const Stats = ({ loading, profile }) => {
         <View className="flex-row justify-around">
           <View className="flex items-center w-[100px] space-y-4 ">
             <Text>Matches</Text>
-            <Text>1</Text>
+            <Text>{profile?.numberOfEndedMatches}</Text>
           </View>
           <View className="flex items-center w-[100px] space-y-4 ">
             <Image

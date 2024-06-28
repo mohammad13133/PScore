@@ -10,10 +10,8 @@ const side_card = (width * 0.18) / 2;
 const Explore = () => {
   return (
     <View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <StadiumsExplore />
-        {/* <TopPlayers /> */}
-      </ScrollView>
+      <StadiumsExplore />
+      {/* <TopPlayers /> */}
     </View>
   );
 };

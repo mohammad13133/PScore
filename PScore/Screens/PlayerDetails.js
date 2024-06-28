@@ -4,6 +4,7 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import React, { useLayoutEffect } from "react";
 import colors from "../assets/colors/colors";
@@ -18,9 +19,10 @@ import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 import { useEffect } from "react";
+import GameCard from "../components/GameCard";
 const PlayerDetails = ({ navigation, route }) => {
   const { token, teamData, triggerEvent, setTeamData } = useAuth();
-  const { name, _id, item } = route.params;
+  const { _id } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [localProfile, setLocalProfile] = useState({});
   const [isMember, setIsMember] = useState(false);
@@ -78,9 +80,11 @@ const PlayerDetails = ({ navigation, route }) => {
     }
   };
   useEffect(() => {
+    console.log(_id);
     const fetchData = async () => {
       console.log(token);
       try {
+        console.log(_id);
         const response = await axios.get(
           `https://pscore-backend.vercel.app/profile/${_id}`,
           {},
@@ -92,6 +96,7 @@ const PlayerDetails = ({ navigation, route }) => {
         );
         // Handle the response here
         setLocalProfile(response.data);
+        console.log("pp");
         console.log(response.data);
       } catch (error) {
         // Handle the error here
@@ -102,7 +107,6 @@ const PlayerDetails = ({ navigation, route }) => {
       fetchData();
     }
   }, []);
-
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -115,7 +119,7 @@ const PlayerDetails = ({ navigation, route }) => {
             className="pr-2"
             onPress={() =>
               navigation.navigate("Chat", {
-                roomid: item.userName,
+                toMassege: localProfile.email,
                 playerid: 400,
               })
             }
@@ -138,9 +142,13 @@ const PlayerDetails = ({ navigation, route }) => {
     });
   }, [navigation, isMember, isLoading, teamData, localProfile]);
   return (
-    <View>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ display: "flex", alignItems: "center" }}
+    >
       <View
         style={{
+          width: "100%",
           height: 300,
           backgroundColor: colors.secondColor,
           borderBottomEndRadius: 50,
@@ -149,16 +157,15 @@ const PlayerDetails = ({ navigation, route }) => {
         className="flex items-center justify-center relative "
       >
         <View className="absolute top-10">
-          <Text>{item?.userName}</Text>
+          <Text>{localProfile?.userName}</Text>
         </View>
-
         <View
           className="rounded-full border border-red-600 flex items-center justify-center"
           style={{ width: 151, height: 151 }}
         >
           <Image
             className="rounded-full"
-            source={{ uri: item?.image }}
+            source={{ uri: localProfile?.image }}
             style={{
               width: 150,
               height: 150,
@@ -168,17 +175,20 @@ const PlayerDetails = ({ navigation, route }) => {
         </View>
       </View>
       <SlidesPicker>
-        <View dispalyName={"games"}>
-          <Text>hello</Text>
-          <Text>hello</Text>
+        <View className="flex" dispalyName={"games"}>
+          <Games matches={localProfile.playerMatches} />
         </View>
-        <View dispalyName={"profile"}>
+
+        <View dispalyName={"profile"} className="items-center">
           <UpperStats profile={localProfile} />
           <Stats profile={localProfile} />
         </View>
       </SlidesPicker>
-    </View>
+    </ScrollView>
   );
+};
+const Games = ({ matches }) => {
+  return <GameCard matches={matches} name={""} />;
 };
 const UpperStats = ({ profile }) => {
   return (
@@ -242,7 +252,7 @@ const Stats = ({ profile }) => {
       <View className="flex-row justify-around">
         <View className="flex items-center w-[100px] space-y-4 ">
           <Text>Matches</Text>
-          <Text>0</Text>
+          <Text>{profile.numberOfEndedMatches}</Text>
         </View>
         <View className="flex items-center w-[100px] space-y-4 ">
           <Image
@@ -250,14 +260,14 @@ const Stats = ({ profile }) => {
             style={{ width: 25, height: 25 }}
             source={require("../assets/images/footballcartoon.jpg")}
           />
-          <Text>0</Text>
+          <Text>{profile.goals}</Text>
         </View>
         <View className="flex items-center w-[100px] space-y-4 ">
           <Image
             style={{ width: 25, height: 25 }}
             source={require("../assets/images/assists.png")}
           />
-          <Text>0</Text>
+          <Text>{profile.assists}</Text>
         </View>
       </View>
     </View>

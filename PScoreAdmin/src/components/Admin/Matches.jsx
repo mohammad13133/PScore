@@ -1,98 +1,95 @@
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useAuth } from "../../contexts/AuthContext";
+import axios from "axios";
 
 function Matches() {
-  const [startDate, setStartDate] = useState(new Date());
+  const { token } = useAuth();
+  const [matches, setMaches] = useState({});
+  const [plname, setPlname] = useState();
+  useEffect(() => {
+    const getMatches = async () => {
+      try {
+        const response = await axios.get(
+          `https://pscore-backend.vercel.app/match/getemptymatchbyowner`,
+          {
+            headers: {
+              authorization: `Ahmad__${token}`,
+            },
+          }
+        );
+        if (response.data) {
+          setMaches(response.data.match);
+          setPlname(response.data.plname);
+          console.log(response.data);
+        } else {
+          console.log("Table data not available");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle errors
+      }
+    };
+
+    getMatches();
+  }, []);
   return (
-    <div className="flex flex-col items-start justify-center mt-2">
-      <DatePicker
-        selected={startDate}
-        onChange={(date) => setStartDate(date)}
-        dateFormat="yyyy-MM-dd"
-      />
-      <SingleGameBook time={"12:00" + "-" + "13:00"} />
-      <SingleGameBook time={"14:00" + "-" + "13:00"} />
-      <SingleGameBook time={"15:00" + "-" + "16:00"} />
+    <div class="relative overflow-x-auto">
+      <p className="text-center">{plname}</p>
+      <table class="w-[600px] m-auto mt-3 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead className="text-xs text-white uppercase bg-green-700 dark:bg-green-800">
+          <tr>
+            <th scope="col" className="px-6 py-3">
+              Date
+            </th>
+
+            <th scope="col" className="px-6 py-3">
+              Start Time
+            </th>
+            <th scope="col" className="px-6 py-3">
+              End Time
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Status
+            </th>
+            <th scope="col" className="px-6 py-3">
+              delete
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {matches.length > 0 &&
+            matches
+              .slice()
+              .reverse()
+              .map((match, index) => (
+                <tr
+                  key={index}
+                  className="bg-green-600 border-b dark:bg-green-700 dark:border-green-500 hover:bg-green-500"
+                >
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-white whitespace-nowrap dark:text-white"
+                  >
+                    {match.date}
+                  </th>
+                  <td className="px-6 py-4 text-white">{match.startTime}</td>
+                  <td className="px-6 py-4 text-white">{match.endTime}</td>
+                  <td className="px-6 py-4 text-white">{match.status}</td>
+                  <td className="px-6 py-4">
+                    <button className="bg-red-600 text-white hover:text-red-600 hover:bg-white border border-red-500 transition-all">
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+        </tbody>
+      </table>
     </div>
   );
 }
-
-const SingleGameBook = ({ time, gameid }) => {
-  //   const navigate = useNavigate();
-  return (
-    <div className="flex flex-row items-center space-x-2 mt-1">
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: "20px",
-          borderRadius: "10px",
-          height: "100px",
-          width: "400px",
-          boxShadow: "0 3px 6px rgba(0, 0, 0, 0.27)",
-          backgroundColor: "#FFFFFF",
-          cursor: "pointer",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "end",
-            justifyContent: "center",
-            margin: "5px",
-            paddingRight: "10px",
-            width: "100px",
-          }}
-        >
-          <span style={{ color: "#007AFF" }}>..</span>
-        </div>
-        <div
-          style={{
-            borderRadius: "50%",
-            backgroundColor: "#718096",
-            width: "35px",
-            height: "35px",
-          }}
-        />
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100px",
-            height: "90px",
-          }}
-        >
-          <span>{time}</span>
-        </div>
-        <div
-          style={{
-            borderRadius: "50%",
-            backgroundColor: "#718096",
-            width: "35px",
-            height: "35px",
-          }}
-        />
-        <div
-          style={{
-            display: "flex",
-            alignItems: "start",
-            justifyContent: "center",
-            margin: "5px",
-            paddingLeft: "10px",
-            width: "100px",
-          }}
-        >
-          <span style={{ color: "#007AFF" }}>..</span>
-        </div>
-      </div>
-      <span className="text-red-500 cursor-pointer">Delete</span>
-    </div>
-  );
-};
 
 export default Matches;

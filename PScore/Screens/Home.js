@@ -16,7 +16,7 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import Header from "../components/Header.js";
 const colors = require("../assets/colors/colors.js");
 import GameCard from "../components/GameCard.js";
-
+import dayjs from "dayjs";
 import axios from "axios";
 import { Formik } from "formik";
 import Line from "../components/Line.js";
@@ -38,7 +38,8 @@ const DATA = [
 ];
 const Home = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [day, setDay] = useState("2024-04-22");
+  const [day, setDay] = useState(dayjs().format("YYYY-MM-DD"));
+
   const [matches, setMatches] = useState([]);
 
   const { token } = useAuth();
@@ -126,7 +127,7 @@ const Home = ({ navigation, route }) => {
             />
           ))}
 
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        {/* <TouchableOpacity onPress={() => navigation.navigate("Login")}>
           <Text style={{ color: colors.mainColor }}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("MessagesScreen")}>
@@ -135,9 +136,9 @@ const Home = ({ navigation, route }) => {
         <TouchableOpacity onPress={() => navigation.navigate("Chat")}>
           <Text style={{ color: colors.mainColor }}>chat</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Testt")}>
-          <Text style={{ color: colors.mainColor }}>Testt</Text>
-        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("TeamDetails")}>
+          <Text style={{ color: colors.mainColor }}>TeamDetails</Text>
+        </TouchableOpacity> */}
       </ScrollView>
     </View>
   );

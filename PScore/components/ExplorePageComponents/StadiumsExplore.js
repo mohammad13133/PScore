@@ -16,30 +16,26 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
 const { width } = Dimensions.get("window");
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 const StadiumsExplore = () => {
   const { playgrounds } = useAuth();
 
   return (
-    <>
-      <Text>Nearest</Text>
+    <View className="items-center">
       <FlatList
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        snapToAlignment={"start"}
-        scrollEventThrottle={16}
-        decelerationRate="fast"
-        snapToOffsets={[...Array(playgrounds.length)].map(
-          (x, i) => i * (width * 0.8 - 40) + (i - 1) * 40
-        )}
         // onScroll={(event) => {
         //   setScrollX(event.nativeEvent.contentOffset.x);
         // }}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 10 }}
         data={playgrounds}
         renderItem={({ item, index }) => <Item item={item} key={index} />}
         keyExtractor={(item) => item._id}
       />
-    </>
+    </View>
   );
 };
 const Item = ({ item }) => {
@@ -52,7 +48,7 @@ const Item = ({ item }) => {
       className="bg-slate-50 rounded-lg h-[180px] mt-4 relative "
       style={{
         elevation: 6,
-        width: isWeb ? 300 : width * 0.8 - 20,
+        width: isWeb ? 300 : wp(80),
         marginHorizontal: 10,
       }}
     >

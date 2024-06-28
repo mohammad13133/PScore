@@ -53,7 +53,14 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
   const [playerCount, setPlayerCount] = useState(5);
   const [DATA, setDATA] = useState();
   const { teamData } = useAuth();
-
+  const showAlert = (title, message) => {
+    Alert.alert(
+      title,
+      message,
+      [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+      { cancelable: false }
+    );
+  };
   useEffect(() => {
     //here get the players avilable
     console.log(teamData.playerProfile);
@@ -75,7 +82,7 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
       Object.values(players).some((player) => player.id === newOther._id)
     ) {
       console.log("Duplicate ID", "This player ID already exists.");
-
+      showAlert("Duplicate Player", "This player already exists.");
       setModalVisible(false);
       return;
     }
@@ -95,7 +102,7 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
       Object.values(players).some((player) => player.id === choice._id)
     ) {
       console.log("Duplicate ID", "This player ID already exists.");
-
+      showAlert("Duplicate Player", "This player already exists.");
       setModalVisible(false);
       return;
     }

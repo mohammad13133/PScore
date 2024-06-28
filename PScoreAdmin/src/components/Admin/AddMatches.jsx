@@ -13,6 +13,7 @@ function AddMatches() {
   const [startTime, setStartTime] = useState("10:00");
   const [endTime, setEndTime] = useState("10:00");
   const [startDate, setStartDate] = useState(new Date());
+  const [message, setMessage] = useState("");
   const handleAddMatch = async () => {
     console.log("Selected Date:", formatDate(startDate));
     console.log("Start Time:", startTime);
@@ -34,6 +35,7 @@ function AddMatches() {
       );
 
       console.log("Match added successfully:", response.data);
+      setMessage(response.data.message);
     } catch (error) {
       console.error("Error adding match:", error);
     }
@@ -42,7 +44,7 @@ function AddMatches() {
     return dayjs(date).format("YYYY-MM-DD");
   };
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mt-10">
       <div>
         <DatePicker
           selected={startDate}
@@ -54,9 +56,13 @@ function AddMatches() {
       <TimePicker onChange={setStartTime} value={startTime} format="HH:mm" />
       <p>to</p>
       <TimePicker onChange={setEndTime} value={endTime} format="HH:mm" />
-      <button className="bg-slate-900 mt-2 text-white" onClick={handleAddMatch}>
+      <button
+        className="bg-green-900 mt-2 text-white border border-green-900 hover:text-green-900 hover:bg-white transition-all"
+        onClick={handleAddMatch}
+      >
         add Match
       </button>
+      <p>{message}</p>
     </div>
   );
 }

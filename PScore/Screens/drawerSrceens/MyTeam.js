@@ -39,9 +39,8 @@ const MyTeam = () => {
         }
 
         // Append teamName to formData if teamData.team is defined
-        if (teamData && teamData.team) {
-          formData.append("teamName", values.teamName);
-        }
+
+        formData.append("teamName", values.teamName);
 
         // Send POST request to create team
         const response = await axios.post(
@@ -97,7 +96,6 @@ const MyTeam = () => {
   return (
     <ScrollView>
       <View className="flex items-center">
-        <Text>Team</Text>
         <TouchableOpacity
           onPress={pickImage}
           className="relative rounded-full border "

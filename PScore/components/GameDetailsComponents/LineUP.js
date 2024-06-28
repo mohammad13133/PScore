@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable } from "react-native";
+import { View, Text, Image, Pressable, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import {
   widthPercentageToDP as wp,
@@ -7,6 +7,7 @@ import {
 import Info from "../Info";
 import DetailsTable from "../DetailsTable";
 import { useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 const LineUP = ({ players, others }) => {
   useEffect(() => {
     console.log(players);
@@ -41,6 +42,7 @@ const LineUP = ({ players, others }) => {
               Name={players[0]?.name}
               goals={players[0]?.goals}
               assists={players[0]?.assists}
+              item={players[0]}
             />
             <Player
               top={"50%"}
@@ -53,6 +55,7 @@ const LineUP = ({ players, others }) => {
               Name={players[1]?.name}
               goals={players[1]?.goals}
               assists={players[1]?.assists}
+              item={players[1]}
             />
             <Player
               top={"70%"}
@@ -65,6 +68,7 @@ const LineUP = ({ players, others }) => {
               Name={players[2]?.name}
               goals={players[2]?.goals}
               assists={players[2]?.assists}
+              item={players[2]}
             />
             <Player
               top={"70%"}
@@ -77,6 +81,7 @@ const LineUP = ({ players, others }) => {
               Name={players[3]?.name}
               goals={players[3]?.goals}
               assists={players[3]?.assists}
+              item={players[3]}
             />
 
             <Player
@@ -90,6 +95,7 @@ const LineUP = ({ players, others }) => {
               Name={players[4]?.name}
               goals={players[4]?.goals}
               assists={players[4]?.assists}
+              item={players[4]}
             />
           </>
         )}
@@ -129,7 +135,7 @@ const LineUP = ({ players, others }) => {
 const OtherPlayers = ({ others }) => {
   return (
     <View className="mt-2 w-[300px]">
-      <DetailsTable header={"OtherPlayers"}>
+      <DetailsTable header={"bench"}>
         {others.map((item) => (
           <Info key={item._id} item={item} first={item.name} />
         ))}
@@ -137,10 +143,18 @@ const OtherPlayers = ({ others }) => {
     </View>
   );
 };
-const Player = ({ top, left, ImageProp, goals, assists, Name }) => {
+const Player = ({ top, left, ImageProp, goals, assists, Name, item }) => {
+  const navigation = useNavigation();
+
   return (
-    <View
+    <TouchableOpacity
       className="absolute flex items-center justify-center"
+      onPress={() => {
+        navigation.navigate("PlayerDetails", {
+          _id: item.playerId,
+          item,
+        });
+      }}
       style={{
         width: 100,
         height: 100,
@@ -205,7 +219,7 @@ const Player = ({ top, left, ImageProp, goals, assists, Name }) => {
       </View>
 
       <Text className="text-white">{Name}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 export default LineUP;

@@ -68,46 +68,7 @@ const GameCard = ({ matches, name }) => {
     </View>
   );
 };
-const ff = {
-  data: [
-    {
-      nameStad: "betWazan",
-      id: 1,
-      matches: [
-        {
-          id: 2009,
-          homeTeam: { teamName: "rafediTeam", goals: 2, teamimage: "ssss" },
-          awayTeam: { teamName: "awayTeam", goals: 2, teamimage: "ssss" },
-          status: "TIMED",
-        },
-        {
-          id: 2010,
-          homeTeam: { teamName: "rafediTeam", goals: 2, teamimage: "ssss" },
-          awayTeam: { teamName: "awayTeam", goals: 2, teamimage: "ssss" },
-          status: "TIMED",
-        },
-      ],
-    },
-    {
-      nameStad: "betWazan",
-      id: 1,
-      matces: [
-        {
-          id: 2009,
-          homeTeam: { teamName: "rafediTeam", goals: 2, teamimage: "ssss" },
-          awayTeam: { teamName: "awayTeam", goals: 2, teamimage: "ssss" },
-          status: "TIMED",
-        },
-        {
-          id: 2010,
-          homeTeam: { teamName: "rafediTeam", goals: 2, teamimage: "ssss" },
-          awayTeam: { teamName: "awayTeam", goals: 2, teamimage: "ssss" },
-          status: "TIMED",
-        },
-      ],
-    },
-  ],
-};
+
 // const SingleGame = ({ MatchDetails }) => {
 //   const navigation = useNavigation();
 //   const dateString = MatchDetails?.utcDate;
@@ -238,22 +199,24 @@ const SingleGame = ({ MatchDetails }) => {
       }}
       onPress={() =>
         navigation.navigate("GameDetails", {
-          gameid: MatchDetails.id,
+          gameid: MatchDetails.id || MatchDetails._id,
         })
       }
     >
       <View className="flex items-end justify-center m-1" style={{ width: 50 }}>
         <Text className="text-center" style={{ color: colors.mainColor }}>
-          {MatchDetails?.team1?.teamName}
+          {MatchDetails?.team1?.teamName || MatchDetails?.team1?.name}
         </Text>
       </View>
 
       <Image
-        source={
-          { uri: MatchDetails?.team1.teamimage } || {
-            uri: "https://icons.veryicon.com/png/o/miscellaneous/site-icon-library/team-28.png",
-          }
-        }
+        source={{
+          uri: MatchDetails?.team1?.teamimage
+            ? MatchDetails.team1?.teamimage
+            : MatchDetails?.team1?.image
+            ? MatchDetails.team1?.image
+            : "https://icons.veryicon.com/png/o/miscellaneous/site-icon-library/team-28.png",
+        }}
         className="rounded-full"
         style={{ width: 35, height: 35 }}
       />
@@ -309,11 +272,13 @@ const SingleGame = ({ MatchDetails }) => {
       </View>
 
       <Image
-        source={
-          { uri: MatchDetails?.team2.teamimage } || {
-            uri: "https://icons.veryicon.com/png/o/miscellaneous/site-icon-library/team-28.png",
-          }
-        }
+        source={{
+          uri: MatchDetails?.team2?.teamimage
+            ? MatchDetails.team2?.teamimage
+            : MatchDetails?.team2?.image
+            ? MatchDetails.team2?.image
+            : "https://icons.veryicon.com/png/o/miscellaneous/site-icon-library/team-28.png",
+        }}
         className="rounded-full"
         style={{ width: 35, height: 35 }}
       />
@@ -323,7 +288,7 @@ const SingleGame = ({ MatchDetails }) => {
         style={{ width: 50 }}
       >
         <Text className="text-center" style={{ color: colors.mainColor }}>
-          {MatchDetails?.team2?.teamName}
+          {MatchDetails?.team2?.teamName || MatchDetails?.team2?.name}
         </Text>
       </View>
     </Pressable>

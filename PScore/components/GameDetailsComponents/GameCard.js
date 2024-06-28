@@ -69,6 +69,7 @@ import SearchTeam from "../SearchTeam";
   );
 };*/
 }
+
 const GameCard = ({
   header,
   discreption,
@@ -77,10 +78,24 @@ const GameCard = ({
   team2,
   setInvitedTeamId,
   live,
+  team1Id,
+  team2Id,
+  recentResults1 = [],
+  recentResults2 = [],
 }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [teamImage, setTeamImage] = useState();
+
+  const paddedStreaks1 = [
+    ...recentResults1,
+    ...Array(4 - recentResults1.length).fill("-"),
+  ];
+  const paddedStreaks2 = [
+    ...recentResults2,
+    ...Array(4 - recentResults2.length).fill("-"),
+  ];
+
   const handleTeamPress = (teamId, teamName, teamImage) => {
     console.log("Team ID:", teamId);
     console.log("Team Image:", teamImage);
@@ -90,6 +105,7 @@ const GameCard = ({
     setModalVisible(false);
     // You can perform further actions with teamId and teamImage here
   };
+
   return (
     <View
       style={{
@@ -119,8 +135,8 @@ const GameCard = ({
       </View>
       <View className="flex-row items-center justify-center space-x-3">
         <TouchableOpacity
-          disabled={team1 ? false : true}
-          onPress={() => navigation.navigate("Team")}
+          disabled={team1Id ? false : true}
+          onPress={() => navigation.navigate("TeamDetails", { _id: team1Id })}
         >
           <Image
             source={
@@ -149,8 +165,14 @@ const GameCard = ({
           </Text>
         </View>
         <TouchableOpacity
-          disabled={team2 ? true : false}
-          onPress={() => setModalVisible(true)}
+          //   disabled={team2Id ? false : true}
+          onPress={() => {
+            if (team2Id) {
+              navigation.navigate("TeamDetails", { _id: team2Id });
+            } else {
+              setModalVisible(true);
+            }
+          }}
         >
           <Image
             source={
@@ -209,56 +231,75 @@ const GameCard = ({
         >
           <View className="flex-row justify-around">
             <View className="flex-row space-x-1">
-              <View
-                className="rounded-full p-4 relative flex items-center justify-center"
-                style={{ backgroundColor: colors.mainColor }}
-              >
-                <Text style={{ color: "white", position: "absolute" }}>-</Text>
-              </View>
-              <View
-                className="rounded-full p-4 relative flex items-center justify-center"
-                style={{ backgroundColor: colors.mainColor }}
-              >
-                <Text style={{ color: "white", position: "absolute" }}>-</Text>
-              </View>
-              <View
-                className="rounded-full p-4 relative flex items-center justify-center"
-                style={{ backgroundColor: colors.mainColor }}
-              >
-                <Text style={{ color: "white", position: "absolute" }}>-</Text>
-              </View>
-              <View
-                className="rounded-full p-4 relative flex items-center justify-center"
-                style={{ backgroundColor: colors.mainColor }}
-              >
-                <Text style={{ color: "white", position: "absolute" }}>-</Text>
-              </View>
+              {paddedStreaks1 &&
+                paddedStreaks1
+                  .slice()
+                  .reverse()
+                  .map((streak, index) => (
+                    <View
+                      key={index}
+                      className="rounded-full p-4 relative flex items-center justify-center"
+                      style={{
+                        backgroundColor:
+                          streak === "w"
+                            ? "green"
+                            : streak === "l"
+                            ? "red"
+                            : streak === "d"
+                            ? colors.myWhite
+                            : colors.mainColor, // Assuming the main color for dash
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: streak === "d" ? "black" : "white", // Black text for draw
+                          position: "absolute",
+                        }}
+                      >
+                        {streak === "w"
+                          ? "W"
+                          : streak === "l"
+                          ? "L"
+                          : streak === "d"
+                          ? "D"
+                          : "-"}
+                      </Text>
+                    </View>
+                  ))}
             </View>
             <View className="flex-row space-x-1">
-              <View
-                className="rounded-full p-4 relative flex items-center justify-center"
-                style={{ backgroundColor: colors.mainColor }}
-              >
-                <Text style={{ color: "white", position: "absolute" }}>-</Text>
-              </View>
-              <View
-                className="rounded-full p-4 relative flex items-center justify-center"
-                style={{ backgroundColor: colors.mainColor }}
-              >
-                <Text style={{ color: "white", position: "absolute" }}>-</Text>
-              </View>
-              <View
-                className="rounded-full p-4 relative flex items-center justify-center"
-                style={{ backgroundColor: colors.mainColor }}
-              >
-                <Text style={{ color: "white", position: "absolute" }}>-</Text>
-              </View>
-              <View
-                className="rounded-full p-4 relative flex items-center justify-center"
-                style={{ backgroundColor: colors.mainColor }}
-              >
-                <Text style={{ color: "white", position: "absolute" }}>-</Text>
-              </View>
+              {paddedStreaks2 &&
+                paddedStreaks2.map((streak, index) => (
+                  <View
+                    key={index}
+                    className="rounded-full p-4 relative flex items-center justify-center"
+                    style={{
+                      backgroundColor:
+                        streak === "w"
+                          ? "green"
+                          : streak === "l"
+                          ? "red"
+                          : streak === "d"
+                          ? colors.myWhite
+                          : colors.mainColor, // Assuming the main color for dash
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: streak === "d" ? "black" : "white", // Black text for draw
+                        position: "absolute",
+                      }}
+                    >
+                      {streak === "w"
+                        ? "W"
+                        : streak === "l"
+                        ? "L"
+                        : streak === "d"
+                        ? "D"
+                        : "-"}
+                    </Text>
+                  </View>
+                ))}
             </View>
           </View>
         </View>

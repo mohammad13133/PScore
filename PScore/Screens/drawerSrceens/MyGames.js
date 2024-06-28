@@ -1,73 +1,47 @@
-import React, { useState } from "react";
-import { Button, Image, View, Platform } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-
+import { View, Text, ScrollView } from "react-native";
+import React from "react";
+import axios from "axios";
+import { useAuth } from "../../contexts/AuthContext";
+import { useEffect } from "react";
+import { useState } from "react";
+import GameCard from "../../components/GameCard";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 const MyGames = () => {
-  const [image, setImage] = useState(null);
-
-  const pickImage = async () => {
-    // Ask for permission to access media library
-    if (Platform.OS !== "web") {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== "granted") {
-        alert("Sorry, we need camera roll permissions to make this work!");
-        return;
-      }
-    }
-
-    // Open image picker
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
-
+  const { token } = useAuth();
+  const [matches, setMatches] = useState();
+  useFocusEffect(
+    useCallback(() => {
+      const getMyMatches = async () => {
+        try {
+          const response = await axios.get(
+            "https://pscore-backend.vercel.app/team/mymatches",
+            {
+              headers: {
+                authorization: `Ahmad__${token}`,
+              },
+            }
+          );
+          const reversedMatches = response?.data?.myMatches.reverse();
+          setMatches(reversedMatches);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+      getMyMatches();
+      // console.log("ss");
+    }, [])
+  );
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Button title="Pick an image from camera roll" onPress={pickImage} />
-      {image && (
-        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-      )}
-    </View>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ display: "flex", alignItems: "center" }}
+    >
+      <View className="flex" dispalyName={"games"}>
+        <GameCard matches={matches} name={""} />
+      </View>
+    </ScrollView>
   );
 };
 
 export default MyGames;
-// function MyGames() {
-//   const width = Dimensions.get("window").width;
-//   return (
-//     <View style={{ flex: 1 }}>
-//       {/* <Carousel
-//         loop
-//         width={width}
-//         height={width / 2}
-//         autoPlay={true}
-//         data={[...new Array(6).keys()]}
-//         scrollAnimationDuration={1000}
-//         // onSnapToItem={(index) => console.log("current index:", index)}
-//         renderItem={({ index }) => (
-//           <View
-//             style={{
-//               flex: 1,
-//               borderWidth: 1,
-//               justifyContent: "center",
-//             }}
-//           >
-//             <Text style={{ textAlign: "center", fontSize: 30 }}>{index}</Text>
-//           </View>
-//         )}
-//       /> */}
-//     </View>
-//   );
-// }
-
-// export default MyGames;

@@ -5,7 +5,7 @@ import {
 } from "react-icons/pi";
 import { IoCalendarOutline } from "react-icons/io5";
 import { BsClock, BsEnvelopePaper } from "react-icons/bs";
-
+import { FaRegNewspaper } from "react-icons/fa6";
 import { CiSettings } from "react-icons/ci";
 import { IoLogOutOutline } from "react-icons/io5";
 import Reservations from "../../components/Admin/Reservations";
@@ -13,13 +13,14 @@ import AddStadium from "../../components/Admin/AddStadium";
 import PlayGroundData from "../../components/Admin/PlayGroundData";
 import AddMatches from "../../components/Admin/AddMatches";
 import Matches from "../../components/Admin/Matches";
+import AddNews from "../../components/Admin/AddNews";
 
 export const SidebarTopData = [
   {
     key: "dashboard",
     label: "dashboard",
     path: "",
-    curruntPath: "/Admin",
+    curruntPath: "/admin",
     icon: <HiOutlineViewGrid />,
     component: <Reservations />,
   },
@@ -27,7 +28,7 @@ export const SidebarTopData = [
     key: "reservations",
     label: "reservations",
     path: "reservations",
-    curruntPath: "/Admin/reservations",
+    curruntPath: "/admin/reservations",
     icon: <IoCalendarOutline />,
     component: <Reservations />,
   },
@@ -35,15 +36,23 @@ export const SidebarTopData = [
     key: "Matches",
     label: "Matches",
     path: "Matches",
-    curruntPath: "/Admin/Matches",
+    curruntPath: "/admin/Matches",
     icon: <IoCalendarOutline />,
     component: <Matches />,
+  },
+  {
+    key: "addNews",
+    label: "addNews",
+    path: "addNews",
+    curruntPath: "/admin/addNews",
+    icon: <FaRegNewspaper />,
+    component: <AddNews />,
   },
   {
     key: "addMatches",
     label: "addMatches",
     path: "addMatches",
-    curruntPath: "/Admin/addMatches",
+    curruntPath: "/admin/addMatches",
     icon: <BsClock />,
     component: <AddMatches />,
   },
@@ -59,7 +68,7 @@ export const SidebarTopData = [
     key: "addStadium",
     label: "addStadium",
     path: "addStadium",
-    curruntPath: "/Admin/addStadium",
+    curruntPath: "/admin/addStadium",
     icon: <PiCourtBasketballLight />,
     component: <AddStadium />,
   },

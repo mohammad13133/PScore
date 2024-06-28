@@ -35,7 +35,7 @@ import { useAuth } from "../contexts/AuthContext";
 
 const Stadium = ({ route, navigation }) => {
   const playgroud = route.params;
-  const { token } = useAuth();
+  const { token, profile } = useAuth();
   const [activeImage, setActiveImage] = useState();
   const [activeHeart, setActiveHeart] = useState(false);
   const [images, setImages] = useState([]);
@@ -179,34 +179,38 @@ const Stadium = ({ route, navigation }) => {
             )}
           </View>
         </View>
-        <View className="flex items-center">
-          <View style={{ width: "95%" }}>
-            <MyCalender
-              handleGetMatches={handleGetMatches}
-              selectedDate={selectedDate}
-              setSelectedDate={setSelectedDate}
-            />
-          </View>
-        </View>
-        <View>
-          <Text className="pl-4 mt-2 font-bold">booking Details</Text>
-        </View>
-        <View className="items-center" style={{ height: 800 }}>
-          <View
-            className="flex  p-4 rounded-md mt-1 mb-4"
-            style={{
-              width: wp(90),
-            }}
-          >
-            {emptyMatches.map((item, index) => (
-              <SingleGameBook
-                key={index}
-                time={item.startTime + "-" + item.endTime}
-                gameid={item._id}
-              />
-            ))}
-          </View>
-        </View>
+        {profile.userType == "manager" && (
+          <>
+            <View className="flex items-center">
+              <View style={{ width: "95%" }}>
+                <MyCalender
+                  handleGetMatches={handleGetMatches}
+                  selectedDate={selectedDate}
+                  setSelectedDate={setSelectedDate}
+                />
+              </View>
+            </View>
+            <View>
+              <Text className="pl-4 mt-2 font-bold">booking Details</Text>
+            </View>
+            <View className="items-center">
+              <View
+                className="flex  p-4 rounded-md mt-1 mb-4"
+                style={{
+                  width: wp(90),
+                }}
+              >
+                {emptyMatches.map((item, index) => (
+                  <SingleGameBook
+                    key={index}
+                    time={item.startTime + "-" + item.endTime}
+                    gameid={item._id}
+                  />
+                ))}
+              </View>
+            </View>
+          </>
+        )}
       </ScrollView>
     </View>
   );

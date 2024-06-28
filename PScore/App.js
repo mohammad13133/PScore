@@ -51,6 +51,7 @@ import {
   UserGroupIcon,
   MagnifyingGlassCircleIcon,
   MagnifyingGlassIcon,
+  ChatBubbleBottomCenterIcon,
 } from "react-native-heroicons/outline";
 import Profile from "./Screens/Profile.js";
 import GameDetails from "./Screens/GameDetails.js";
@@ -64,14 +65,14 @@ import AuthContext, { AuthProvider, useAuth } from "./contexts/AuthContext.js";
 import { ChatsProvider, useChats } from "./contexts/ChatsContext.js";
 import PlayerDetails from "./Screens/PlayerDetails.js";
 import LogOut from "./Screens/drawerSrceens/LogOut.js";
-import MassegesScreen from "./Screens/MessagesScreen.js";
 import Chat from "./Screens/Chat.js";
-import MessagesScreen from "./Screens/MessagesScreen.js";
+import MessagesScreen from "./Screens/drawerSrceens/MessagesScreen.js";
 import { useEffect } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
 import MyTeam from "./Screens/drawerSrceens/MyTeam.js";
 import AddEvent from "./Screens/AddEvent.js";
+import TeamDetails from "./Screens/TeamDetails.js";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -86,7 +87,7 @@ export default function App() {
       <ChatsProvider>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="MainPage"
+            initialRouteName="Welcome"
             screenOptions={{
               headerShown: false,
             }}
@@ -103,7 +104,7 @@ export default function App() {
             <Stack.Screen name="Stadium" component={Stadium} />
             <Stack.Screen name="Search" component={Search} />
             <Stack.Screen name="PlayerDetails" component={PlayerDetails} />
-            <Stack.Screen name="MessagesScreen" component={MessagesScreen} />
+            <Stack.Screen name="TeamDetails" component={TeamDetails} />
             <Stack.Screen name="Chat" component={Chat} />
             <Stack.Screen name="AddEvent" component={AddEvent} />
           </Stack.Navigator>
@@ -246,6 +247,7 @@ function MyTabsDrower() {
             },
           }
         );
+        console.log("my profile");
         console.log(response.data);
         setProfile(response.data);
       } catch (error) {
@@ -336,6 +338,7 @@ function MyTabsDrower() {
         }}
         component={MyTabs}
       />
+
       {profile.userType == "manager" && (
         <Drawer.Screen
           name="Notifications"
@@ -346,18 +349,17 @@ function MyTabsDrower() {
         />
       )}
 
-      {profile.userType == "player" ||
-        (profile.userType == "manager" && (
-          <Drawer.Screen
-            name="MyGames"
-            options={{
-              drawerIcon: () => (
-                <ArchiveBoxArrowDownIconLine color={colors.secondColor} />
-              ),
-            }}
-            component={MyGames}
-          />
-        ))}
+      {profile.userType == "manager" && (
+        <Drawer.Screen
+          name="MyGames"
+          options={{
+            drawerIcon: () => (
+              <ArchiveBoxArrowDownIconLine color={colors.secondColor} />
+            ),
+          }}
+          component={MyGames}
+        />
+      )}
       {profile.userType == "manager" && (
         <Drawer.Screen
           name="MyTeam"
@@ -367,6 +369,17 @@ function MyTabsDrower() {
           component={MyTeam}
         />
       )}
+      <Drawer.Screen
+        name="MessagesScreen"
+        options={{
+          drawerLabel: "Messages",
+          title: "Messages",
+          drawerIcon: () => (
+            <ChatBubbleBottomCenterIcon color={colors.secondColor} />
+          ),
+        }}
+        component={MessagesScreen}
+      />
       <Drawer.Screen
         name="Settings"
         options={{

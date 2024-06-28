@@ -23,13 +23,36 @@ import debounce from "lodash/debounce";
 import { useAuth } from "../contexts/AuthContext";
 import Player from "../components/Player";
 const SearchTeam = ({ onPress }) => {
-  const { token } = useAuth();
+  const { token, teamData } = useAuth();
   const [search, setSearch] = useState("");
   const [teams, setTeams] = useState(null);
   const searchInputRef = useRef(null);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false); // Initial loading state
   const [results, setResults] = useState([]);
+  useEffect(() => {
+    const getTeams = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `https://pscore-backend.vercel.app/team/dropdownteams`,
+          {
+            headers: {
+              authorization: `Ahmad__${token}`,
+            },
+          }
+        );
+        console.log(response.data);
+        setResults(response?.data?.teams);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getTeams();
+  }, []);
+
   const fetchSearch = async (name) => {
     try {
       setLoading(true);
@@ -65,6 +88,7 @@ const SearchTeam = ({ onPress }) => {
     setSearch("");
     setResults([]);
   };
+
   return (
     <ScrollView>
       <View className="bg-slate-300 rounded-lg mx-4 py-3 mt-5 flex-row items-center justify-between">
@@ -92,9 +116,12 @@ const SearchTeam = ({ onPress }) => {
       <View className="mt-4 flex">
         <DetailsTable header={"Teams"}>
           {results &&
-            results.map((item, index) => (
-              <Team item={item} key={index} onPress={onPress} />
-            ))}
+            results.map(
+              (item, index) =>
+                item.name !== teamData.team.name && (
+                  <Team item={item} key={index} onPress={onPress} />
+                )
+            )}
         </DetailsTable>
         {loading && <ActivityIndicator color={colors.mainColor} />}
       </View>

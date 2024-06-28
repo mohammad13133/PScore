@@ -189,7 +189,7 @@ const SignUp = ({ navigation }) => {
               <MyTextInput
                 Icon={CalendarDaysIcon}
                 placeholder="date of birth"
-                label="date"
+                label="date of birth"
                 isDate={true}
                 showDatePicker={showDatePicker}
                 dateText={dayjs(date).format("YYYY-MM-DD")}
