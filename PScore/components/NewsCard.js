@@ -35,7 +35,8 @@ const MobileCard = ({ item }) => {
       className=" rounded-3xl flex items-center mt-4 mx-4"
     >
       <Text className="font-bold">{item.title}</Text>
-      <Text style={{ color: colors.mainColor }}>{item.desc}</Text>
+      <Text>{item.desc}</Text>
+
       <Text style={{ color: colors.mainColor }}>{item.date}</Text>
       <Image
         style={{ height: hp(30) }}
@@ -68,7 +69,10 @@ const WebCard = ({ item }) => {
   const [activeLike, setActiveLike] = useState(false);
   let isActive = activeLike == true;
   return (
-    <View className="bg-slate-300 rounded-3xl flex-row items-start justify-start mt-4 mx-4 relative">
+    <View
+      style={{ backgroundColor: colors.secondColor }}
+      className="rounded-3xl flex-row items-start justify-start mt-4 mx-4 px-3 space-x-3 relative"
+    >
       <Image
         style={{ height: hp(30), width: wp(30) }}
         className="ml-3"
@@ -79,8 +83,8 @@ const WebCard = ({ item }) => {
         }
       />
       <View className="flex h-full items-start justify-center">
-        <Text style={{ color: "#9a9a9a" }}>{item.category}</Text>
         <Text className="font-bold">{item.title}</Text>
+        <Text>{item.desc}</Text>
         <Text>{item.date}</Text>
         <View
           className="flex-row justify-between items-end w-full px-6 py-2  absolute bottom-0 -z-20"

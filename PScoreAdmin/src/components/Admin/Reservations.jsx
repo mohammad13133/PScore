@@ -6,7 +6,7 @@ import { useState } from "react";
 
 export default function Reservations() {
   const { token } = useAuth();
-  const [matches, setMaches] = useState({});
+  const [matches, setMaches] = useState([]);
   const [plname, setPlname] = useState();
   useEffect(() => {
     const getMatches = async () => {
@@ -20,7 +20,7 @@ export default function Reservations() {
           }
         );
         if (response.data) {
-          setMaches(response.data?.matchDetails);
+          setMaches(response.data?.matchDetails || []);
           setPlname(response.data?.plname);
           console.log(response.data);
         } else {

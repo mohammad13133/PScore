@@ -13,6 +13,8 @@ import { useNavigation } from "@react-navigation/native";
 import GameCard from "../components/GameCard";
 const TeamDetails = ({ route }) => {
   const [teamData, setTeamData] = useState({});
+  const [streak, setStreak] = useState([]);
+
   const navigation = useNavigation();
   const { _id } = route?.params;
   useEffect(() => {
@@ -42,6 +44,11 @@ const TeamDetails = ({ route }) => {
       },
     });
   }, [navigation]);
+  useEffect(() => {
+    setStreak(teamData?.team?.recentResults || []);
+  }, [teamData]);
+
+  const paddedStreaks1 = [...streak, ...Array(4 - streak.length).fill("-")];
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -77,6 +84,42 @@ const TeamDetails = ({ route }) => {
             // <Text>dd</Text>
           )}
         </View>
+        {teamData?.team && (
+          <View className="flex-row space-x-1 absolute bottom-5">
+            {paddedStreaks1 &&
+              paddedStreaks1.map((streak, index) => (
+                <View
+                  key={index}
+                  className="rounded-full p-4 relative flex items-center justify-center mt-2 border border-black"
+                  style={{
+                    backgroundColor:
+                      streak === "W"
+                        ? colors.mainColor
+                        : streak === "L"
+                        ? "#9c0811"
+                        : streak === "D"
+                        ? colors.myWhite
+                        : colors.mainColor, // Assuming the main color for dash
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: streak === "D" ? "black" : "white", // Black text for draw
+                      position: "absolute",
+                    }}
+                  >
+                    {streak === "W"
+                      ? "W"
+                      : streak === "L"
+                      ? "L"
+                      : streak === "D"
+                      ? "D"
+                      : "-"}
+                  </Text>
+                </View>
+              ))}
+          </View>
+        )}
       </View>
       <SlidesPicker>
         <View className="flex" dispalyName={"games"}>

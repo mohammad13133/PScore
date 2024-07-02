@@ -1,15 +1,12 @@
-import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { useAuth } from "../../contexts/AuthContext";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useAuth } from "../../contexts/AuthContext";
 
 function Matches() {
   const { token } = useAuth();
-  const [matches, setMaches] = useState({});
-  const [plname, setPlname] = useState();
+  const [matches, setMatches] = useState([]);
+  const [plname, setPlname] = useState("");
+
   useEffect(() => {
     const getMatches = async () => {
       try {
@@ -22,8 +19,8 @@ function Matches() {
           }
         );
         if (response.data) {
-          setMaches(response.data.match);
-          setPlname(response.data.plname);
+          setMatches(response.data.match || []); // Ensure matches is always an array
+          setPlname(response.data.plname || ""); // Set plname or default to an empty string
           console.log(response.data);
         } else {
           console.log("Table data not available");
@@ -35,17 +32,17 @@ function Matches() {
     };
 
     getMatches();
-  }, []);
+  }, [token]);
+
   return (
-    <div class="relative overflow-x-auto">
+    <div className="relative overflow-x-auto">
       <p className="text-center">{plname}</p>
-      <table class="w-[600px] m-auto mt-3 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <table className="w-[600px] m-auto mt-3 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-white uppercase bg-green-700 dark:bg-green-800">
           <tr>
             <th scope="col" className="px-6 py-3">
               Date
             </th>
-
             <th scope="col" className="px-6 py-3">
               Start Time
             </th>
@@ -56,12 +53,12 @@ function Matches() {
               Status
             </th>
             <th scope="col" className="px-6 py-3">
-              delete
+              Delete
             </th>
           </tr>
         </thead>
         <tbody>
-          {matches.length > 0 &&
+          {matches.length > 0 ? (
             matches
               .slice()
               .reverse()
@@ -85,7 +82,14 @@ function Matches() {
                     </button>
                   </td>
                 </tr>
-              ))}
+              ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="px-6 py-4 text-center text-white">
+                No matches found
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

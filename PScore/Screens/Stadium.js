@@ -127,6 +127,7 @@ const Stadium = ({ route, navigation }) => {
             <View className="pl-4">
               <Text className="font-bold text-lg">{playgroud.name}</Text>
               <Text className="font-light">Nablus</Text>
+              <Text className="font-light">0599975427</Text>
             </View>
             <View className="flex-row pr-4 space-x-2">
               <ShareIcon color={colors.lightGreen} size={25} />
@@ -150,33 +151,30 @@ const Stadium = ({ route, navigation }) => {
               paddingTop: statusBarHeight,
               borderRadius: 10,
               overflow: "hidden",
-              backgroundColor: "green",
             }}
           >
-            {Platform.OS != "web" ? (
-              mapLat !== null &&
-              mapLong !== null && (
-                <MapView
-                  style={StyleSheet.absoluteFill}
-                  provider={PROVIDER_GOOGLE}
-                  initialRegion={{
-                    latitude: mapLat,
-                    longitude: mapLong,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                  }}
-                  // scrollEnabled={false}
-                >
-                  <Marker
-                    coordinate={{ latitude: mapLat, longitude: mapLong }}
-                    title={"title"}
-                    description={"description"}
-                  />
-                </MapView>
-              )
-            ) : (
-              <Text>use android to see maps</Text>
-            )}
+            {Platform.OS != "web"
+              ? mapLat !== null &&
+                mapLong !== null && (
+                  <MapView
+                    style={StyleSheet.absoluteFill}
+                    provider={PROVIDER_GOOGLE}
+                    initialRegion={{
+                      latitude: mapLat,
+                      longitude: mapLong,
+                      latitudeDelta: 0.0922,
+                      longitudeDelta: 0.0421,
+                    }}
+                    // scrollEnabled={false}
+                  >
+                    <Marker
+                      coordinate={{ latitude: mapLat, longitude: mapLong }}
+                      title={"title"}
+                      description={"description"}
+                    />
+                  </MapView>
+                )
+              : null}
           </View>
         </View>
         {profile.userType == "manager" && (

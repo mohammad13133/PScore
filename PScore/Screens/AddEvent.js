@@ -76,8 +76,13 @@ const AddEvent = ({ route }) => {
     }
   };
   return (
-    <View className="flex-1 items-center justify-center bg-slate-400 space-y-3">
-      <View className="flex-row items-center justify-between space-x-4">
+    <View className="flex-1 items-center justify-center space-y-3 relative">
+      <Image
+        className="absolute h-screen"
+        source={require("../assets/images/footballMessageBack.jpeg")}
+        style={{ width: "100%", resizeMode: "cover" }}
+      />
+      <View className="flex-row items-center justify-between space-x-4 absolute top-0">
         <View className="border border-green-700 rounded-full ">
           <Image
             className="w-[50px] h-[50px]  rounded-full"

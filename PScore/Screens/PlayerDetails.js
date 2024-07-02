@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
+  Alert,
 } from "react-native";
 import React, { useLayoutEffect } from "react";
 import colors from "../assets/colors/colors";
@@ -72,12 +73,21 @@ const PlayerDetails = ({ navigation, route }) => {
         }
       );
       console.log(response?.data);
+      showAlert("invite sent", "you invited the player");
       triggerEvent();
     } catch (error) {
       console.error("Login error:", error);
     } finally {
       setIsLoading(false); // Stop loading
     }
+  };
+  const showAlert = (title, message) => {
+    Alert.alert(
+      title,
+      message,
+      [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+      { cancelable: false }
+    );
   };
   useEffect(() => {
     console.log(_id);

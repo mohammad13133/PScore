@@ -339,7 +339,7 @@ function MyTabsDrower() {
         component={MyTabs}
       />
 
-      {profile.userType == "manager" && (
+      {(profile.userType == "manager" || profile.userType == "player") && (
         <Drawer.Screen
           name="Notifications"
           options={{

@@ -284,6 +284,7 @@ const GameDetails = ({ navigation, route }) => {
               score={".."}
               team1={teamData?.team.image}
               team2={""}
+              recentResults1={teamData?.team?.recentResults}
             />
           ) : matchDetails?.status === "timed" ? (
             <GameCard
@@ -309,6 +310,7 @@ const GameDetails = ({ navigation, route }) => {
               team1Id={matchDetails?.team1?._id}
               team2Id={matchDetails?.team2?._id}
               recentResults1={matchDetails?.team1?.recentResults}
+              recentResults2={matchDetails?.team2?.recentResults}
             />
           ) : matchDetails?.status === "live" ? (
             <GameCard
@@ -342,7 +344,7 @@ const GameDetails = ({ navigation, route }) => {
               team2={matchDetails?.team2?.image}
               team1Id={matchDetails?.team1?._id}
               team2Id={matchDetails?.team2?._id}
-              recentResults1={matchDetails?.team2?.recentResults}
+              recentResults1={matchDetails?.team1?.recentResults}
               recentResults2={matchDetails?.team2?.recentResults}
             />
           )}

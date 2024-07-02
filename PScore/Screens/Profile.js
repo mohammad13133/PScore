@@ -8,6 +8,7 @@ import axios from "axios";
 import SlidesPicker from "../components/MyComp/SlidesPicker";
 import DetailsTable from "../components/DetailsTable";
 import Player from "../components/Player";
+import GameCard from "../components/GameCard";
 
 const Profile = () => {
   const { token, getUser, profile, teamData } = useAuth();
@@ -53,6 +54,7 @@ const Profile = () => {
           </View>
         </View>
         <Text>{profile ? profile?.userName : "no login"}</Text>
+        <Text className="font-bold">{profile ? profile?.userType : ""}</Text>
         {/* <Text>{user ? user?.type : "no login"}</Text> */}
         <View
           className="flex-row justify-around rounded-md p-1"
@@ -100,6 +102,11 @@ const Profile = () => {
       </View>
 
       <SlidesPicker>
+        {profile.userType == "player" && (
+          <View className="flex items-center" dispalyName={"games"}>
+            <GameCard matches={profile?.playerMatches} />
+          </View>
+        )}
         <Stats dispalyName="Profile" loading={loading} profile={profile} />
       </SlidesPicker>
     </ScrollView>
@@ -130,6 +137,12 @@ const Stats = ({ loading, profile }) => {
           <Text>phone</Text>
           <Text>{profile.number}</Text>
         </View>
+        {profile.userType == "user" && (
+          <View className="flex items-center w-[100px] space-y-4 ">
+            <Text>Trust level</Text>
+            <Text>{profile.trustLevel}</Text>
+          </View>
+        )}
       </View>
       {profile.userType == "player" && (
         <View className="flex-row justify-around">

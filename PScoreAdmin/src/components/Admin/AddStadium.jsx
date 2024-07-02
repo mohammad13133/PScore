@@ -7,9 +7,9 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useEffect } from "react";
 
 export default function AddStadium() {
-  const [first, setfirst] = useState("second");
   const [images, setImages] = useState([]);
   const { token } = useAuth();
+  const [message, setMessage] = useState("");
   useEffect(() => {
     console.log(token);
   }, []);
@@ -45,6 +45,7 @@ export default function AddStadium() {
         }
       );
       console.log("Response:", response.data);
+      setMessage("playground Created");
     } catch (error) {
       console.error("error:", error);
     }
@@ -76,7 +77,7 @@ export default function AddStadium() {
             name="userName"
             onChange={formik.handleChange}
             value={formik.values.userName}
-            label="userName"
+            label="owner Name"
             variant="standard"
             className="w-auto"
           />
@@ -105,6 +106,12 @@ export default function AddStadium() {
             label="playgroundName"
             variant="standard"
           />
+          <TextField
+            id="phoneNumber"
+            name="phoneNumber"
+            label="phoneNumber"
+            variant="standard"
+          />
           <input
             type="file"
             accept="image/*"
@@ -131,21 +138,14 @@ export default function AddStadium() {
             label="coordinates"
             variant="standard"
           />
-          <button className="bg-gray-800 text-white" type="submit">
+          <button
+            className="bg-green-800 text-white hover:text-green-800 hover:bg-white border border-green-800 transition-all"
+            type="submit"
+          >
             Submit
           </button>
         </div>
-
-        {/* <div className="border border-color-thirdColor w-[100px]">
-      <input
-        className="bg-transparent"
-        id="StadiumName"
-        name="StadiumName"
-        type="text"
-        onChange={formik.handleChange}
-        value={formik.values.StadiumName}
-      />
-    </div> */}
+        <p>{message}</p>
       </form>
     </div>
   );

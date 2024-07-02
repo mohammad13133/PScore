@@ -232,40 +232,37 @@ const GameCard = ({
           <View className="flex-row justify-around">
             <View className="flex-row space-x-1">
               {paddedStreaks1 &&
-                paddedStreaks1
-                  .slice()
-                  .reverse()
-                  .map((streak, index) => (
-                    <View
-                      key={index}
-                      className="rounded-full p-4 relative flex items-center justify-center"
+                paddedStreaks1.map((streak, index) => (
+                  <View
+                    key={index}
+                    className="rounded-full p-4 relative flex items-center justify-center"
+                    style={{
+                      backgroundColor:
+                        streak === "W"
+                          ? colors.mainColor
+                          : streak === "L"
+                          ? "#9c0811"
+                          : streak === "D"
+                          ? colors.myWhite
+                          : colors.mainColor, // Assuming the main color for dash
+                    }}
+                  >
+                    <Text
                       style={{
-                        backgroundColor:
-                          streak === "w"
-                            ? "green"
-                            : streak === "l"
-                            ? "red"
-                            : streak === "d"
-                            ? colors.myWhite
-                            : colors.mainColor, // Assuming the main color for dash
+                        color: streak === "D" ? "black" : "white", // Black text for draw
+                        position: "absolute",
                       }}
                     >
-                      <Text
-                        style={{
-                          color: streak === "d" ? "black" : "white", // Black text for draw
-                          position: "absolute",
-                        }}
-                      >
-                        {streak === "w"
-                          ? "W"
-                          : streak === "l"
-                          ? "L"
-                          : streak === "d"
-                          ? "D"
-                          : "-"}
-                      </Text>
-                    </View>
-                  ))}
+                      {streak === "W"
+                        ? "W"
+                        : streak === "L"
+                        ? "L"
+                        : streak === "D"
+                        ? "D"
+                        : "-"}
+                    </Text>
+                  </View>
+                ))}
             </View>
             <View className="flex-row space-x-1">
               {paddedStreaks2 &&
@@ -275,26 +272,26 @@ const GameCard = ({
                     className="rounded-full p-4 relative flex items-center justify-center"
                     style={{
                       backgroundColor:
-                        streak === "w"
-                          ? "green"
-                          : streak === "l"
-                          ? "red"
-                          : streak === "d"
+                        streak === "W"
+                          ? colors.mainColor
+                          : streak === "L"
+                          ? "#9c0811"
+                          : streak === "D"
                           ? colors.myWhite
                           : colors.mainColor, // Assuming the main color for dash
                     }}
                   >
                     <Text
                       style={{
-                        color: streak === "d" ? "black" : "white", // Black text for draw
+                        color: streak === "D" ? "black" : "white", // Black text for draw
                         position: "absolute",
                       }}
                     >
-                      {streak === "w"
+                      {streak === "W"
                         ? "W"
-                        : streak === "l"
+                        : streak === "L"
                         ? "L"
-                        : streak === "d"
+                        : streak === "D"
                         ? "D"
                         : "-"}
                     </Text>

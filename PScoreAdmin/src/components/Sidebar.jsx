@@ -22,6 +22,7 @@ export default function Sidebar() {
               return null; // Skip rendering the addMatches link if user is not admin
             } else if (
               (item.key === "addMatches" ||
+                item.key === "News" ||
                 item.key === "Matches" ||
                 item.key === "reservations") &&
               type !== "owner"

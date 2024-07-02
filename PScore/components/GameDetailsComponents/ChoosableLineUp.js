@@ -128,6 +128,7 @@ const ChoosableLineUp = ({ players, setPlayers, others, setOthers }) => {
             style={{
               width: wp(130),
               height: hp(50),
+              maxWidth: 900,
             }}
           >
             <Image

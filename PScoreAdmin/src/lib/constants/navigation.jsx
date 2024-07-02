@@ -14,6 +14,8 @@ import PlayGroundData from "../../components/Admin/PlayGroundData";
 import AddMatches from "../../components/Admin/AddMatches";
 import Matches from "../../components/Admin/Matches";
 import AddNews from "../../components/Admin/AddNews";
+import PlayGrounds from "../../components/Admin/PlayGrounds";
+import News from "../../components/Admin/News";
 
 export const SidebarTopData = [
   {
@@ -22,7 +24,7 @@ export const SidebarTopData = [
     path: "",
     curruntPath: "/admin",
     icon: <HiOutlineViewGrid />,
-    component: <Reservations />,
+    component: <PlayGrounds />,
   },
   {
     key: "reservations",
@@ -39,6 +41,14 @@ export const SidebarTopData = [
     curruntPath: "/admin/Matches",
     icon: <IoCalendarOutline />,
     component: <Matches />,
+  },
+  {
+    key: "news",
+    label: "news",
+    path: "news",
+    curruntPath: "/admin/news",
+    icon: <FaRegNewspaper />,
+    component: <News />,
   },
   {
     key: "addNews",

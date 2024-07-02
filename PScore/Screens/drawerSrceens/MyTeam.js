@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   ScrollView,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { CameraIcon, UserGroupIcon } from "react-native-heroicons/outline";
 import * as ImagePicker from "expo-image-picker";
 import colors from "../../assets/colors/colors";
@@ -23,6 +23,7 @@ const MyTeam = () => {
   const { triggerEvent, token, teamData } = useAuth();
   const [image, setImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [streak, setStreak] = useState([]);
   const fetchTeam = async (values) => {
     if (token) {
       try {
@@ -93,6 +94,11 @@ const MyTeam = () => {
       setImage(result.assets[0].uri);
     }
   };
+  useEffect(() => {
+    setStreak(teamData?.team?.recentResults || []);
+  }, [teamData]);
+
+  const paddedStreaks1 = [...streak, ...Array(4 - streak.length).fill("-")];
   return (
     <ScrollView>
       <View className="flex items-center">
@@ -116,6 +122,42 @@ const MyTeam = () => {
             <CameraIcon size={30} color={"black"} />
           </View>
         </TouchableOpacity>
+        {teamData?.team && (
+          <View className="flex-row space-x-1">
+            {paddedStreaks1 &&
+              paddedStreaks1.map((streak, index) => (
+                <View
+                  key={index}
+                  className="rounded-full p-4 relative flex items-center justify-center mt-2 border border-black"
+                  style={{
+                    backgroundColor:
+                      streak === "W"
+                        ? colors.mainColor
+                        : streak === "L"
+                        ? "#9c0811"
+                        : streak === "D"
+                        ? colors.myWhite
+                        : colors.mainColor, // Assuming the main color for dash
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: streak === "D" ? "black" : "white", // Black text for draw
+                      position: "absolute",
+                    }}
+                  >
+                    {streak === "W"
+                      ? "W"
+                      : streak === "L"
+                      ? "L"
+                      : streak === "D"
+                      ? "D"
+                      : "-"}
+                  </Text>
+                </View>
+              ))}
+          </View>
+        )}
 
         <Formik
           initialValues={{
@@ -152,6 +194,7 @@ const MyTeam = () => {
             </View>
           )}
         </Formik>
+
         {teamData?.playerProfile?.length > 0 && (
           <Players dispalyName="Players" team={teamData} />
         )}
